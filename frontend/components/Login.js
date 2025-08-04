@@ -1,63 +1,157 @@
 import { useState } from "react";
 import styles from "../styles/login.module.css";
 
-
 const Login = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
+  
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
 
-  const openModal = () => setIsModalOpen(true);
-  const openSecondModal = () => setIsSecondModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-  const closeSecondModal = () => setIsSecondModalOpen(false);
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [signupUsername, setSignupUsername] = useState("");
+  const [signupEmail, setSignupEmail] = useState("");
+  const [signupPassword, setSignupPassword] = useState("");
+  
+  
+  const backendUrl = "http://localhost:3000";
+
+  
+  const openLoginModal = () => setIsLoginModalOpen(true);
+  const openSignupModal = () => setIsSignupModalOpen(true);
+
+  
+  const closeLoginModal = () => setIsLoginModalOpen(false);
+  const closeSignupModal = () => setIsSignupModalOpen(false);
+
+  
+  const handleLogin = (e) => {
+    e.preventDefault();
+    
+    fetch(`${backendUrl}/signin`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: loginEmail,
+        password: loginPassword,
+      }),
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Erreur de connexion");
+      }
+      return response.json();
+    })
+    .then(data => {
+     
+      console.log("Connexion réussie !", data);
+      
+      closeLoginModal();
+    })
+    .catch(error => {
+      console.error("Échec de la connexion :", error);
+    });
+  };
+
+  const handleSignup = (e) => {
+    e.preventDefault();
+    
+    fetch(`${backendUrl}/signup`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: signupUsername,
+        email: signupEmail,
+        password: signupPassword,
+      }),
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Erreur d'inscription");
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log("Inscription réussie !", data);
+      closeSignupModal();
+    })
+    .catch(error => {
+      console.error("Échec de l'inscription :", error);
+    });
+  };
 
   return (
     <div className={styles.container}>
       
-        <button onClick={openModal} className={styles.button}>
+        <button onClick={openLoginModal} className={styles.button}>
           SE CONNECTER
         </button>
-        <button onClick={openSecondModal} className={styles.button}>
+        <button onClick={openSignupModal} className={styles.button}>
           S'INSCRIRE
         </button>
         <button className={styles.button}>INVITÉ</button>
       
 
-      {isModalOpen && (
-        <div onClick={closeModal} className={styles.modalOverlay}>
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className={styles.modalContainer}
-          >
-            <button onClick={closeModal} className={styles.modalCloseButton}>
+      {isLoginModalOpen && (
+        <div onClick={closeLoginModal} className={styles.modalOverlay}>
+          <div onClick={(e) => e.stopPropagation()} className={styles.modalContainer}>
+            <button onClick={closeLoginModal} className={styles.modalCloseButton}>
               &times;
             </button>
-            <div className={styles.modalContent}>
-              
-           <p>Email</p><input></input>
-           <p>Mot de passe</p><input ></input>
-           <button>SE CONNECTER</button>
-             
-            </div>
+            <form onSubmit={handleLogin} className={styles.modalContent}>
+              <p>Email</p>
+              <input 
+                type="email" 
+                value={loginEmail} 
+                onChange={(e) => setLoginEmail(e.target.value)} 
+                required 
+              />
+              <p>Mot de passe</p>
+              <input 
+                type="password" 
+                value={loginPassword} 
+                onChange={(e) => setLoginPassword(e.target.value)} 
+                required 
+              />
+              <button type="submit" className={styles.modalButton}>SE CONNECTER</button>
+            </form>
           </div>
         </div>
       )}
-      {isSecondModalOpen && (
-        <div onClick={closeSecondModal} className={styles.modalOverlay}>
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className={styles.modalContainer}
-          >
-            <button onClick={closeSecondModal} className={styles.modalCloseButton}>
+      
+      {isSignupModalOpen && (
+        <div onClick={closeSignupModal} className={styles.modalOverlay}>
+          <div onClick={(e) => e.stopPropagation()} className={styles.modalContainer}>
+            <button onClick={closeSignupModal} className={styles.modalCloseButton}>
               &times;
             </button>
-            <div className={styles.modalContent}>
-            <p>Nom d'utilisateur</p><input></input>
-           <p>Email</p><input></input>
-           <p>Mot de passe</p><input ></input>
-           <button>SE CONNECTER</button>
-             
-            </div>
+            <form onSubmit={handleSignup} className={styles.modalContent}>
+              <p>Nom d'utilisateur</p>
+              <input 
+                type="text" 
+                value={signupUsername} 
+                onChange={(e) => setSignupUsername(e.target.value)} 
+                required 
+              />
+              <p>Email</p>
+              <input 
+                type="email" 
+                value={signupEmail} 
+                onChange={(e) => setSignupEmail(e.target.value)} 
+                required 
+              />
+              <p>Mot de passe</p>
+              <input 
+                type="password" 
+                value={signupPassword} 
+                onChange={(e) => setSignupPassword(e.target.value)} 
+                required 
+              />
+              <button type="submit" className={styles.modalButton}>S'INSCRIRE</button>
+            </form>
           </div>
         </div>
       )}
