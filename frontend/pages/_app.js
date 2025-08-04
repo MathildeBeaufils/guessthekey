@@ -1,15 +1,9 @@
-import '../styles/globals.css';
-import Head from 'next/head';
+import Login from "../components/login";
+import "../styles/globals.css";
 
-function App({ Component, pageProps }) {
-  return (
-    <>
-      <Head>
-        <title>Next.js App</title>
-      </Head>
-      <Component {...pageProps} />
-    </>
-  );
+
+function App() {
+  return <Login  />;
 }
 
 export default App;
