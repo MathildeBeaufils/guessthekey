@@ -1,10 +1,20 @@
 import { useState } from "react";
 import styles from "../styles/login.module.css";
 import { useRouter } from "next/router";
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../reducers/users';
+
 
 
 const Login = () => {
+  const dispatch = useDispatch();
   const router = useRouter();
+  const user = useSelector((state)=>state.user.value);
+  if (user.token) {
+    router.push('/home');
+  }
+  console.log('user: ',user)
+
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
 
@@ -45,6 +55,18 @@ const Login = () => {
       })
       .then((data) => {
         console.log("Connexion réussie !", data);
+        dispatch(login({ 
+          token: data.data.token, 
+          username: data.data.username,
+          email: data.data.email,
+          itemJambes: data.data.itemJambes,
+          itemPieds: data.data.itemPieds,
+          itemTete: data.data.itemTete,
+          itemTorse: data.data.itemTorse,
+          keyPoint: data.data.keyPoint,
+          nbVictoire: data.data.nbVictoire,
+          isAdmin: data.data.isAdmin,
+        }));
         router.push("/home")
       })
       .catch((error) => {
@@ -74,7 +96,19 @@ const Login = () => {
       })
       .then((data) => {
         console.log("Inscription réussie !", data);
-       router.push("/home")
+        dispatch(login({ 
+          token: data.data.token, 
+          username: data.data.username,
+          email: data.data.email,
+          itemJambes: data.data.itemJambes,
+          itemPieds: data.data.itemPieds,
+          itemTete: data.data.itemTete,
+          itemTorse: data.data.itemTorse,
+          keyPoint: data.data.keyPoint,
+          nbVictoire: data.data.nbVictoire,
+          isAdmin: data.data.isAdmin,
+        }));
+        router.push("/home")
       })
       .catch((error) => {
         console.error("Échec de l'inscription :", error);

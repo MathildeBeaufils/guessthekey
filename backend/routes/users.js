@@ -62,7 +62,7 @@ router.post('/signin', (req, res) => {
 
   User.findOne({ email: req.body.email }).then(data => {
     if (data && bcrypt.compareSync(req.body.password, data.password)) {
-      res.json({ result: true, token: data.token });
+      res.json({ result: true, data: data });
     } else {
       res.json({ result: false, error: 'Utilisateur introuvable ou mot de passe incorrect' });
     }
