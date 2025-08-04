@@ -19,10 +19,18 @@ router.post('/signup', (req, res) => {
   User.findOne({ username: req.body.username }).then(data => {
     if (data === null) {
       const hash = bcrypt.hashSync(req.body.password, 10);
+      const registrationDate = new Date();
+      
+      //date formaté sous la forme lundi 4 août 2025 à 17:06:19 UTC+2
+      // const formattedDate = new Intl.DateTimeFormat('fr-FR', {
+      //   timeZone: 'Europe/Paris',
+      //   dateStyle: 'full',
+      //   timeStyle: 'long',
+      // }).format(registrationDate);
 
       const newUser = new User({
         username: req.body.username,
-        created_at: Date,
+        created_at: registrationDate,
         email: req.body.email,
         password: hash,
         token: uid2(32),
