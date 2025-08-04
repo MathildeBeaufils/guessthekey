@@ -1,0 +1,45 @@
+.nav{
+    background-color: #E3505A;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    font-size: 24px;
+    color: white;
+    font-weight: bolder;
+    height: 10vh;
+}
+.item{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+@media (max-width: 1200px) { 
+    .nav{
+    font-size: 20px;
+    }
+}
+
+@media (max-width: 900px) { 
+    .nav{
+    font-size: 15px;
+    }
+}
+
+
+@media (max-width: 750px) { 
+    .nav{
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        padding: 20px;
+        font-size: 32px;
+        height: 10vh;
+    }
+    .item p {
+        display: none;
+
+    }
+}
