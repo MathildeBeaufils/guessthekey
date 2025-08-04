@@ -8,12 +8,13 @@ const store = configureStore({
   reducer: { user },
 });
 
-function App() {
+function App({ Component, pageProps }) {
   return (
     <Provider store={store}>
-      <Login />;
+      <Component {...pageProps} />
     </Provider>
   );
 }
+
 
 export default App;

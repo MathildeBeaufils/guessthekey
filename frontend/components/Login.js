@@ -2,7 +2,9 @@ import { useState } from "react";
 import styles from "../styles/login.module.css";
 import { useRouter } from "next/router";
 
+
 const Login = () => {
+  const router = useRouter();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
 
@@ -43,8 +45,7 @@ const Login = () => {
       })
       .then((data) => {
         console.log("Connexion réussie !", data);
-
-        router.push("/home");
+        router.push("/home")
       })
       .catch((error) => {
         console.error("Échec de la connexion :", error);
@@ -80,7 +81,9 @@ const Login = () => {
       });
   };
     
-    const invit = router.push("/profil")
+    const handleInvit = (e) => {
+      router.push("/profil")
+    }
 
   return (
     <div className={styles.container}>
@@ -90,7 +93,7 @@ const Login = () => {
       <button onClick={openSignupModal} className={styles.button}>
         S'INSCRIRE
       </button>
-      <button onClick={invit} className={styles.button}>INVITÉ</button>
+      <button onClick={handleInvit} className={styles.button}>INVITÉ</button>
 
       {isLoginModalOpen && (
         <div onClick={closeLoginModal} className={styles.modalOverlay}>
