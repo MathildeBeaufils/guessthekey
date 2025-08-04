@@ -3,6 +3,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: auto;
   min-height: 90vh;
   background-color: #555563;
 }
@@ -11,17 +12,20 @@
   line-height: 1.15;
   font-size: 4rem;
   color: white;
+  margin-bottom: -20px;
+  margin-top: -10%;
+  cursor: default;
 }
 .btn{
   background-color: #C9333E;
-  font-size: 24px;
+  font-size: 22px;
   font-weight: bolder;
   color: white;
-  padding: 15px;
+  padding: 10px;
   border-radius: 50px;
   width: 60%;
   border: solid #C9333E 1px;
-  margin-top: 50px;
+  margin-top: 30px;
   box-shadow: 10px 10px 25px 1px rgba(0,0,0,0.82);
   -webkit-box-shadow: 10px 10px 25px 1px rgba(0,0,0,0.82);
   -moz-box-shadow: 10px 10px 25px 1px rgba(0,0,0,0.82);
@@ -52,22 +56,40 @@
 }
 
 
-@media (min-width: 1200px) { 
+@media (min-width: 700px) { 
   .title {
     font-size: 6rem;
   }
   .btn{
     width: 40%;
+    margin-top: 40px;
+    padding: 15px;
   }
 }
-@media (min-width: 1600px) { 
+
+@media (min-width: 1200px) { 
   .title {
     font-size: 7rem;
+    margin-bottom: 3%;
+  }
+  .btn{
+    width: 40%;
+    margin-top: 40px;
+    padding: 15px;
+  }
+}
+
+@media (min-width: 1600px) { 
+  .title {
+    font-size: 8rem;
+    margin-bottom: 30px;
   }
   .btn{
     width: 30%;
+    margin-top: 50px;
+    padding: 20px;
   }
   .displayQuete{
-  margin-top: -2%;
-}
+    margin-top: -2%;
+  }
 }
