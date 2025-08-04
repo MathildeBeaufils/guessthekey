@@ -6,4 +6,6 @@ const categoriesSchema = mongoose.Schema({
     created_at: Date,
 });
 
-const Categorie = mongoose.model('categories', categoriesSchema);
+const Categorie = mongoose.model('Categorie', categoriesSchema);
+
+module.exports = Categorie;
