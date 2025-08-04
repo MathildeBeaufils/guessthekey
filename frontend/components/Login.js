@@ -13,7 +13,7 @@ const Login = () => {
   const [signupPassword, setSignupPassword] = useState("");
   
   
-  const backendUrl = "http://localhost:3000";
+  const backendUrl = "http://localhost:3000/users";
 
   
   const openLoginModal = () => setIsLoginModalOpen(true);
