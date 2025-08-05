@@ -44,7 +44,7 @@ router.post('/signup', (req, res) => {
       });
 
       newUser.save().then(data => {
-        res.json({ result: true, token: data.token });
+        res.json({ result: true, data: data });
       });
     } else {
       // User already exists in database
