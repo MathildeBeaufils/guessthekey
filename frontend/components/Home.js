@@ -10,7 +10,7 @@ import Link from 'next/link';
 
 
 function Home() {
-
+const router = useRouter();
   // Quete, a decommenté et arrangé quand se sera fait ! + decommenté dans le jsx
 const [nbQuete, setNbQuete] = useState(0)
 const [isVisible, setIsVisible] = useState(false);
@@ -38,10 +38,10 @@ const [isVisible, setIsVisible] = useState(false);
       // router.push('/')
     }else if(page === 'multi'){
       // vers page multi
-      // router.push('/');
+      router.push('/creategamemulti');
     }else{
       // vers page parties privées
-      // router.push('/');      
+      router.push('/creategamelocal');      
     }
 };
   return (
