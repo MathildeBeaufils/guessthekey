@@ -1,0 +1,115 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    min-height: 90vh;
+    background-color: #555563;
+}
+
+.title {
+    line-height: 1.15;
+    font-size: 4rem;
+    color: white;
+    margin-bottom: -20px;
+    cursor: default;
+}
+.btn{
+    background-color: #C9333E;
+    font-size: 22px;
+    font-weight: bolder;
+    color: white;
+    padding: 10px;
+    border-radius: 50px;
+    width: 60%;
+    border: solid #C9333E 1px;
+    margin-top: 30px;
+    box-shadow: 10px 10px 25px 1px rgba(0,0,0,0.82);
+    -webkit-box-shadow: 10px 10px 25px 1px rgba(0,0,0,0.82);
+    -moz-box-shadow: 10px 10px 25px 1px rgba(0,0,0,0.82);
+    cursor: pointer;
+}
+.btn:hover{
+    background-color: #E3505A;
+    border: solid #E3505A 1px;
+}
+.h2{
+    display: flex;
+    justify-content: center;
+    background-color: #C9333E;
+    font-size: 22px;
+    font-weight: bolder;
+    color: white;
+    padding: 5px;
+    border-radius:10px;
+    width: 70%;
+    border: solid #C9333E 1px;
+    margin-top: 30px;
+    cursor: default;
+}
+.ListContainer{
+    justify-content: center;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    height: auto;
+    width: 70%;
+}
+.ListContainerLast{
+    justify-content: center;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    height: auto;
+    width: 70%;
+    margin-bottom: 80px;
+}
+
+
+@media (min-width: 700px) { 
+    .ListContainer{
+        width: 80%;
+    }
+}
+
+@media (min-width: 1200px) { 
+    .title{
+        font-size: 7em;
+    }
+    .h2{
+        width: 50%;
+        margin-top: 40px;
+        padding: 15px;
+    }
+    .ListContainer{
+        width: 50%;
+    }
+}
+@media (min-width: 1400px) { 
+    .title{
+        font-size: 7em;
+    }
+    .h2{
+        width: 50%;
+        margin-top: 40px;
+        padding: 15px;
+    }
+    .ListContainer{
+        width: 50%;
+    }
+}
+
+@media (min-width: 1600px) { 
+    .title{
+        font-size: 7em;
+    }
+    .h2{
+        width: 50%;
+        margin-top: 50px;
+        padding: 20px;
+    }
+    .ListContainer{
+        width: 50%;
+    }
+}
