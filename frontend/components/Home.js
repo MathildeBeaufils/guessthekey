@@ -7,6 +7,7 @@ import Link from 'next/link';
 
 // A faire:
 // - mettre les liens sur la page
+// - Adapter le fetch
 
 
 function Home() {
@@ -35,7 +36,7 @@ const [isVisible, setIsVisible] = useState(false);
   const handleSubmit = (page) => {
     if(page === 'solo'){
       // vers page solo
-      // router.push('/')
+      router.push('/solo')
     }else if(page === 'multi'){
       // vers page multi
       Router.push('/onlineHostJoin');

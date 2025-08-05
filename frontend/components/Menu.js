@@ -1,5 +1,4 @@
 import styles from '../styles/Menu.module.css';
-import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMusic, faCartPlus, faShirt, faGear} from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
