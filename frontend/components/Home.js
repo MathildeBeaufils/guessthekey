@@ -30,7 +30,7 @@ const [isVisible, setIsVisible] = useState(false);
 //   });
 
 
-
+  const Router = useRouter();
 
   const handleSubmit = (page) => {
     if(page === 'solo'){
@@ -38,10 +38,10 @@ const [isVisible, setIsVisible] = useState(false);
       // router.push('/')
     }else if(page === 'multi'){
       // vers page multi
-      router.push('/creategamemulti');
+      Router.push('/onlineHostJoin');
     }else{
-      // vers page parties privées
-      router.push('/creategamelocal');      
+      // vers page parties privées      
+      Router.push('/localHostJoin');      
     }
 };
   return (
