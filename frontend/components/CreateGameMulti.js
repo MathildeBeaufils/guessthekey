@@ -1,6 +1,7 @@
 import styles from "../styles/createGame.module.css";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import Menu from './Menu';
 
 function CreateGameMulti() {
   const router = useRouter();
@@ -11,6 +12,7 @@ function CreateGameMulti() {
   };
   return (
     <>
+      <Menu/>
       <div className={styles.container}>
         <h1 className={styles.create}>Créer une partie en mulitjoueur</h1>
 

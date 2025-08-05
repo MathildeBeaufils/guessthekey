@@ -1,6 +1,7 @@
 import styles from '../styles/Solo.module.css';
 import PlaylistPredefini from './PlaylistPredefini';
 import { useState } from 'react';
+import Menu from './Menu';
 
 
 // A faire:
@@ -48,27 +49,28 @@ function Solo() {
 
     return (
         <div>
-        <main className={styles.main}>
-            <h1 className={styles.title}>Solo</h1>
-            <h2 className={styles.h2}>Facile</h2>
-            <div className={styles.ListContainer}>
-                {displayFacile}
-                <PlaylistPredefini name={'toto'} terminer={true}/>
-                <PlaylistPredefini name={'tata'} terminer={true}/>
-                <PlaylistPredefini name={'titi'} terminer={true}/>
-                <PlaylistPredefini name={'tutu'}/>
-                <PlaylistPredefini name={'toto'}/>
-                <PlaylistPredefini name={'tata'}/>
-                <PlaylistPredefini name={'titi'} terminer={true}/>
-                <PlaylistPredefini name={'tutu'}/>
-            </div>
-            <h2 className={styles.h2}>Moyen</h2>
-            <div className={styles.ListContainer}></div>
-            <h2 className={styles.h2}>Difficile</h2> 
-            <div className={styles.ListContainer}></div>           
+            <Menu/>            
+            <main className={styles.main}>
+                <h1 className={styles.title}>Solo</h1>
+                <h2 className={styles.h2}>Facile</h2>
+                <div className={styles.ListContainer}>
+                    {displayFacile}
+                    <PlaylistPredefini name={'toto'} terminer={true}/>
+                    <PlaylistPredefini name={'tata'} terminer={true}/>
+                    <PlaylistPredefini name={'titi'} terminer={true}/>
+                    <PlaylistPredefini name={'tutu'}/>
+                    <PlaylistPredefini name={'toto'}/>
+                    <PlaylistPredefini name={'tata'}/>
+                    <PlaylistPredefini name={'titi'} terminer={true}/>
+                    <PlaylistPredefini name={'tutu'}/>
+                </div>
+                <h2 className={styles.h2}>Moyen</h2>
+                <div className={styles.ListContainer}></div>
+                <h2 className={styles.h2}>Difficile</h2> 
+                <div className={styles.ListContainerLast}></div>           
 
 
-        </main>
+            </main>
         </div>
     );
 }
