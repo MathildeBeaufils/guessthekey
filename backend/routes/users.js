@@ -88,6 +88,41 @@ router.get('/:username', (req, res) => {
   })
 })
 
+// update username
+router.post('/updateUsername', (req, res) => {
+  const newUsername = req.body.newUsername;
+  User.updateOne({ username: req.body.username }, { username: newUsername })
+    .then(() => {
+      res.json({ result: true, username: newUsername });
+    })
+    .catch(error => {
+      res.json({ result: false, error: error.message });
+    });
+});
+
+
+
+// update password
+router.post('/updatePassword', (req, res) => {
+  const { email, password, newPassword } = req.body;
+
+  const hash = bcrypt.hashSync(newPassword, 10);
+
+  User.findOne({ email }).then(user => {
+    if (user && bcrypt.compareSync(password, user.password)) {
+      User.updateOne({ email }, { password: hash })
+        .then(() => {
+          res.json({ result: true, message: 'Mot de passe changé avec succès' });
+        })
+        .catch(error => {
+          res.json({ result: false, error: error.message });
+        });
+    } else {
+      res.json({ result: false, error: 'Utilisateur introuvable ou mot de passe incorrect' });
+    }
+  });
+});
+
 
 
 module.exports = router;

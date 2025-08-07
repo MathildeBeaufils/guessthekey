@@ -5,6 +5,10 @@ import { useRouter } from "next/router";
 function CreateRound() {
   const router = useRouter();
 
+  const [song, setSong] = useState("");
+  const [selectList, setSelectList] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
+
   const [themeName, setThemeName] = useState("");
   const [roundKey, setRoundKey] = useState("");
 
@@ -26,6 +30,7 @@ function CreateRound() {
 
   const backendUrl = "http://localhost:3000";
 
+    // ------------------------------ Selectionne la modal a ouvrir ------------------------------
   const openModal = (index) => {
     setSelectedSongIndex(index);
     let title = "";
@@ -61,6 +66,8 @@ function CreateRound() {
     setSelectedSongIndex(null);
   };
 
+
+  // ------------------------------ Sauvegarde le title dans un useState------------------------------
   const handleModalSave = () => {
     
     if (selectedSongIndex === 1) {
@@ -82,6 +89,8 @@ function CreateRound() {
     closeModal();
   };
 
+
+  // ------------------------------ Envoi ver BDD (manches) ------------------------------
   const handleCreateRound = (e) => {
     e.preventDefault();
 
@@ -99,7 +108,6 @@ function CreateRound() {
       titre5: song5Title,
       artiste5: song5Artist,
     };
-    console.log("ici")
 
     fetch(`${backendUrl}/manches`, {
       method: "POST",
@@ -129,7 +137,8 @@ function CreateRound() {
         console.error("Échec de la création de la manche :", error);
       });
   };
-
+  
+  // ------------------------------ Recupere le titre et artiste ------------------------------
   const getSongButtonText = (title, artist, defaultText) => {
     if (title && artist) {
       return `${title} - ${artist}`;
@@ -138,6 +147,28 @@ function CreateRound() {
     }
     return defaultText;
   };
+  // ------------------------------ fetch demande API ------------------------------
+  console.log(song)
+      function searchsong(search) {
+        console.log('dans fonction')
+        fetch(`http://localhost:3000/manches/searchsong`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ search }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            const list = Array.isArray(data.data) ? data.data : [];
+            setSelectList(list);
+        })
+        .catch(error => console.error("Erreur :", error));
+      }
+
+
+  // ------------------------------ View ------------------------------
   return (
     <>
       <div className={styles.container}>
@@ -186,30 +217,34 @@ function CreateRound() {
         </form>
       </div>
 
+
+      {/* ------------------------------------------ Modal ------------------------------------------ */}
       {isModalOpen && (
         <div className={styles.modal_overlay}>
           <div className={styles.modal_content}>
-            <h2 className={styles.modal_title}>Modifier Chanson {selectedSongIndex}</h2>
+            <h2 className={styles.modal_title}>Selectionnez votre chanson {selectedSongIndex}</h2>
             <div>
-              <label htmlFor="input1" className={styles.modal_label}>Titre:</label>
+              {/* <label htmlFor="input1" className={styles.modal_label}>Titre:</label>
               <input
                 type="text"
                 id="input1"
                 className={styles.modal_input}
                 value={currentSongInput1}
                 onChange={(e) => setCurrentSongInput1(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="input2" className={styles.modal_label}>Artiste:</label>
+              /> */}
+
+              <label htmlFor="input1" className={styles.modal_label}>Titre ou artiste:</label>
               <input
-                type="text"
-                id="input2"
-                className={styles.modal_input}
-                value={currentSongInput2}
-                onChange={(e) => setCurrentSongInput2(e.target.value)}
+                  type="text"
+                  className={styles.input}
+                  value={song}
+                  onChange={(e) => setSong(e.target.value)}
+                  placeholder="Titre ou artiste"
+                  required
               />
+              <button onClick={()=>searchsong(song)}>Chercher</button>
             </div>
+
             <div className={styles.modal_buttons_wrapper}>
               <button type="button" className={styles.modal_cancel_button} onClick={closeModal}>
                 Annuler
@@ -221,6 +256,7 @@ function CreateRound() {
           </div>
         </div>
       )}
+      {/* ------------------------------------------ Fin Modal ------------------------------------------ */}
     </>
   );
 }
