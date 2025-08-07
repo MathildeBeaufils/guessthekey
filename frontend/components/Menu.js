@@ -3,9 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMusic, faCartPlus, faShirt, faGear} from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 
-// A faire:
-// - Mettre a jour les liens
-
 function Menu() {
     return (    
         <nav className={styles.nav}>
@@ -23,14 +20,14 @@ function Menu() {
                 </div>
             </Link>
 
-            <Link href="/">
+            <Link href="/profil">
                 <div className={styles.item}>
                     <FontAwesomeIcon icon={faShirt} />
                     <p>PERSONNALISATION</p>
                 </div>
             </Link>
 
-            <Link href="/">
+            <Link href="/parametre">
                 <div className={styles.item}>
                     <FontAwesomeIcon icon={faGear} />
                     <p>REGLAGES</p>

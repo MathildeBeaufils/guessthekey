@@ -30,6 +30,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var manchesRouter = require('./routes/manches');
+var missionsCampagneRouter = require('./routes/missionCampagne');
 
 
 
@@ -46,6 +47,7 @@ app.use(cors());
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/manches', manchesRouter);
+app.use('/missionsCampagne', missionsCampagneRouter);
 
 // Ajout pour le générateur des nom de lobbies
 app.use('/lobbies', lobbiesRouter);
