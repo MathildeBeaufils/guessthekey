@@ -116,7 +116,7 @@ const Login = () => {
   };
     
     const handleInvit = (e) => {
-      router.push("/profil")
+      router.push("/userprofilepage")
     }
 
   return (
