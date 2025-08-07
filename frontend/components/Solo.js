@@ -1,50 +1,59 @@
 import styles from '../styles/Solo.module.css';
 import PlaylistPredefini from './PlaylistPredefini';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Menu from './Menu';
+import { useSelector } from 'react-redux';
 
 
 // A faire:
 // - Mettre les props de l'image
 // - Lien vers l'ecoute
-// - Adapter le fetch
 
 
 function Solo() {
+    const user = useSelector((state)=>state.user.value);
     const [facile, setFacile]= useState([]);
     const [moyen, setMoyen]= useState([]);
     const [difficile, setDifficile]= useState([]);
 
-    fetch('http://localhost:3000/missionCampagne')
-    .then((response) => response.json())
-    .then((data) => {
-        console.log(data);
-        const facile = [];
-        const moyen = [];
-        const difficile = [];
-        if(data.difficulté === 'facile'){
-            facile.push(data[i]);  
-            setFacile(facile);                          // voir si on met l'ID ou l'objet
-        }else if(data.difficulté === 'moyen'){
-            moyen.push(data[i]);                       // voir si on met l'ID ou l'objet
-            setMoyen(moyen);              
-        }else if(data.difficulté === 'difficile'){
-            difficile.push(data[i]);                   // voir si on met l'ID ou l'objet
-            setDifficile(difficile);
+    useEffect(() => {
+
+        fetch(`http://localhost:3000/missionsCampagne/${user.token}`)
+        .then((response) => response.json())
+        .then((data) => {
+            const arr = data.data;
+            const facile = [];
+            const moyen = [];
+            const difficile = [];
+        for (let i = 0; i < arr.length; i++) { 
+            const mission = arr[i];             
+
+            if (mission.difficulte === 'facile') {
+                facile.push(mission);
+                setFacile(facile); 
+            } else if (mission.difficulte === 'moyen') {
+                moyen.push(mission);
+                setMoyen(moyen);
+            } else if (mission.difficulte === 'difficile') {
+                difficile.push(mission);
+                setDifficile(difficile);
+            }
         }
-    })
-    .catch((error) => {
-        console.error('Erreur lors du fetch :', error);
-    });
+        })
+        .catch((error) => {
+            console.error('Erreur lors du fetch :', error);
+        });
+
+    }, []); 
 
     const displayFacile = facile.map((data, i) => {
-        return <PlaylistPredefini name={data.name} terminer={data.terminer} />;
+        return <PlaylistPredefini key={[i]} name={data.nom} image={data.image} terminer={data.terminee} />;
     });
     const displayMoyen = moyen.map((data, i) => {
-        return <PlaylistPredefini name={data.name} terminer={data.terminer} />;
+        return <PlaylistPredefini key={[i]} name={data.nom} image={data.image} terminer={data.terminee} />;
     });
     const displayDifficile = difficile.map((data, i) => {
-        return <PlaylistPredefini name={data.name} terminer={data.terminer} />;
+        return <PlaylistPredefini key={[i]} name={data.nom} image={data.image} terminer={data.terminee} />;
     });
 
     return (
@@ -55,21 +64,15 @@ function Solo() {
                 <h2 className={styles.h2}>Facile</h2>
                 <div className={styles.ListContainer}>
                     {displayFacile}
-                    <PlaylistPredefini name={'toto'} terminer={true}/>
-                    <PlaylistPredefini name={'tata'} terminer={true}/>
-                    <PlaylistPredefini name={'titi'} terminer={true}/>
-                    <PlaylistPredefini name={'tutu'}/>
-                    <PlaylistPredefini name={'toto'}/>
-                    <PlaylistPredefini name={'tata'}/>
-                    <PlaylistPredefini name={'titi'} terminer={true}/>
-                    <PlaylistPredefini name={'tutu'}/>
                 </div>
                 <h2 className={styles.h2}>Moyen</h2>
-                <div className={styles.ListContainer}></div>
+                <div className={styles.ListContainer}>
+                    {displayMoyen}
+                </div>
                 <h2 className={styles.h2}>Difficile</h2> 
-                <div className={styles.ListContainerLast}></div>           
-
-
+                <div className={styles.ListContainerLast}>
+                    {displayDifficile}
+                </div>           
             </main>
         </div>
     );

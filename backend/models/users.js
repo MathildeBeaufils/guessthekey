@@ -9,6 +9,20 @@ const inventaireSchema = mongoose.Schema({
 objetsAcquis: [{ type: mongoose.Schema.Types.ObjectId, ref: 'store' }]
 })
 
+const missionsCampagne_SousDocumentSchema = mongoose.Schema({
+    terminee: Boolean,
+    nom: String,
+    image:String,
+    difficulte: String,
+    manches: { type: mongoose.Schema.Types.ObjectId, ref: 'manches' },
+});
+
+const quetes_SousDocumentSchema = mongoose.Schema({
+    terminee: Boolean,
+      nom: String,
+      objectif: String,
+});
+
 const userSchema = mongoose.Schema({
   username: String,
   created_at: Date,
@@ -22,10 +36,10 @@ const userSchema = mongoose.Schema({
   itemTorse: String,
   itemJambes: String,
   itemPieds: String,
-  missionsCampagne: [{ type: mongoose.Schema.Types.ObjectId, ref: 'missionsCampagne' }],
+  tableauMissionsCampagne: [missionsCampagne_SousDocumentSchema],
   parametres: parametresSchema,
   inventaire: inventaireSchema,
-  quetes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'quetes' }],
+  quetes: [quetes_SousDocumentSchema],
 });
 
 const User = mongoose.model('users', userSchema);
