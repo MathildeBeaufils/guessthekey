@@ -1,0 +1,173 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    min-height: 90vh;
+    background-color: #555563;
+  }
+  
+  .title {
+    line-height: 1.15;
+    font-size: 4rem;
+    color: white;
+    margin-bottom: -20px;
+    margin-top: -10%;
+    cursor: default;
+  }
+
+.sonores {
+    margin-top: 10px;
+    width: 80vw;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;    
+}
+
+.cursor {
+    -webkit-appearance: none;
+    width: 60%;
+    height: 12px;
+    background: linear-gradient(to right, #cccccb 50%, #fff 50%);
+    border-radius: 6px;
+    outline: none;
+    touch-action: none;
+  }
+  
+  /* Curseur personnalisé pour WebKit (Chrome, Safari, iOS) */
+  .cursor::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 30px;
+    height: 30px;
+    background: #cccccb;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+  }
+  
+  /* Curseur pour Firefox */
+  .cursor::-moz-range-thumb {
+    width: 30px;
+    height: 30px;
+    background: #fff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  /* Track pour Firefox */
+  .cursor::-moz-range-track {
+    height: 12px;
+    background: #cccccb;
+    border-radius: 6px;
+  }
+  .volume {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+  }
+
+.volumeIcon {
+    font-size: 30px;
+    color: white;
+}
+
+.affichage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 10px;
+    color: #fff;
+    font-size: 30px;
+}
+
+.affichageIcon {
+  width: 100px;
+  height: 100px;
+  background-color: #0070f3;
+}
+
+  .btn{
+    background-color: #C9333E;
+    font-size: 22px;
+    font-weight: bolder;
+    color: white;
+    padding: 10px;
+    border-radius: 50px;
+    width: 60%;
+    border: solid #C9333E 1px;
+    margin-top: 30px;
+    box-shadow: 10px 10px 25px 1px rgba(0,0,0,0.82);
+    -webkit-box-shadow: 10px 10px 25px 1px rgba(0,0,0,0.82);
+    -moz-box-shadow: 10px 10px 25px 1px rgba(0,0,0,0.82);
+    cursor: pointer;
+  }
+  .btn:hover{
+    background-color: #E3505A;
+    border: solid #E3505A 1px;
+  }
+  .title a {
+    color: #0070f3;
+    text-decoration: none;
+  }
+  
+  .title a:hover, .title a:focus, .title a:active {
+    text-decoration: underline;
+  }
+  .nbQuate{
+    color: gold;
+    font-size: 18px;
+    margin-bottom: -10px;
+    margin-left: 50px;
+  }
+  .displayQuete{
+    margin-left: -35%;
+    margin-top: -5%;
+    display: none;
+  }
+  
+  
+  @media (min-width: 700px) { 
+    .title {
+      font-size: 6rem;
+    }
+    .btn{
+      width: 40%;
+      margin-top: 40px;
+      padding: 15px;
+    }
+  }
+  
+  @media (min-width: 1200px) { 
+    .title {
+      font-size: 7rem;
+      margin-bottom: 3%;
+    }
+    .btn{
+      width: 40%;
+      margin-top: 40px;
+      padding: 15px;
+    }
+  }
+  
+  @media (min-width: 1600px) { 
+    .title {
+      font-size: 8rem;
+      margin-bottom: 30px;
+    }
+    .btn{
+      width: 30%;
+      margin-top: 50px;
+      padding: 20px;
+    }
+    .displayQuete{
+      margin-top: -2%;
+    }
+  }
