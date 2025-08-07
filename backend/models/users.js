@@ -11,12 +11,10 @@ objetsAcquis: [{ type: mongoose.Schema.Types.ObjectId, ref: 'store' }]
 
 const missionsCampagne_SousDocumentSchema = mongoose.Schema({
     terminee: Boolean,
-    // test
     nom: String,
     image:String,
     difficulte: String,
     manches: { type: mongoose.Schema.Types.ObjectId, ref: 'manches' },
-    //missionsCampagne: { type: mongoose.Schema.Types.ObjectId, ref: 'missionsCampagne' },
 });
 
 const quetes_SousDocumentSchema = mongoose.Schema({
