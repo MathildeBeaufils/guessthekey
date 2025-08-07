@@ -118,11 +118,42 @@ router.post('/', function(req, res) {
 });
 
 
-// Route pour visualiser les manches sauvegardées par l'utilisateur
+// // route  qui valide un input dans le front
+// router.post('/searchartist', (req, res) => {
+//   const search = req.body.search 
+//   // faire la requete api ici
+//   fetch(`https://api.deezer.com/search/artist?q=${search}`)
+//     .then(response => response.json())
+//     .then(data => {
+//       const names = data.data.map(artist => artist.name);
+//       res.json({ result: true, names }); // renvoie uniquement les noms
+//   })
+//   .catch(error => console.error("Error fetching artist:", error));
+// });
 
-// Route pour Ajouter une manche dans le dossier de manches sauvegardées de l'utilisateur
 
-// Route pour supprimer une manche par un admin ou l'utilisateur qui l'a créé
+router.post('/searchsong', (req, res) => {
+  const search = req.body.search;
+
+  fetch(`https://api.deezer.com/search/track?q=${search}&limit=10`)
+    .then(response => response.json())
+    .then(data => {
+      const simplifiedData = data.data.map(track => ({
+        title: track.title,
+        artist: track.artist.name,
+        idArtiste: track.artist.id
+      }));
+
+      res.json({ result: true, data: simplifiedData });
+    })
+    .catch(error => {
+      console.error("Error fetching artist:", error);
+      res.status(500).json({ result: false, error: "Internal server error" });
+    });
+});
+
+
+// route qui recupere trackid grace a l'artiste et title depuis l'API
 
 
 module.exports = router;
