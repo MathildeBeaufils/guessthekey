@@ -9,6 +9,7 @@ function Game () {
     // Le useRouter a besoin d'un cycle pour récupérer les infos
     const router = useRouter();
     const { lobbyId } = router.query;
+    const isReady = router.isReady;
     
     const [status, setStatus] = useState('waiting'); // waiting ou in-game ou ended
     const [round, setRound] = useState(null);
@@ -19,17 +20,17 @@ function Game () {
 
 const audioRef = useRef();
 
-    if (!lobbyId) {
-        return <div>Chargement du lobby...</div>;
-    }
-
-
 useEffect(() => {
+
+    if (!lobbyId || !isReady) return;
 
     // Connection au lobby pour récupérer les infos en instantané
     socket.emit('joinLobby', lobbyId);
+    console.log(` joined lobby ${lobbyId}`)
+    socket.emit('requestCurrentGameState', lobbyId);
 
     socket.on('newRound', ({ index, total, previewUrl, duration }) => {
+        console.log("New round")
         setStatus('in-game');
         setRound({ index, total, previewUrl, duration });
         setRoundResult(null);
@@ -54,8 +55,11 @@ useEffect(() => {
             socket.off('roundEnded');
             socket.off('gameEnded')
     };
-}, [lobbyId]);
+}, [lobbyId, isReady]);
 
+if (!isReady) {
+    return <div>Chargement du lobby...</div>;
+}
 
 // Joue la musique à chaque nouveau round, y compris le premier
 useEffect(() => {
