@@ -13,7 +13,7 @@ const Login = () => {
   if (user.token) {
     router.push('/home');
   }
-  console.log('user: ',user)
+
 
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
@@ -54,7 +54,6 @@ const Login = () => {
         return response.json();
       })
       .then((data) => {
-        console.log("Connexion réussie !", data);
         dispatch(login({ 
           token: data.data.token, 
           username: data.data.username,
@@ -95,7 +94,7 @@ const Login = () => {
         return response.json();
       })
       .then((data) => {
-        console.log("Inscription réussie !", data);
+        console.log("Inscription réussie !");
         dispatch(login({ 
           token: data.data.token, 
           username: data.data.username,

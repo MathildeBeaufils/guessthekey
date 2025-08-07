@@ -22,7 +22,6 @@ function Solo() {
         .then((response) => response.json())
         .then((data) => {
             const arr = data.data;
-            console.log('arr', arr)
             const facile = [];
             const moyen = [];
             const difficile = [];
@@ -74,8 +73,6 @@ function Solo() {
                 <div className={styles.ListContainerLast}>
                     {displayDifficile}
                 </div>           
-
-
             </main>
         </div>
     );

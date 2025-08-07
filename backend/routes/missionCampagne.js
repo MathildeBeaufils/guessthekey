@@ -8,7 +8,6 @@ router.get('/:token', (req, res) => {
     const token = req.params.token;
     User.findOne({ token: token })
     .then(data => {
-        console.log(data.tableauMissionsCampagne)
         res.json({ data: data.tableauMissionsCampagne });
     })
 });
