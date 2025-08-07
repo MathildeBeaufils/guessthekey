@@ -9,6 +9,7 @@ function Game () {
     // Le useRouter a besoin d'un cycle pour récupérer les infos
     const router = useRouter();
     const { lobbyId } = router.query;
+    const isReady = router.isReady;
     
     const [status, setStatus] = useState('waiting'); // waiting ou in-game ou ended
     const [round, setRound] = useState(null);
