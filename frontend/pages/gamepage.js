@@ -112,53 +112,16 @@ if (status === 'ended') {
         {/* Bouton retour au lobby ou accueil */}
     </div>
     );
+// pages/creategamemulti.js
+
+import Game from "../components/Game";
+
+function GamePage() {
+  return (
+    <>
+      <Game />
+    </>
+  );
 }
 
-return (
-    <div>
-    <h2>
-        Manche {round?.index} / {round?.total}
-    </h2>
-    <audio ref={audioRef} controls />
-    <p>Temps restant: {timeLeft}s</p>
-
-    <div>
-        <input
-        placeholder="Titre"
-        value={answer.title}
-        onChange={(e) => setAnswer({ ...answer, title: e.target.value })}
-        disabled={timeLeft === 0}
-        onKeyDown={(e) => e.key === 'Enter' && sendAnswer()}
-        />
-        <input
-        placeholder="Artiste"
-        value={answer.artist}
-        onChange={(e) => setAnswer({ ...answer, artist: e.target.value })}
-        disabled={timeLeft === 0}
-        onKeyDown={(e) => e.key === 'Enter' && sendAnswer()}
-        />
-        <button onClick={sendAnswer} disabled={timeLeft === 0}>
-        Envoyer
-        </button>
-    </div>
-
-    {roundResult && (
-        <div>
-        <h3>Réponses de la manche :</h3>
-        <p>
-            Réponse correcte: {roundResult.correctAnswer.title} -{' '}
-            {roundResult.correctAnswer.artist}
-        </p>
-        <ul>
-            {Object.entries(roundResult.allAnswers).map(([playerId, ans]) => (
-            <li key={playerId}>
-                {playerId}: {ans.title} - {ans.artist}
-            </li>
-            ))}
-        </ul>
-        </div>
-    )}
-    </div>
-    );
-}
-export default Game;
+export default GamePage;
