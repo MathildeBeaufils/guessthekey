@@ -47,7 +47,7 @@ const Lobby = () => {
   const startGame = () => {
     console.log(`Lancement de la partie pour le lobby ${lobbyId}`);
     socket.emit("startGame", lobbyId);
-    router.push("/ecoute");
+    router.push("/gamepage");
   };
 
   useEffect(() => {
@@ -63,7 +63,7 @@ const Lobby = () => {
       <button className={styles.button}>Ajouter un membre</button>
       <div className={styles.players_container}>
       {players.map((playerId) => (
-        <span key={playerId}>{playerId} <p></p></span>
+        <span key={playerId}>{playerId}</span>
        
       ))}
 </div>
