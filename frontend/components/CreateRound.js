@@ -1,228 +1,314 @@
 import { useState } from "react";
 import styles from "../styles/createRound.module.css";
 import { useRouter } from "next/router";
+import { useSelector } from 'react-redux';
 
 function CreateRound() {
-  const router = useRouter();
+    const router = useRouter();
 
-  const [themeName, setThemeName] = useState("");
-  const [roundKey, setRoundKey] = useState("");
+    const backendUrl = "http://localhost:3000";
 
-  const [song1Title, setSong1Title] = useState("");
-  const [song1Artist, setSong1Artist] = useState("");
-  const [song2Title, setSong2Title] = useState("");
-  const [song2Artist, setSong2Artist] = useState("");
-  const [song3Title, setSong3Title] = useState("");
-  const [song3Artist, setSong3Artist] = useState("");
-  const [song4Title, setSong4Title] = useState("");
-  const [song4Artist, setSong4Artist] = useState("");
-  const [song5Title, setSong5Title] = useState("");
-  const [song5Artist, setSong5Artist] = useState("");
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentSongInput1, setCurrentSongInput1] = useState("");
-  const [currentSongInput2, setCurrentSongInput2] = useState("");
-  const [selectedSongIndex, setSelectedSongIndex] = useState(null);
+    const handleCreateRound = () => {
+        const roundData = {selectedItem };
 
-  const backendUrl = "http://localhost:3000";
+        fetch(`${backendUrl}/manches`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(roundData),
+        })
+        .then((response) => {
+            if (!response.ok) {
+            throw new Error("Erreur lors de la création de la manche");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            console.log("Manche créée avec succès !", data);
+            // setTheme('');
+            // setKey('');  
+            // setSelectedItem1('');
+            // setSelectedItem2('');
+            // setSelectedItem3(''); 
+            // setSelectedItem4('');
+            // setSelectedItem5('');
+            // setSelectedItem([]);
 
-  const openModal = (index) => {
-    setSelectedSongIndex(index);
-    let title = "";
-    let artist = "";
-
-    
-    if (index === 1) {
-      title = song1Title;
-      artist = song1Artist;
-    } else if (index === 2) {
-      title = song2Title;
-      artist = song2Artist;
-    } else if (index === 3) {
-      title = song3Title;
-      artist = song3Artist;
-    } else if (index === 4) {
-      title = song4Title;
-      artist = song4Artist;
-    } else if (index === 5) {
-      title = song5Title;
-      artist = song5Artist;
-    }
-
-    setCurrentSongInput1(title);
-    setCurrentSongInput2(artist);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setCurrentSongInput1("");
-    setCurrentSongInput2("");
-    setSelectedSongIndex(null);
-  };
-
-  const handleModalSave = () => {
-    
-    if (selectedSongIndex === 1) {
-      setSong1Title(currentSongInput1);
-      setSong1Artist(currentSongInput2);
-    } else if (selectedSongIndex === 2) {
-      setSong2Title(currentSongInput1);
-      setSong2Artist(currentSongInput2);
-    } else if (selectedSongIndex === 3) {
-      setSong3Title(currentSongInput1);
-      setSong3Artist(currentSongInput2);
-    } else if (selectedSongIndex === 4) {
-      setSong4Title(currentSongInput1);
-      setSong4Artist(currentSongInput2);
-    } else if (selectedSongIndex === 5) {
-      setSong5Title(currentSongInput1);
-      setSong5Artist(currentSongInput2);
-    }
-    closeModal();
-  };
-
-  const handleCreateRound = (e) => {
-    e.preventDefault();
-
-    const roundData = {
-      themeName: themeName,
-      key: roundKey,
-      titre1: song1Title,
-      artiste1: song1Artist,
-      titre2: song2Title,
-      artiste2: song2Artist,
-      titre3: song3Title,
-      artiste3: song3Artist,
-      titre4: song4Title,
-      artiste4: song4Artist,
-      titre5: song5Title,
-      artiste5: song5Artist,
+            // router.push("/lobbypage");
+        })
+        .catch((error) => {
+            console.error("Échec de la création de la manche :", error);
+        });
     };
-    console.log("ici")
 
-    fetch(`${backendUrl}/manches`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(roundData),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Erreur lors de la création de la manche");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Manche créée avec succès !", data);
-        setThemeName("");
-        setRoundKey("");
-        setSong1Title(""); setSong1Artist("");
-        setSong2Title(""); setSong2Artist("");
-        setSong3Title(""); setSong3Artist("");
-        setSong4Title(""); setSong4Artist("");
-        setSong5Title(""); setSong5Artist("");
-        router.push("/lobbypage");
-      })
-      .catch((error) => {
-        console.error("Échec de la création de la manche :", error);
-      });
-  };
+    // mon code:
+    const [song1, setSong1] = useState("");
+    const [selectList1, setSelectList1] = useState([]);
+    const [song2, setSong2] = useState("");
+    const [selectList2, setSelectList2] = useState([]);
+    const [song3, setSong3] = useState("");
+    const [selectList3, setSelectList3] = useState([]);
+    const [song4, setSong4] = useState("");
+    const [selectList4, setSelectList4] = useState([]);
+    const [song5, setSong5] = useState("");
+    const [selectList5, setSelectList5] = useState([]);
 
-  const getSongButtonText = (title, artist, defaultText) => {
-    if (title && artist) {
-      return `${title} - ${artist}`;
-    } else if (title) {
-      return title;
+    const user = 'bbb' // useSelector((state)=>state.user.value.username);
+
+    const [theme, setTheme] = useState('');
+    const [key, setKey] = useState('');  
+
+    const [selectedItem1, setSelectedItem1] = useState('');
+    const [selectedItem2, setSelectedItem2] = useState('');
+    const [selectedItem3, setSelectedItem3] = useState(''); 
+    const [selectedItem4, setSelectedItem4] = useState('');
+    const [selectedItem5, setSelectedItem5] = useState('');
+    const [selectedItem, setSelectedItem] = useState([]);
+
+    function searchsong1(search) {
+        fetch(`http://localhost:3000/manches/searchsong`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ search }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            const list = Array.isArray(data.data) ? data.data : [];
+            setSelectList1(list);
+        })
+        .catch(error => console.error("Erreur :", error));
     }
-    return defaultText;
-  };
-  return (
-    <>
-      <div className={styles.container}>
-        <h1 className={styles.manche}>CRÉATION DE MANCHE</h1>
-        <form onSubmit={handleCreateRound} className={styles.round_container}>
-          <div className={styles.input_container}>
-            <p className={styles.container_p}>Nom du thème</p>
-            <input
-              type="text"
-              className={styles.input}
-              value={themeName}
-              onChange={(e) => setThemeName(e.target.value)}
-              required
-            />
-            <p className={styles.container_p}>Key</p>
-            <input
-              type="text"
-              className={styles.input}
-              value={roundKey}
-              onChange={(e) => setRoundKey(e.target.value)}
-              required
-            />
-          </div>
-          <div className={styles.title_container}>
-            <button type="button" className={styles.title_button} onClick={() => openModal(1)}>
-              {getSongButtonText(song1Title, song1Artist, "Chanson 1")}
-            </button>
-            <button type="button" className={styles.title_button} onClick={() => openModal(2)}>
-              {getSongButtonText(song2Title, song2Artist, "Chanson 2")}
-            </button>
-            <button type="button" className={styles.title_button} onClick={() => openModal(3)}>
-              {getSongButtonText(song3Title, song3Artist, "Chanson 3")}
-            </button>
-            <button type="button" className={styles.title_button} onClick={() => openModal(4)}>
-              {getSongButtonText(song4Title, song4Artist, "Chanson 4")}
-            </button>
-            <button type="button" className={styles.title_button} onClick={() => openModal(5)}>
-              {getSongButtonText(song5Title, song5Artist, "Chanson 5")}
-            </button>
-          </div>
-          <div className={styles.button_place}>
-            <button type="submit" className={styles.button}>
-              VALIDER
-            </button>
-          </div>
-        </form>
-      </div>
+    function searchsong2(search) {
+        fetch(`http://localhost:3000/manches/searchsong`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ search }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            const list = Array.isArray(data.data) ? data.data : [];
+            setSelectList2(list);
+        })
+        .catch(error => console.error("Erreur :", error));
+    }
+        function searchsong3(search) {
+        fetch(`http://localhost:3000/manches/searchsong`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ search }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            const list = Array.isArray(data.data) ? data.data : [];
+            setSelectList3(list);
+        })
+        .catch(error => console.error("Erreur :", error));
+    }
+        function searchsong4(search) {
+        fetch(`http://localhost:3000/manches/searchsong`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ search }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            const list = Array.isArray(data.data) ? data.data : [];
+            setSelectList4(list);
+        })
+        .catch(error => console.error("Erreur :", error));
+    }
+        function searchsong5(search) {
+        fetch(`http://localhost:3000/manches/searchsong`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ search }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            const list = Array.isArray(data.data) ? data.data : [];
+            setSelectList5(list);
+        })
+        .catch(error => console.error("Erreur :", error));
+    }
 
-      {isModalOpen && (
-        <div className={styles.modal_overlay}>
-          <div className={styles.modal_content}>
-            <h2 className={styles.modal_title}>Modifier Chanson {selectedSongIndex}</h2>
-            <div>
-              <label htmlFor="input1" className={styles.modal_label}>Titre:</label>
+
+    function trackValidate() {
+      const items = [{username:user}, {theme:theme}, {key:key}, {titre : [selectedItem1,selectedItem2,selectedItem3,selectedItem4,selectedItem5]}]
+        setSelectedItem(items)
+      console.log("Sélectionné :", selectedItem);
+      handleCreateRound()
+    }
+
+
+    return (
+        <>
+        <div className={styles.container}>
+            <h1 className={styles.manche}>CRÉATION DE MANCHE</h1>
+            <div className={styles.round_container}>
+            <div className={styles.input_container}>
+                <p className={styles.container_p}>Nom du thème</p>
+                <input
+                  type="text"
+                  className={styles.input}
+                  value={theme}
+                  onChange={(e) => setTheme(e.target.value)}
+                  required
+                />
+                <p className={styles.container_p}>Key</p>
+                <input
+                  type="text"
+                  className={styles.input}
+                  value={key}
+                  onChange={(e) => setKey(e.target.value)}
+                  required
+                />
+
+            </div>
+            <div className={styles.title_container}>
+            // ----------------------------------------------1
               <input
                 type="text"
-                id="input1"
-                className={styles.modal_input}
-                value={currentSongInput1}
-                onChange={(e) => setCurrentSongInput1(e.target.value)}
+                className={styles.input}
+                value={song1}
+                onChange={(e) => setSong1(e.target.value)}
+                placeholder="Rechercher une chanson"
+                required
               />
-            </div>
-            <div>
-              <label htmlFor="input2" className={styles.modal_label}>Artiste:</label>
+              <button onClick={() => searchsong1(song1)}>Chercher</button>
+
+              <div className={styles.radioGroup}>
+                  {selectList1.map((item, i) => (
+                  <label key={i} className={styles.radioLabel}>
+                  <input
+                  type="radio"
+                  name="song"
+                  value={`${item.title} - ${item.artist}`}
+                  onChange={() => setSelectedItem1(item)}
+                  />
+                  {item.title} - {item.artist}
+                  </label>
+                  ))}
+              </div>
+
+
+            // ----------------------------------------------2
               <input
                 type="text"
-                id="input2"
-                className={styles.modal_input}
-                value={currentSongInput2}
-                onChange={(e) => setCurrentSongInput2(e.target.value)}
+                className={styles.input}
+                value={song2}
+                onChange={(e) => setSong2(e.target.value)}
+                placeholder="Rechercher une chanson"
+                required
               />
+              <button onClick={() => searchsong2(song2)}>Chercher</button>
+
+              <div className={styles.radioGroup}>
+                  {selectList2.map((item2, i) => (
+                  <label key={i} className={styles.radioLabel}>
+                      <input
+                      type="radio"
+                      name="song2"
+                      value={`${item2.title} - ${item2.artist}`}
+                      onChange={() => setSelectedItem2(item2)}
+                      />
+                      {item2.title} - {item2.artist}
+                  </label>
+                  ))}
+              </div>
+              // ----------------------------------------------3
+              <input
+                type="text"
+                className={styles.input}
+                value={song3}
+                onChange={(e) => setSong3(e.target.value)}
+                placeholder="Rechercher une chanson"
+                required
+              />
+              <button onClick={() => searchsong3(song3)}>Chercher</button>
+
+              <div className={styles.radioGroup}>
+                  {selectList3.map((item3, i) => (
+                  <label key={i} className={styles.radioLabel}>
+                      <input
+                      type="radio"
+                      name="song3"
+                      value={`${item3.title} - ${item3.artist}`}
+                      onChange={() => setSelectedItem3(item3)}
+                      />
+                      {item3.title} - {item3.artist}
+                  </label>
+                  ))}
+              </div>
+              // ----------------------------------------------4
+              <input
+                type="text"
+                className={styles.input}
+                value={song4}
+                onChange={(e) => setSong4(e.target.value)}
+                placeholder="Rechercher une chanson"
+                required
+              />
+              <button onClick={() => searchsong4(song4)}>Chercher</button>
+
+              <div className={styles.radioGroup}>
+                  {selectList4.map((item, i) => (
+                  <label key={i} className={styles.radioLabel}>
+                      <input
+                      type="radio"
+                      name="song4"
+                      value={`${item.title} - ${item.artist}`}
+                      onChange={() => setSelectedItem4(item)}
+                      />
+                      {item.title} - {item.artist}
+                  </label>
+                  ))}
+              </div>
+              // ----------------------------------------------5
+              <input
+                type="text"
+                className={styles.input}
+                value={song5}
+                onChange={(e) => setSong5(e.target.value)}
+                placeholder="Rechercher une chanson"
+                required
+              />
+              <button onClick={() => searchsong5(song5)}>Chercher</button>
+
+              <div className={styles.radioGroup}>
+                  {selectList5.map((item, i) => (
+                  <label key={i} className={styles.radioLabel}>
+                      <input
+                      type="radio"
+                      name="song5"
+                      value={`${item.title} - ${item.artist}`}
+                      onChange={() => setSelectedItem5(item)}
+                      />
+                      {item.title} - {item.artist}
+                  </label>
+                  ))}
+              </div>
+              // ----------------------------------------------
+
+              <button onClick={() => trackValidate()}>Selectionner</button>
             </div>
-            <div className={styles.modal_buttons_wrapper}>
-              <button type="button" className={styles.modal_cancel_button} onClick={closeModal}>
-                Annuler
-              </button>
-              <button type="button" className={styles.modal_save_button} onClick={handleModalSave}>
-                Valider
-              </button>
+            <div className={styles.button_place}>
             </div>
-          </div>
+            </div>
         </div>
-      )}
-    </>
-  );
+        </>
+    );
 }
 
 export default CreateRound;

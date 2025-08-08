@@ -83,54 +83,42 @@ router.get('/', function(req, res) {
 
 // Route pour ajouter une manche 
 router.post('/', function(req, res) {
+  const user = req.body.selectedItem[0].username;
+  const key = req.body.selectedItem[0].key;
+  const theme = req.body.selectedItem[0].theme
+  const titre1=req.body.selectedItem[3].titre[0];
+  const titre2=req.body.selectedItem[3].titre[1];
+  const titre3=req.body.selectedItem[3].titre[2];
+  const titre4=req.body.selectedItem[3].titre[3];
+  const titre5=req.body.selectedItem[3].titre[4];
 
-  User.findOne({ username: req.body.username}).then(user => {
-
-    Manche.findOne( {created_by: req.body.created_by, key: req.body.key}).then(manche => {
-      if(manche){
-        res.json({ result: false, message: `Il existe déjà une manche ${req.body.key} crée par ${req.body.users.username}`})
-      } else {
-        const newManche = new Manche({
-        titre1: req.body.titre1,
-        artiste1: req.body.artiste1,
-        titre2: req.body.titre2,
-        artiste2: req.body.artiste2,
-        titre3: req.body.titre3,
-        artiste3: req.body.artiste3,
-        titre4: req.body.titre4,
-        artiste4: req.body.artiste4,
-        titre5: req.body.titre5,
-        artiste5: req.body.artiste5,
-        key: req.body.key,
-        categories: req.body.categories, // Object ID requis, mettre le categories _id
-        created_at: new Date(),
-        created_by: req.body.created_by, // Object ID requis, mettre le user_id
-        });
-        newManche.save().then(data => {
-          res.json({ result: true, manche: data })
-        })
-        .catch(error => {
-          console.error('Erreur lors de la création de la manche :', error);
-        })
-      }
+  User.findOne({ username: user}).then(user => {
+    const userId = user._id;
+    const newManche = new Manche({
+    titre1: titre1.title,
+    artiste1: titre1.artist,
+    titre2: titre2.title,
+    artiste2: titre2.artist,
+    titre3: titre3.title,
+    artiste3: titre3.artist,
+    titre4: titre4.title,
+    artiste4: titre4.artist,
+    titre5: titre5.title,
+    artiste5: titre5.artist,
+    key: key,
+    theme: theme,
+    // categories: req.body.categories, // Object ID requis, mettre le categories _id
+    created_at: new Date(),
+    created_by: userId, // Object ID requis, mettre le user_id
+    });
+    newManche.save().then(data => {
+      res.json({ result: true, manche: data })
+    })
+    .catch(error => {
+      console.error('Erreur lors de la création de la manche :', error);
     })
   })
 });
-
-
-// // route  qui valide un input dans le front
-// router.post('/searchartist', (req, res) => {
-//   const search = req.body.search 
-//   // faire la requete api ici
-//   fetch(`https://api.deezer.com/search/artist?q=${search}`)
-//     .then(response => response.json())
-//     .then(data => {
-//       const names = data.data.map(artist => artist.name);
-//       res.json({ result: true, names }); // renvoie uniquement les noms
-//   })
-//   .catch(error => console.error("Error fetching artist:", error));
-// });
-
 
 router.post('/searchsong', (req, res) => {
   const search = req.body.search;
