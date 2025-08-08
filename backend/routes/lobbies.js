@@ -32,25 +32,24 @@ router.post('/join', (req, res) => {
         return res.status(404).json({ result: false, message: 'Lobby non trouvé' });
       }
 
-      const alreadyInLobby = lobby.players.some(
-        player => player.username.toLowerCase() === username.toLowerCase()
-      );
+  const alreadyInLobby = lobby.players.some(
+    player => player.username.toLowerCase() === username.toLowerCase()
+  );
 
-      if (!alreadyInLobby) {
-        lobby.players.push({ username });
-        return lobby.save().then(() => {
-          res.json({ result: true, message: 'Lobby rejoint', code: lobby.code });
-        });
-      } else {
-        res.json({ result: true, message: 'Déjà dans le lobby', code: lobby.code });
-      }
-      
-    })
-    .catch(err => {
-      console.error('Erreur lors de la recherche du lobby :', err);
-      res.status(500).json({ result: false, message: 'Erreur serveur' });
+  if (!alreadyInLobby) {
+    lobby.players.push({ username });
+    return lobby.save().then(() => {
+      res.json({ result: true, message: 'Lobby rejoint', code: lobby.code });
     });
+  } else {
+    res.json({ result: true, message: 'Déjà dans le lobby', code: lobby.code });
+  }
+  
+})
+.catch(err => {
+  console.error('Erreur lors de la recherche du lobby :', err);
+  res.status(500).json({ result: false, message: 'Erreur serveur' });
 });
-
+});
 
 module.exports = router;
