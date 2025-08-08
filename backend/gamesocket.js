@@ -39,25 +39,6 @@ function getFiveTracks() {
   return Promise.all(updateURL);
 }
 
-// function findSong (inputRecherche){
-//   fetch(`https://api.deezer.com/search?q=${inputRecherche}`)
-//   .then(response => response.json())
-//   .then(data => {
-
-//     // Si aps d'artsite ou de chanson trouvé, renvoi un message d'erreur
-//     if(data.total === 0) {
-//       console.error(`Pas de titre ni d'artiste trouvé`);
-//     } else { // sinon afficher le premier résultat de la recheche ==> A modifier pour proposer une liste de qqs résultats à la place
-//       const artist = data.data[0].artist.name;
-//       const title = data.data[0].title;
-//       const previewURL = data.data[0].preview;
-//       const coverURL = data.data[0].album.cover;
-//       const songID = data.data[0].id;
-//     }
-//   })
-// };
-
-
 module.exports = (serverInstance) => {
     const io = new Server(serverInstance, {
         cors: { origin: '*' }
@@ -80,7 +61,7 @@ module.exports = (serverInstance) => {
             rounds: [],
             scores: new Map()
             });
-        console.log(`Nouveau lobby créé: ${lobbyId}`)
+        console.log(`Lobby rejoins : ${lobbyId}`)
         }
         const lobby = lobbies.get(lobbyId);
         lobby.players.add(socket.id);
