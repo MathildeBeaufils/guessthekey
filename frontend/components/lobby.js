@@ -5,50 +5,51 @@ import styles from "../styles/lobby.module.css";
 console.log('Tentative de connexion socket...');
 const socket = io('http://localhost:4000'); // port déterminé dans le backend, spécifique pour le Socket
 
+
 const Lobby = () => {
     const router = useRouter();
     const { code } = router.query;
 
-const [lobbyId, setLobbyId] = useState("NomduLobby");
-const [players, setPlayers] = useState([]);
-const [gameStarted, setGameStarted] = useState(false);
+    const [lobbyId, setLobbyId] = useState("NomduLobby");
+    const [players, setPlayers] = useState([]);
+    const [gameStarted, setGameStarted] = useState(false);
 
 
-useEffect(() => {
-    setLobbyId(code);
-    //Connexion à un lobby existant via son ID
-    socket.emit('joinLobby', lobbyId);
-}, [code])
+    useEffect(() => {
+        setLobbyId(code);
+        //Connexion à un lobby existant via son ID
+        socket.emit('joinLobby', code);
+    }, [code])
 
-useEffect(() => {
-    // Mise à jour des joueureuses présent.es dans le lobby
-    socket.on('lobbyPlayers', (playerList) => {
-        setPlayers(playerList);
-    });
-    // Lancement de la partie au click du bouton
-    socket.on('gameStarted', () => {
-        setGameStarted(true);
-    });
+    useEffect(() => {
+        // Mise à jour des joueureuses présent.es dans le lobby
+        socket.on('lobbyPlayers', (playerList) => {
+            setPlayers(playerList);
+        });
+        // Lancement de la partie au click du bouton
+        socket.on('gameStarted', () => {
+            setGameStarted(true);
+        });
 
-    // Fonction de nettoyage : lors du démontage du composant, la socket arrête l'écoute de lobbyPlaers et gameStarted => Evite les doublons
-    return() => {
-        socket.off('lobbyPlayers');
-        socket.off('gameStarted');
+        // Fonction de nettoyage : lors du démontage du composant, la socket arrête l'écoute de lobbyPlaers et gameStarted => Evite les doublons
+        return() => {
+            socket.off('lobbyPlayers');
+            socket.off('gameStarted');
+        };
+    }, [lobbyId]);
+
+    const startGame = () => {
+        console.log(`Lancement de la partie pour le lobby ${lobbyId}`)
+        socket.emit('startGame', lobbyId);
     };
-}, [lobbyId]);
 
-const startGame = () => {
-    console.log(`Lancement de la partie pour le lobby ${lobbyId}`)
-    socket.emit('startGame', lobbyId);
-};
+    useEffect(() => {
+        if(gameStarted){
+            router.push(`/gamepage?lobbyId=${lobbyId}`);
+        } 
+    }, [gameStarted, router]);
 
-useEffect(() => {
-    if(gameStarted){
-        router.push(`/gamepage?lobbyId=${lobbyId}`);
-    } 
-}, [gameStarted, router]);
-
-// Infos du lobby
+    // Infos du lobby
   return (
     <div className={styles.container}>
       <span className={styles.welcome}>Bienvenue dans le {lobbyId}</span>
