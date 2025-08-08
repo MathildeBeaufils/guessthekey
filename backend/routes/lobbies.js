@@ -7,12 +7,13 @@ const generateLobbyCode = require('../utils/generateLobbyCode');
 router.post('/create', async (req, res) => {
   let code;
   let existingLobby;
+  const {state = "private"} = req.body; // apr défault une game sera private
   do {
     code = generateLobbyCode();
     existingLobby = await Lobby.findOne({ code });
   } while (existingLobby);
 
-  const lobby = new Lobby({ code, players: [] });
+  const lobby = new Lobby({ code, players: [], state });
   await lobby.save();
 
   res.json({ result: true, code });
@@ -52,5 +53,19 @@ router.post('/join', (req, res) => {
     });
 });
 
+// Route pour récupérer les lobbys existants en public
+router.get('/', (req, res) => {
+
+  Lobby.find({state: "public"}).then(lobbies => {
+    if (!lobbies) {
+      res.status(404).json({ result: false, message: 'Pas de lobby public en cours' });
+    } else {
+      res.status(200).json({ result: true, lobbies: lobbies})
+    }
+  })
+  .catch(error => {
+    console.error('Erreur lors de la récupération des lobbies publics :', error);
+  });
+})
 
 module.exports = router;
