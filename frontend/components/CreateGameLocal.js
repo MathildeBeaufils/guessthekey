@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import Menu from './Menu';
 import { useSelector } from 'react-redux';
+import io from 'socket.io-client';
+const socket = io('http://localhost:4000');
 
 function CreateGameSolo() {
   const router = useRouter();
@@ -16,12 +18,13 @@ function CreateGameSolo() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ code, username }),
+            body: JSON.stringify({ username }),
         })
             .then((response) => response.json())
             .then((data) => {
                 if (data.result) {
-                    router.push('/local');
+                  socket.emit('joinLobby', data.code);
+                  router.push(`/lobby/${data.code}`);
                 } 
             })
     };

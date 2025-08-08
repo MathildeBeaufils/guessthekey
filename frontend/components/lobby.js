@@ -4,30 +4,23 @@ import { useRouter} from 'next/router';
 import styles from "../styles/lobby.module.css";
 console.log('Tentative de connexion socket...');
 const socket = io('http://localhost:4000'); // port déterminé dans le backend, spécifique pour le Socket
+const router = useRouter();
+const { code } = router.query;
 
 const Lobby = () => {
-    const [lobbyId, setLobbyId] = useState('NomduLobby');
+    const [lobbyId, setLobbyId] = useState("NomduLobby");
     const [players, setPlayers] = useState([]);
     const [gameStarted, setGameStarted] = useState(false);
 
     const router = useRouter();
 
-    // Récupération d'un nom de lobby
     useEffect(() => {
-    // Appel API pour obtenir un lobbyId unique
-    fetch('http://localhost:3000/lobbies/create', {
-        method: 'POST',
-    })
-        .then(res => res.json())
-        .then(data => {
-        setLobbyId(data.code);
-        });
-    }, []);
-
-    useEffect(() => {
+        setLobbyId(code);
         //Connexion à un lobby existant via son ID
         socket.emit('joinLobby', lobbyId);
+    }, [code])
 
+    useEffect(() => {
         // Mise à jour des joueureuses présent.es dans le lobby
         socket.on('lobbyPlayers', (playerList) => {
             setPlayers(playerList);

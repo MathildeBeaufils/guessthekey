@@ -18,7 +18,7 @@ function LocalJoinPage() {
             .then((response) => response.json())
             .then((data) => {
                 if (data.result) {
-                    Router.push('/localLobby');
+                    Router.push(`/lobby/${data.code}`);
                 } 
             })
     };
