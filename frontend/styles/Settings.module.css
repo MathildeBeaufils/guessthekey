@@ -12,19 +12,17 @@
     line-height: 1.15;
     font-size: 4rem;
     color: white;
-    margin-bottom: -20px;
-    margin-top: -10%;
     cursor: default;
+    margin: -5px;
   }
 
 .sonores {
-    margin-top: 10px;
     width: 80vw;
     color: white;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;    
+    align-items: center;
 }
 
 .cursor {
@@ -68,6 +66,7 @@
   .volume {
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 20px;
     width: 100%;
   }
@@ -85,13 +84,42 @@
     width: 100%;
     margin: 10px;
     color: #fff;
-    font-size: 30px;
+    font-size: 20px;
+    gap: 5px;
 }
 
+.couleurs {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  font-size: 20px;
+  gap: 20px;
+}
+
+.paletteIcon {
+  font-size: 30px;
+  color: white;
+}
 .affichageIcon {
-  width: 100px;
-  height: 100px;
-  background-color: #0070f3;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.2s ease;
+}
+
+.btnCouleurs {
+  display: flex;
+  background-color: #555563;
+  border: none;
+  cursor: pointer;
+  width: 70px;
+  height: 70px;
+  
+}
+
+.btnCouleurs:hover .affichageIcon {
+  transform: scale(1.4); 
 }
 
   .btn{
@@ -113,26 +141,32 @@
     background-color: #E3505A;
     border: solid #E3505A 1px;
   }
-  .title a {
-    color: #0070f3;
-    text-decoration: none;
-  }
-  
-  .title a:hover, .title a:focus, .title a:active {
-    text-decoration: underline;
-  }
-  .nbQuate{
-    color: gold;
-    font-size: 18px;
-    margin-bottom: -10px;
-    margin-left: 50px;
-  }
-  .displayQuete{
-    margin-left: -35%;
-    margin-top: -5%;
-    display: none;
-  }
-  
+
+.btnLogout {
+  background-color: #555563;
+  border: solid 1px transparent;
+  border-radius: 50px;
+  font-size: 22px;
+  font-weight: bolder;
+  color: #fff;
+  padding: 20px;
+  margin-top: 30px;
+  display: flex;
+  gap: 20px;
+  cursor: pointer;
+}
+
+.btnLogout:hover {
+  background-color: #7b7b7e;
+  padding: 20px;
+  border: solid 1px transparent;
+  border-radius: 50px;
+}
+
+.logoutIcon {
+  font-size: 30px;
+}
+
   
   @media (min-width: 700px) { 
     .title {
@@ -166,8 +200,5 @@
       width: 30%;
       margin-top: 50px;
       padding: 20px;
-    }
-    .displayQuete{
-      margin-top: -2%;
     }
   }

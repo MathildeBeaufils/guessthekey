@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Menu from './Menu';
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faVolumeXmark, faVolumeHigh,faPalette } from '@fortawesome/free-solid-svg-icons';
+import { faVolumeXmark, faVolumeHigh,faPalette, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 
 
 function Settings() {
@@ -13,18 +13,16 @@ function Settings() {
     const [volumeMusique, setVolumeMusique] = useState(50);
     const [volumeSFX, setVolumeSFX] = useState(50);
 
-    const handleSubmit = (page) => {
-        if(page === 'solo'){
-        // vers page solo
-        router.push('/solo')
-        }else if(page === 'multi'){
-        // vers page multi
-        Router.push('/onlineHostJoin');
-        }else{
-        // vers page parties privées      
-        Router.push('/localHostJoin');      
-        }
-    };
+    /* Fonctionnalité des boutons de paramètres à mettre en place
+    const handleRed () {}
+    const handleGreen () {}
+    const handleBnW () {}
+    const handleLink () {}
+    const handleDelete () {}
+    const handleSecurity () {}
+    const handleLogout () {}
+    */
+
 
   return (
     <div>
@@ -82,13 +80,29 @@ function Settings() {
 
         <div className={styles.affichage}>
           <h3> Paramètres d'affichage</h3>
-          <FontAwesomeIcon icon={faPalette} />
-          <image  src="/affichageRed.png" alt={"Affichage Rouge"} className={styles.affichageIcon}/>
+          <div className={styles.couleurs}>
+
+            <FontAwesomeIcon icon={faPalette} className={styles.paletteIcon}/>
+
+            <button className={styles.btnCouleurs} onClick={() => handleRed('rouge')}>
+              <img  src="/affichageRed.png" alt={"Affichage Rouge"} className={styles.affichageIcon}/>
+            </button>
+
+            <button className={styles.btnCouleurs} onClick={() => handleGreen('vert')}>
+              <img  src="/affichageGreen.png" alt={"Affichage Rouge"} className={styles.affichageIcon}/>
+            </button>
+
+            <button className={styles.btnCouleurs} onClick={() => handleBnW('BnW')}>
+              <img  src="/affichageBnW.png" alt={"Affichage Noir et Blanc"} className={styles.affichageIcon}/>
+            </button>
+            
+            </div>
         </div>
 
-        <button className={styles.btn} onClick={() => handleSubmit('solo')}>Lier un compte</button>
-        <button className={styles.btn} onClick={() => handleSubmit('multi')}>Supprimer un compte</button>
-        <button className={styles.btn} onClick={() => handleSubmit('pp')}>Deconnection</button>
+        <button className={styles.btn} onClick={() => handleLink('lier')}>Lier un compte</button>
+        <button className={styles.btn} onClick={() => handleDelete('supprimer')}>Supprimer un compte</button>
+        <button className={styles.btn} onClick={() => handleSecurity('confidentialité')}>Confidentialité et sécurité</button>
+        <button className={styles.btnLogout} onClick={() => handleLogout('pp')}>Deconnection <FontAwesomeIcon icon={faArrowRightFromBracket} className={styles.logoutIcon}/></button>
       </main>
     </div>
   );
