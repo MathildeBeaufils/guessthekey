@@ -18,7 +18,7 @@ const Lobby = () => {
     useEffect(() => {
         setLobbyId(code);
         //Connexion à un lobby existant via son ID
-        socket.emit('joinLobby', lobbyId);
+        socket.emit('joinLobby', code);
     }, [code])
 
     useEffect(() => {

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import io from "socket.io-client";
 import { useRouter } from "next/router";
 import styles from "../styles/game.module.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FaVolumeUp, FaVolumeDown, FaVolumeMute } from "react-icons/fa";
 
 const socket = io("http://localhost:4000"); // port déterminé dans le backend, spécifique pour le Socket
