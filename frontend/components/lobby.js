@@ -4,15 +4,16 @@ import { useRouter} from 'next/router';
 import styles from "../styles/lobby.module.css";
 console.log('Tentative de connexion socket...');
 const socket = io('http://localhost:4000'); // port déterminé dans le backend, spécifique pour le Socket
-const router = useRouter();
-const { code } = router.query;
+
 
 const Lobby = () => {
+    const router = useRouter();
+    const { code } = router.query;
+
     const [lobbyId, setLobbyId] = useState("NomduLobby");
     const [players, setPlayers] = useState([]);
     const [gameStarted, setGameStarted] = useState(false);
 
-    const router = useRouter();
 
     useEffect(() => {
         setLobbyId(code);
