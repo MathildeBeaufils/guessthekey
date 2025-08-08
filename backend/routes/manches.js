@@ -82,6 +82,7 @@ router.get('/', function(req, res) {
 });
 
 // Route pour ajouter une manche 
+// A ajouter, les categories
 router.post('/', function(req, res) {
   const user = req.body.selectedItem[0].username;
   const key = req.body.selectedItem[0].key;

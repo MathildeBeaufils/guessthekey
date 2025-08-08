@@ -5,6 +5,9 @@ import { useSelector } from 'react-redux';
 
 function CreateRound() {
     const router = useRouter();
+    const user = 'bbb' // useSelector((state)=>state.user.value.username);
+    // decommenté le router
+    // refactoriser
 
     const backendUrl = "http://localhost:3000";
 
@@ -27,14 +30,14 @@ function CreateRound() {
         })
         .then((data) => {
             console.log("Manche créée avec succès !", data);
-            // setTheme('');
-            // setKey('');  
-            // setSelectedItem1('');
-            // setSelectedItem2('');
-            // setSelectedItem3(''); 
-            // setSelectedItem4('');
-            // setSelectedItem5('');
-            // setSelectedItem([]);
+            setTheme('');
+            setKey('');  
+            setSelectedItem1('');
+            setSelectedItem2('');
+            setSelectedItem3(''); 
+            setSelectedItem4('');
+            setSelectedItem5('');
+            setSelectedItem([]);
 
             // router.push("/lobbypage");
         })
@@ -54,8 +57,6 @@ function CreateRound() {
     const [selectList4, setSelectList4] = useState([]);
     const [song5, setSong5] = useState("");
     const [selectList5, setSelectList5] = useState([]);
-
-    const user = 'bbb' // useSelector((state)=>state.user.value.username);
 
     const [theme, setTheme] = useState('');
     const [key, setKey] = useState('');  
@@ -83,64 +84,64 @@ function CreateRound() {
         .catch(error => console.error("Erreur :", error));
     }
     function searchsong2(search) {
-        fetch(`http://localhost:3000/manches/searchsong`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ search }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            const list = Array.isArray(data.data) ? data.data : [];
-            setSelectList2(list);
-        })
-        .catch(error => console.error("Erreur :", error));
+      fetch(`http://localhost:3000/manches/searchsong`, {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ search }),
+      })
+      .then(response => response.json())
+      .then(data => {
+          const list = Array.isArray(data.data) ? data.data : [];
+          setSelectList2(list);
+      })
+      .catch(error => console.error("Erreur :", error));
     }
-        function searchsong3(search) {
-        fetch(`http://localhost:3000/manches/searchsong`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ search }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            const list = Array.isArray(data.data) ? data.data : [];
-            setSelectList3(list);
-        })
-        .catch(error => console.error("Erreur :", error));
+    function searchsong3(search) {
+      fetch(`http://localhost:3000/manches/searchsong`, {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ search }),
+      })
+      .then(response => response.json())
+      .then(data => {
+          const list = Array.isArray(data.data) ? data.data : [];
+          setSelectList3(list);
+      })
+      .catch(error => console.error("Erreur :", error));
     }
-        function searchsong4(search) {
-        fetch(`http://localhost:3000/manches/searchsong`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ search }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            const list = Array.isArray(data.data) ? data.data : [];
-            setSelectList4(list);
-        })
-        .catch(error => console.error("Erreur :", error));
+    function searchsong4(search) {
+      fetch(`http://localhost:3000/manches/searchsong`, {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ search }),
+      })
+      .then(response => response.json())
+      .then(data => {
+          const list = Array.isArray(data.data) ? data.data : [];
+          setSelectList4(list);
+      })
+      .catch(error => console.error("Erreur :", error));
     }
-        function searchsong5(search) {
-        fetch(`http://localhost:3000/manches/searchsong`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ search }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            const list = Array.isArray(data.data) ? data.data : [];
-            setSelectList5(list);
-        })
-        .catch(error => console.error("Erreur :", error));
+    function searchsong5(search) {
+      fetch(`http://localhost:3000/manches/searchsong`, {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ search }),
+      })
+      .then(response => response.json())
+      .then(data => {
+          const list = Array.isArray(data.data) ? data.data : [];
+          setSelectList5(list);
+      })
+      .catch(error => console.error("Erreur :", error));
     }
 
 
@@ -174,118 +175,143 @@ function CreateRound() {
                   onChange={(e) => setKey(e.target.value)}
                   required
                 />
-
             </div>
             <div className={styles.title_container}>
-            // ----------------------------------------------1
-              <input
-                type="text"
-                className={styles.input}
-                value={song1}
-                onChange={(e) => setSong1(e.target.value)}
-                placeholder="Rechercher une chanson"
-                required
-              />
-              <button onClick={() => searchsong1(song1)}>Chercher</button>
+              <div className={styles.title}>
+                <div>
+                    <label>
+                      Recherche un artiste ou une musique:<br></br>
+                    <input
+                      type="text"
+                      className={styles.inputrecherche}
+                      value={song1}
+                      onChange={(e) => setSong1(e.target.value)}
+                      placeholder="Rechercher une chanson"
+                      required
+                    />
+                    </label>
+                    <button onClick={() => searchsong1(song1)} className={styles.recherche} >Recherche</button>                  
+                </div>
+                <div className={styles.radioGroup}>
+                    {selectList1.map((item, i) => (
+                    <label key={i} className={styles.radioLabel}>
+                    <input
+                    type="radio"
+                    name="song"
+                    value={`${item.title} - ${item.artist}`}
+                    onChange={() => setSelectedItem1(item)}
+                    />
+                    {item.title} - {item.artist}
+                    </label>
+                    ))}
+                </div>                
+              </div>
 
-              <div className={styles.radioGroup}>
-                  {selectList1.map((item, i) => (
-                  <label key={i} className={styles.radioLabel}>
+              <div className={styles.title}>
+                <div>
+                    <label>
+                      Recherche un artiste ou une musique:<br></br>
+                    <input
+                      type="text"
+                      className={styles.inputrecherche}
+                      value={song2}
+                      onChange={(e) => setSong2(e.target.value)}
+                      placeholder="Rechercher une chanson"
+                      required
+                    />
+                    </label>
+                    <button onClick={() => searchsong2(song2)} className={styles.recherche}>Chercher</button>                
+                  </div>
+                  <div className={styles.radioGroup}>
+                    {selectList2.map((item2, i) => (
+                    <label key={i} className={styles.radioLabel}>
+                        <input
+                        type="radio"
+                        name="song2"
+                        value={`${item2.title} - ${item2.artist}`}
+                        onChange={() => setSelectedItem2(item2)}
+                        />
+                        {item2.title} - {item2.artist}
+                    </label>
+                    ))}
+                </div>            
+              </div>
+
+              <div className={styles.title}>
+                <div>
+                  <label>
+                      Recherche un artiste ou une musique:<br></br>
                   <input
-                  type="radio"
-                  name="song"
-                  value={`${item.title} - ${item.artist}`}
-                  onChange={() => setSelectedItem1(item)}
+                    type="text"
+                    className={styles.inputrecherche}
+                    value={song3}
+                    onChange={(e) => setSong3(e.target.value)}
+                    placeholder="Rechercher une chanson"
+                    required
                   />
-                  {item.title} - {item.artist}
                   </label>
-                  ))}
+                  <button onClick={() => searchsong3(song3)} className={styles.recherche}>Chercher</button>
+                </div>
+                <div className={styles.radioGroup}>
+                    {selectList3.map((item3, i) => (
+                    <label key={i} className={styles.radioLabel}>
+                        <input
+                        type="radio"
+                        name="song3"
+                        value={`${item3.title} - ${item3.artist}`}
+                        onChange={() => setSelectedItem3(item3)}
+                        />
+                        {item3.title} - {item3.artist}
+                    </label>
+                    ))}
+                </div>
               </div>
 
-
-            // ----------------------------------------------2
-              <input
-                type="text"
-                className={styles.input}
-                value={song2}
-                onChange={(e) => setSong2(e.target.value)}
-                placeholder="Rechercher une chanson"
-                required
-              />
-              <button onClick={() => searchsong2(song2)}>Chercher</button>
-
-              <div className={styles.radioGroup}>
-                  {selectList2.map((item2, i) => (
-                  <label key={i} className={styles.radioLabel}>
-                      <input
-                      type="radio"
-                      name="song2"
-                      value={`${item2.title} - ${item2.artist}`}
-                      onChange={() => setSelectedItem2(item2)}
-                      />
-                      {item2.title} - {item2.artist}
+              <div className={styles.title}>
+                <div>
+                  <label>
+                    Recherche un artiste ou une musique:<br></br>
+                    <input
+                      type="text"
+                      className={styles.inputrecherche}
+                      value={song4}
+                      onChange={(e) => setSong4(e.target.value)}
+                      placeholder="Rechercher une chanson"
+                      required
+                    />
                   </label>
-                  ))}
+                  <button onClick={() => searchsong4(song4)} className={styles.recherche}>Chercher</button>
+                </div>
+                <div className={styles.radioGroup}>
+                    {selectList4.map((item, i) => (
+                    <label key={i} className={styles.radioLabel}>
+                        <input
+                        type="radio"
+                        name="song4"
+                        value={`${item.title} - ${item.artist}`}
+                        onChange={() => setSelectedItem4(item)}
+                        />
+                        {item.title} - {item.artist}
+                    </label>
+                    ))}
+                </div>
               </div>
-              // ----------------------------------------------3
-              <input
-                type="text"
-                className={styles.input}
-                value={song3}
-                onChange={(e) => setSong3(e.target.value)}
-                placeholder="Rechercher une chanson"
-                required
-              />
-              <button onClick={() => searchsong3(song3)}>Chercher</button>
 
-              <div className={styles.radioGroup}>
-                  {selectList3.map((item3, i) => (
-                  <label key={i} className={styles.radioLabel}>
-                      <input
-                      type="radio"
-                      name="song3"
-                      value={`${item3.title} - ${item3.artist}`}
-                      onChange={() => setSelectedItem3(item3)}
-                      />
-                      {item3.title} - {item3.artist}
+              <div className={styles.title}>
+                <div>
+                  <label>
+                    Recherche un artiste ou une musique:<br></br>
+                    <input
+                      type="text"
+                      className={styles.inputrecherche}
+                      value={song5}
+                      onChange={(e) => setSong5(e.target.value)}
+                      placeholder="Rechercher une chanson"
+                      required
+                    />
                   </label>
-                  ))}
-              </div>
-              // ----------------------------------------------4
-              <input
-                type="text"
-                className={styles.input}
-                value={song4}
-                onChange={(e) => setSong4(e.target.value)}
-                placeholder="Rechercher une chanson"
-                required
-              />
-              <button onClick={() => searchsong4(song4)}>Chercher</button>
-
-              <div className={styles.radioGroup}>
-                  {selectList4.map((item, i) => (
-                  <label key={i} className={styles.radioLabel}>
-                      <input
-                      type="radio"
-                      name="song4"
-                      value={`${item.title} - ${item.artist}`}
-                      onChange={() => setSelectedItem4(item)}
-                      />
-                      {item.title} - {item.artist}
-                  </label>
-                  ))}
-              </div>
-              // ----------------------------------------------5
-              <input
-                type="text"
-                className={styles.input}
-                value={song5}
-                onChange={(e) => setSong5(e.target.value)}
-                placeholder="Rechercher une chanson"
-                required
-              />
-              <button onClick={() => searchsong5(song5)}>Chercher</button>
-
+                  <button onClick={() => searchsong5(song5)} className={styles.recherche}>Chercher</button>
+                </div>
               <div className={styles.radioGroup}>
                   {selectList5.map((item, i) => (
                   <label key={i} className={styles.radioLabel}>
@@ -299,9 +325,9 @@ function CreateRound() {
                   </label>
                   ))}
               </div>
-              // ----------------------------------------------
+            </div>
 
-              <button onClick={() => trackValidate()}>Selectionner</button>
+              <button onClick={() => trackValidate()} className={styles.valider} >Valider</button>
             </div>
             <div className={styles.button_place}>
             </div>

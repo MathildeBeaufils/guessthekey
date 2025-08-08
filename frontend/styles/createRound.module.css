@@ -1,7 +1,8 @@
 .container {
   background-color: #555563;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -29,8 +30,9 @@
 .round_container {
   background-color: #c9333d;
   width: 90vh;
-  height: 65vh;
+  height: auto;
   border-radius: 20px;
+  margin-bottom: 50px;
 }
 
 .input_container {
@@ -49,6 +51,15 @@
   margin-top: 25px;
 }
 
+.title{
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  width: 80%;
+  gap: 20px;
+  margin-bottom: 15px;
+  margin-top: 30px;
+}
 
 .title_button {
   margin-right: 20px;
@@ -62,108 +73,39 @@
   border: none;
 }
 
-.button {
-  width: 30%;
-  padding: 3%;
-  margin: -5%;
+
+.inputrecherche {
+  border-radius: 5px;
+  border: none;
+  height: 25px;
+  margin-top: 10px;
+  margin-right: 20px;
+}
+.recherche{
+  background-color: #FF9809;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  height: 25px;
+  margin-top: 10px;
+  margin-right: 20px;
+}
+.valider{
+  width: 25%;
+  padding: 2%;
+  margin: 2%;
   border-radius: 20px;
-  background-color: #ff9809;
+  box-shadow: 15px 15px 25px 1px rgba(0, 0, 0, 0.82);
+  -webkit-box-shadow: 15px 15px 25px 1px rgba(0, 0, 0, 0.82);
+  -moz-box-shadow: 15px 15px 25px 1px rgba(0, 0, 0, 0.82);
+  background-color: #FF9809;
+  border: #FF9809;
   color: white;
-  border: none;
-}
-
-.button_place{display: flex;
-justify-content: center;
-align-items: center;
-margin-top: 45px;}
-
-.modal_overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6); /* Fond semi-transparent */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000; /* Assure que la modale est au-dessus du reste */
-  padding: 20px; /* Padding pour les petits écrans */
-}
-
-.modal_content {
-  background-color: white;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-  width: 90%;
-  max-width: 500px; /* Largeur maximale de la modale */
-  display: flex;
-  flex-direction: column;
-  gap: 15px; /* Espace entre les éléments de la modale */
-  box-sizing: border-box;
-}
-
-.modal_title {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: black;
-  text-align: center;
-  margin-bottom: 15px;
-}
-
-.modal_label {
-  display: block; 
-  font-size: 1rem;
-  font-weight: bold;
-  color: #555;
-  margin-bottom: 5px;
-}
-
-.modal_input {
-  width: calc(100% - 20px);
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 1rem;
-  box-sizing: border-box;
-}
-
-.modal_buttons_wrapper {
-  display: flex;
-  justify-content: space-around;
-  gap: 15px;
-  margin-top: 20px;
-}
-
-.modal_cancel_button,
-.modal_save_button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
   cursor: pointer;
-  font-size: 1rem;
-  font-weight: bold;
-  
-  flex: 1; 
+  font-size: 22px;
+  font-weight: bolder;
+
 }
-
-.modal_cancel_button {
-  background-color: #6c757d; 
-  color: white;
-}
-
-.modal_cancel_button:hover {
-  background-color: #5a6268;
-}
-
-.modal_save_button {
-  background-color: #ff9809; 
-  color: white;
-}
-
-
-
 
 @media (max-width: 768px) {
   .manche {
