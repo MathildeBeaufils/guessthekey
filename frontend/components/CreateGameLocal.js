@@ -2,14 +2,30 @@ import styles from "../styles/createGame.module.css";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import Menu from './Menu';
+import { useSelector } from 'react-redux';
 
 function CreateGameSolo() {
   const router = useRouter();
   const [numberOfPlayers, setNumberOfPlayers] = useState(5);
   const [numberOfRounds, setNumberOfRounds] = useState(5);
-  const handleCreate = (e) => {
-    router.push("/local");
-  };
+  const username = useSelector((state) => state.user.username);
+
+  const handleCreate = () => {
+        fetch('http://localhost:3000/lobbies/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ code, username }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.result) {
+                    router.push('/local');
+                } 
+            })
+    };
+ 
   return (
     <>
       <Menu/>

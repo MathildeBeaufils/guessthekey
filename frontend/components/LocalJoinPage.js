@@ -1,12 +1,26 @@
 import styles from '../styles/localJoinPage.module.css';
 import { useRouter } from 'next/router';
 import Menu from './Menu';
+import { useSelector } from 'react-redux';
 
 function LocalJoinPage() {
     const Router = useRouter();
+    const username = useSelector((state) => state.user.username);
 
     const handleJoin = () => {
-        Router.push('/localLobby')
+        fetch('http://localhost:3000/lobbies/join', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ code, username }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.result) {
+                    Router.push('/localLobby');
+                } 
+            })
     };
 
     return (

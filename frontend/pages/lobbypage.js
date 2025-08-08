@@ -15,12 +15,12 @@ const Lobby = () => {
     // Récupération d'un nom de lobby
     useEffect(() => {
     // Appel API pour obtenir un lobbyId unique
-    fetch('http://localhost:3000/lobbies', {
+    fetch('http://localhost:3000/lobbies/create', {
         method: 'POST',
     })
         .then(res => res.json())
         .then(data => {
-        setLobbyId(data.lobbyId);
+        setLobbyId(data.code);
         });
     }, []);
 
