@@ -2,12 +2,18 @@ import styles from '../styles/localJoinPage.module.css';
 import { useRouter } from 'next/router';
 import Menu from './Menu';
 import { useSelector } from 'react-redux';
+import io from 'socket.io-client';
+import { useState } from 'react';
+const socket = io('http://localhost:4000');
 
 function LocalJoinPage() {
     const Router = useRouter();
-    const username = useSelector((state) => state.user.username);
+    const router = useRouter();
+    const username = useSelector((state) => state.user.value.username);
+    const [code, setCode] = useState('');
 
     const handleJoin = () => {
+        console.log(username)
         fetch('http://localhost:3000/lobbies/join', {
             method: 'POST',
             headers: {
@@ -18,7 +24,8 @@ function LocalJoinPage() {
             .then((response) => response.json())
             .then((data) => {
                 if (data.result) {
-                    Router.push(`/lobby/${data.code}`);
+                    socket.emit('joinLobby', data.code);
+                    router.push(`/lobby/${data.code}`);
                 } 
             })
     };
@@ -30,7 +37,7 @@ function LocalJoinPage() {
                 <h1>Rejoindre une Partie Locale</h1>
                 <div className={styles.inputContainer}>
                     <label htmlFor="gameCode">Code de la Partie :</label>
-                    <input className={styles.input} type="text" placeholder="Entrez le code de la partie" />
+                    <input className={styles.input} type="text" placeholder="Entrez le code de la partie" onChange={(e) => setCode(e.target.value)}/>
                 </div>
                 <button className={styles.btn} onClick={handleJoin}>Valider</button>
             </div>        
