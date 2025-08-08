@@ -1,0 +1,9 @@
+const mongoose = require('mongoose');
+
+const LobbySchema = new mongoose.Schema({
+  code: { type: String, unique: true, required: true },
+  players: [{username: { type: String, required: true }}],
+  createdAt: { type: Date, default: Date.now, expires: 3600 }, // 1h expiration
+});
+
+module.exports = mongoose.model('Lobby', LobbySchema);
