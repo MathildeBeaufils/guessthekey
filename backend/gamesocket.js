@@ -39,6 +39,8 @@ function getFiveTracks() {
   return Promise.all(updateURL);
 }
 
+
+
 module.exports = (serverInstance) => {
     const io = new Server(serverInstance, {
         cors: { origin: '*' }
@@ -61,7 +63,7 @@ module.exports = (serverInstance) => {
             rounds: [],
             scores: new Map()
             });
-        console.log(`Lobby rejoins : ${lobbyId}`)
+        console.log(`Nouveau lobby créé: ${lobbyId}`)
         }
         const lobby = lobbies.get(lobbyId);
         lobby.players.add(socket.id);
