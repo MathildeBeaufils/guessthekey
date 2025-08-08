@@ -1,0 +1,18 @@
+.container {
+  background-color: #555563;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: white;
+  margin-bottom: 50px;
+}
+.quest{
+  background-color: white;
+  color: black;
+  width: 35rem;
+  padding: 2rem;
+  border-radius: 10px;
+}
