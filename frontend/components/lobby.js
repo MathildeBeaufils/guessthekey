@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import Menu from "./Menu";
 import io from 'socket.io-client';
 import { useRouter} from 'next/router';
 import styles from "../styles/lobby.module.css";
@@ -50,19 +51,40 @@ const Lobby = () => {
     }, [gameStarted, router]);
 
     // Infos du lobby
-  return (
-    <div className={styles.container}>
-      <span className={styles.welcome}>Bienvenue dans le {lobbyId}</span>
-      <button className={styles.button}>Ajouter un membre</button>
-      <div className={styles.players_container}>
-      {players.map((playerId) => (
-        <span key={playerId}>{playerId}</span>
-       
-      ))}
-</div>
-      <button className={styles.button} onClick={startGame}>Lancer la partie</button>
-    </div>
-  );
+    return (
+    <>
+        <Menu />
+        <div className={styles.container}>
+            
+            <h1 className={styles.welcome}>Bienvenue dans le lobby : {lobbyId}</h1>
+            <p>Partagez le code du lobby pour que les membres le rejoigne</p>
+            <div className={styles.info}>
+                <p>Nombre de joueurs du lobby : X / X</p>
+                <p> | </p>
+                <p>Nombre de manche pour la partie :</p>
+            </div>
+            <div className={styles.ajout}>
+                <button className={styles.button}>Ajouter un membre</button>
+                <button className={styles.button} onClick={startGame}>Ajouter une manche</button>
+            </div>
+            <div className={styles.tableau}>
+                <div className={styles.players_container}>
+                    <p>Joueur·euses dans le lobby :</p>
+                    {players.map((playerId) => (
+                        <span key={playerId}>{playerId}</span>
+                    ))}
+                </div>
+                <div className={styles.round_container}>
+                    <p>Manches disponibles pour le lobby :</p>
+                    {players.map((playerId) => (
+                        <span key={playerId}>{playerId}</span>
+                    ))}
+                </div>
+                </div>
+            <button className={styles.button} onClick={startGame}>Lancer la partie</button>
+        </div>
+    </>
+    );
 };
 
 export default Lobby;
