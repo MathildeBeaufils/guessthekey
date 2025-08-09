@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import io from 'socket.io-client';
 const socket = io('http://localhost:4000');
 
-function CreateGameSolo() {
+function CreateGameLocal() {
   const router = useRouter();
   const [numberOfPlayers, setNumberOfPlayers] = useState(5);
   const [numberOfRounds, setNumberOfRounds] = useState(5);
@@ -18,7 +18,7 @@ function CreateGameSolo() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username }),
+            body: JSON.stringify({ username, state: "private" }),
         })
             .then((response) => response.json())
             .then((data) => {
@@ -63,4 +63,4 @@ function CreateGameSolo() {
   );
 }
 
-export default CreateGameSolo;
+export default CreateGameLocal;

@@ -1,0 +1,79 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 90vh;
+    min-height: 90vh;
+    background-color: #555563;
+}
+
+.main p {
+    color: #fff;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.main h2 {
+    color: #fff;
+    font-size: 1rem;
+}
+
+.title {
+    line-height: 1.15;
+    font-size: 2rem;
+    color: white;
+    cursor: default;
+    margin: 15px;
+}
+
+.layout {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 95%;
+    height: 90%;
+    padding: 2%;
+    gap: 10px;
+    background-color: aqua;
+}
+
+.layout span {
+    color: #fff;
+    font-size: 13px;
+}
+
+.skins {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    text-align: center;
+    width: 95%;
+    height: 70%;
+    gap: 10px;
+    background-color: yellow;
+    overflow: scroll;
+}
+
+.item {
+    background-color: #cccccb;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 150px;
+    width: 150px;
+}
+
+.imgItem {
+    width: 100px;
+    height: 100px;
+}
+
+.KPstore {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    height: 10%;
+}

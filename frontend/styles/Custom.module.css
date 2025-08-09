@@ -1,0 +1,79 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 90vh;
+    min-height: 90vh;
+    background-color: #555563;
+}
+
+.main p {
+    color: #fff;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.title {
+    line-height: 1.15;
+    font-size: 2rem;
+    color: white;
+    cursor: default;
+    margin: 15px;
+}
+
+.layout {
+    display: flex;
+    width: 95%;
+    height: 70%;
+    padding: 1%;
+    gap: 10px;
+}
+
+.items {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    width: 50%;
+    height: 100%;
+    gap: 10px;
+}
+
+.perso {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    background-color: #cccccb;
+    width: 50%;
+    height: 100%;
+}
+
+.image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.imgPerso {
+    width: 200px;
+}
+
+.tete {
+    background-color: #cccccb;
+    height: 25%;
+}
+
+.haut {
+    background-color: #cccccb;
+    height: 25%;
+}
+
+.bas {
+    background-color: #cccccb;
+    height: 25%;
+}
+
+.pied {
+    background-color: #cccccb;
+    height: 25%;
+}
