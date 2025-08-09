@@ -82,16 +82,24 @@ router.get('/', function(req, res) {
 });
 
 // Route pour ajouter une manche 
-// A ajouter, les categories
+// demander a gaspard psk sorcelerie // fonctionne si j'envoi 2 fois le formulaire // key et theme pas en bdd
 router.post('/', function(req, res) {
+  console.log("selectedItem:", req.body.selectedItem);
+  console.log("selectedItem[3]:", req.body.selectedItem[3]);
+  const categorieId = [];
+  const categories = req.body.selectedItem[3].categorie;
+  for (let i = 0; i < categories.length; i++) {
+    categorieId.push(categories[i]);
+  }
+  console.log(categorieId)
   const user = req.body.selectedItem[0].username;
   const key = req.body.selectedItem[0].key;
-  const theme = req.body.selectedItem[0].theme
-  const titre1=req.body.selectedItem[3].titre[0];
-  const titre2=req.body.selectedItem[3].titre[1];
-  const titre3=req.body.selectedItem[3].titre[2];
-  const titre4=req.body.selectedItem[3].titre[3];
-  const titre5=req.body.selectedItem[3].titre[4];
+  const theme = req.body.selectedItem[0].theme;
+  const titre1=req.body.selectedItem[4].titre[0];
+  const titre2=req.body.selectedItem[4].titre[1];
+  const titre3=req.body.selectedItem[4].titre[2];
+  const titre4=req.body.selectedItem[4].titre[3];
+  const titre5=req.body.selectedItem[4].titre[4];
 
   User.findOne({ username: user}).then(user => {
     const userId = user._id;
@@ -108,9 +116,9 @@ router.post('/', function(req, res) {
     artiste5: titre5.artist,
     key: key,
     theme: theme,
-    // categories: req.body.categories, // Object ID requis, mettre le categories _id
+    categories: categorieId, // tableau d'ID de categorie
     created_at: new Date(),
-    created_by: userId, // Object ID requis, mettre le user_id
+    created_by: userId, // Object ID requis
     });
     newManche.save().then(data => {
       res.json({ result: true, manche: data })

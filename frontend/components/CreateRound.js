@@ -1,20 +1,89 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "../styles/createRound.module.css";
 import { useRouter } from "next/router";
 import { useSelector } from 'react-redux';
 
+
+    // A faire:
+    // - refactoriser
+    // - css
+    
 function CreateRound() {
     const router = useRouter();
-    const user = 'bbb' // useSelector((state)=>state.user.value.username);
-    // decommenté le router
-    // refactoriser
+    const user = 'bbb'//useSelector((state)=>state.user.value.username);
+
+
+      const [song1, setSong1] = useState("");
+      const [selectList1, setSelectList1] = useState([]);
+      const [song2, setSong2] = useState("");
+      const [selectList2, setSelectList2] = useState([]);
+      const [song3, setSong3] = useState("");
+      const [selectList3, setSelectList3] = useState([]);
+      const [song4, setSong4] = useState("");
+      const [selectList4, setSelectList4] = useState([]);
+      const [song5, setSong5] = useState("");
+      const [selectList5, setSelectList5] = useState([]);
+
+      const [theme, setTheme] = useState('');
+      const [key, setKey] = useState('');  
+      const [categorieList, setCategorieList] = useState([]);
+      const [selectCategorieList, setSelectCategorieList] = useState([]);     
+
+      const [selectedItem1, setSelectedItem1] = useState('');
+      const [selectedItem2, setSelectedItem2] = useState('');
+      const [selectedItem3, setSelectedItem3] = useState(''); 
+      const [selectedItem4, setSelectedItem4] = useState('');
+      const [selectedItem5, setSelectedItem5] = useState('');
+      const [selectedItem, setSelectedItem] = useState([]);
 
     const backendUrl = "http://localhost:3000";
 
+    // Fetch les categories disponibles
+    useEffect(() => {
+      fetch(`${backendUrl}/manches/categories`)
+      .then(response => response.json())
+      .then(data=>{
 
+
+        setCategorieList(data.categories)
+        // 
+
+      })
+    }, []);
+
+    // display les categories
+    const displayCategorie = categorieList.map((data, i) => (
+      <div key={i}>
+        <label>{data.nom}
+        <input
+          type="checkbox"
+          id={`cat-${i}`}
+          value={data.nom}
+          onChange={()=>ajoutCategorie(data._id)}
+        />
+        </label>
+      </div>
+    ))
+
+
+function ajoutCategorie(id) {
+  const arrCategorie = selectCategorieList;
+  const index = arrCategorie.indexOf(id);
+  //arrCategorie.push(id)
+  if (index === -1) {
+    arrCategorie.push(id);
+  } else {
+    arrCategorie.splice(index, 1);
+  }
+  setSelectCategorieList(arrCategorie)
+}
+
+
+
+
+    // envoi Creation de manche
     const handleCreateRound = () => {
         const roundData = {selectedItem };
-
         fetch(`${backendUrl}/manches`, {
         method: "POST",
         headers: {
@@ -38,38 +107,17 @@ function CreateRound() {
             setSelectedItem4('');
             setSelectedItem5('');
             setSelectedItem([]);
-
-            // router.push("/lobbypage");
+            router.push("/lobbypage");
         })
         .catch((error) => {
             console.error("Échec de la création de la manche :", error);
         });
     };
 
-    // mon code:
-    const [song1, setSong1] = useState("");
-    const [selectList1, setSelectList1] = useState([]);
-    const [song2, setSong2] = useState("");
-    const [selectList2, setSelectList2] = useState([]);
-    const [song3, setSong3] = useState("");
-    const [selectList3, setSelectList3] = useState([]);
-    const [song4, setSong4] = useState("");
-    const [selectList4, setSelectList4] = useState([]);
-    const [song5, setSong5] = useState("");
-    const [selectList5, setSelectList5] = useState([]);
 
-    const [theme, setTheme] = useState('');
-    const [key, setKey] = useState('');  
-
-    const [selectedItem1, setSelectedItem1] = useState('');
-    const [selectedItem2, setSelectedItem2] = useState('');
-    const [selectedItem3, setSelectedItem3] = useState(''); 
-    const [selectedItem4, setSelectedItem4] = useState('');
-    const [selectedItem5, setSelectedItem5] = useState('');
-    const [selectedItem, setSelectedItem] = useState([]);
-
+    // Recherche les musique et retourne une liste de musique potentiel // A refactoriser
     function searchsong1(search) {
-        fetch(`http://localhost:3000/manches/searchsong`, {
+        fetch(`${backendUrl}/manches/searchsong`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -84,7 +132,7 @@ function CreateRound() {
         .catch(error => console.error("Erreur :", error));
     }
     function searchsong2(search) {
-      fetch(`http://localhost:3000/manches/searchsong`, {
+      fetch(`${backendUrl}/manches/searchsong`, {
       method: "POST",
       headers: {
           "Content-Type": "application/json",
@@ -99,7 +147,7 @@ function CreateRound() {
       .catch(error => console.error("Erreur :", error));
     }
     function searchsong3(search) {
-      fetch(`http://localhost:3000/manches/searchsong`, {
+      fetch(`${backendUrl}/manches/searchsong`, {
       method: "POST",
       headers: {
           "Content-Type": "application/json",
@@ -114,7 +162,7 @@ function CreateRound() {
       .catch(error => console.error("Erreur :", error));
     }
     function searchsong4(search) {
-      fetch(`http://localhost:3000/manches/searchsong`, {
+      fetch(`${backendUrl}/manches/searchsong`, {
       method: "POST",
       headers: {
           "Content-Type": "application/json",
@@ -129,7 +177,7 @@ function CreateRound() {
       .catch(error => console.error("Erreur :", error));
     }
     function searchsong5(search) {
-      fetch(`http://localhost:3000/manches/searchsong`, {
+      fetch(`${backendUrl}/manches/searchsong`, {
       method: "POST",
       headers: {
           "Content-Type": "application/json",
@@ -144,15 +192,14 @@ function CreateRound() {
       .catch(error => console.error("Erreur :", error));
     }
 
-
     function trackValidate() {
-      const items = [{username:user}, {theme:theme}, {key:key}, {titre : [selectedItem1,selectedItem2,selectedItem3,selectedItem4,selectedItem5]}]
+      const items = [{username:user}, {theme:theme}, {key:key},{categorie:selectCategorieList}, {titre : [selectedItem1,selectedItem2,selectedItem3,selectedItem4,selectedItem5]}]
         setSelectedItem(items)
       console.log("Sélectionné :", selectedItem);
       handleCreateRound()
     }
 
-
+    // A refactoriser
     return (
         <>
         <div className={styles.container}>
@@ -176,6 +223,14 @@ function CreateRound() {
                   required
                 />
             </div>
+
+            <div>
+              {displayCategorie}
+            </div>
+
+
+
+
             <div className={styles.title_container}>
               <div className={styles.title}>
                 <div>
