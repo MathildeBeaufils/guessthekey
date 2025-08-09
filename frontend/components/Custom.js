@@ -16,8 +16,9 @@ function Custom() {
         <h1 className={styles.title}>PERSONNALISATION</h1>
 
         <div className={styles.layout}>
-
+            
             <div className={styles.items}>
+                <span>Inventaire</span>
                 <div className={styles.tete}>
                     <span>Tête</span>
                 </div>
@@ -39,7 +40,7 @@ function Custom() {
             <div className={styles.perso}>
                 <span>Votre personnage</span>
                 <div className={styles.image}>
-                    <img className={styles.imgPerso} src="/perso_test.png" />
+                    <img className={styles.imgPerso} src="/perso_test1.png" />
                 </div>
             </div>
         </div>
