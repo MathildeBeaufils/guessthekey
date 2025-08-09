@@ -1,8 +1,12 @@
 .container {
   background-color: #555563;
   width: 100%;
+<<<<<<< HEAD
   min-height: 100vh;
   height: auto;
+=======
+  height: 90vh;
+>>>>>>> ff1d411f0ec51a7a969f54a0ca108bd62b17c477
   display: flex;
   align-items: center;
   justify-content: center;

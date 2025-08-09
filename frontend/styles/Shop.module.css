@@ -1,0 +1,126 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+    min-height: 90vh;
+    background-color: #555563;
+}
+
+.main p {
+    color: #fff;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.main h2 {
+    color: #fff;
+    font-size: 1rem;
+}
+
+.title {
+    line-height: 1.15;
+    font-size: 2rem;
+    color: white;
+    cursor: default;
+    margin: 15px;
+}
+
+.layout {
+    display: flex;
+    flex-direction: column;
+    justify-content: top;
+    align-items: center;
+    width: 95%;
+    height: 90%;
+    padding: 2%;
+    gap: 10px;
+}
+
+.layout span {
+    color: #fff;
+    font-size: 13px;
+}
+
+.layout .KPbox {
+    position: absolute;
+    top: 10vh;
+    right: 0;
+    margin: 10px;
+    padding: 5px;
+    background-color: #dadada;
+    color: #000;
+    font-size: 15px;
+}
+
+.skins {
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between;
+    text-align: center;
+    width: 95%;
+    height: 70%;
+    gap: 10px;
+}
+
+.categories {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    border: solid, 1px, #fff;
+    background-color: #cccccb;
+    width: 100%;
+    height: 50%;
+    gap: 10px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+.item {
+    background-color: #cccccb;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 150px;
+    width: 150px;
+}
+
+.imgItem {
+    width: 100px;
+    height: 100px;
+}
+
+.KPstore {
+    background-color: #cccccb;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 95%;
+    height: 60px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+.KPitem {
+    background-color: #E3505A;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    width: 150px;
+}
+
+.KP {
+    font-size: 3rem;
+    font-weight: 800;
+}
+
+.panier {
+    font-size: 15px;
+    padding-bottom: 50px;
+}
