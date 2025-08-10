@@ -154,10 +154,15 @@ router.post('/musicByArtist', (req,res)=>{
   const musique = req.body.musique;
   console.log('artiste',artiste)
   console.log('musique',musique)
-  fetch(`https://api.deezer.com/search/track?q=${musique}&limit=100`)
+  fetch(`https://api.deezer.com/search/track?q=${musique}&limit=10`)
   .then(response => response.json())
   .then(data => {
-    const urlMusic = data.data[0].link
+    const morceauCorrespondant = data.data.find(track => {
+      const titre = track.title;
+      const nomArtiste = track.artist.name;
+      return titre === musique && nomArtiste === artiste;
+    });
+    const urlMusic = morceauCorrespondant.link
     res.json({ result: true, data:urlMusic });
   })
   .catch(error => {
