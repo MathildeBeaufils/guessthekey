@@ -80,3 +80,8 @@
     background-color: #cccccb;
     height: 25%;
 }
+
+.lienShop:hover {
+    cursor: pointer;
+    color: #E3505A;
+}
