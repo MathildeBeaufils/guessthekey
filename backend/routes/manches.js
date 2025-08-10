@@ -82,10 +82,8 @@ router.get('/', function(req, res) {
 });
 
 // Route pour ajouter une manche 
-// demander a gaspard psk sorcelerie // fonctionne si j'envoi 2 fois le formulaire // key et theme pas en bdd
+// key et theme pas en bdd
 router.post('/', function(req, res) {
-  console.log("selectedItem:", req.body.selectedItem);
-  console.log("selectedItem[3]:", req.body.selectedItem[3]);
   const categorieId = [];
   const categories = req.body.selectedItem[3].categorie;
   for (let i = 0; i < categories.length; i++) {

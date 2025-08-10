@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
     // A faire:
     // - refactoriser
     // - css
+    // - changer le user ligne 15
     
 function CreateRound() {
     const router = useRouter();
@@ -34,7 +35,6 @@ function CreateRound() {
       const [selectedItem3, setSelectedItem3] = useState(''); 
       const [selectedItem4, setSelectedItem4] = useState('');
       const [selectedItem5, setSelectedItem5] = useState('');
-      const [selectedItem, setSelectedItem] = useState([]);
 
     const backendUrl = "http://localhost:3000";
 
@@ -69,7 +69,6 @@ function CreateRound() {
 function ajoutCategorie(id) {
   const arrCategorie = selectCategorieList;
   const index = arrCategorie.indexOf(id);
-  //arrCategorie.push(id)
   if (index === -1) {
     arrCategorie.push(id);
   } else {
@@ -79,17 +78,36 @@ function ajoutCategorie(id) {
 }
 
 
+// Met toutes les infos selectionner dans une variable pour les passé dans en parametre de la fonction, 
+// le useState serai trop lent a se mettre a jour dans la fonction handleCreateRound()
+function trackValidate() {
+  const items = [
+    { username: user },
+    { theme: theme },
+    { key: key },
+    { categorie: selectCategorieList },
+    {
+      titre: [
+        selectedItem1,
+        selectedItem2,
+        selectedItem3,
+        selectedItem4,
+        selectedItem5,
+      ],
+    },
+  ];
+  handleCreateRound(items);
+}
 
 
     // envoi Creation de manche
-    const handleCreateRound = () => {
-        const roundData = {selectedItem };
+    const handleCreateRound = (items) => {
         fetch(`${backendUrl}/manches`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(roundData),
+        body: JSON.stringify({ selectedItem: items }),
         })
         .then((response) => {
             if (!response.ok) {
@@ -99,14 +117,6 @@ function ajoutCategorie(id) {
         })
         .then((data) => {
             console.log("Manche créée avec succès !", data);
-            setTheme('');
-            setKey('');  
-            setSelectedItem1('');
-            setSelectedItem2('');
-            setSelectedItem3(''); 
-            setSelectedItem4('');
-            setSelectedItem5('');
-            setSelectedItem([]);
             router.push("/lobbypage");
         })
         .catch((error) => {
@@ -192,12 +202,7 @@ function ajoutCategorie(id) {
       .catch(error => console.error("Erreur :", error));
     }
 
-    function trackValidate() {
-      const items = [{username:user}, {theme:theme}, {key:key},{categorie:selectCategorieList}, {titre : [selectedItem1,selectedItem2,selectedItem3,selectedItem4,selectedItem5]}]
-        setSelectedItem(items)
-      console.log("Sélectionné :", selectedItem);
-      handleCreateRound()
-    }
+
 
     // A refactoriser
     return (
