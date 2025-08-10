@@ -148,7 +148,23 @@ router.post('/searchsong', (req, res) => {
 });
 
 
-// route qui recupere trackid grace a l'artiste et title depuis l'API
+// route qui recupere l'URL du titre
+router.post('/musicByArtist', (req,res)=>{
+  const artiste = req.body.artiste;
+  const musique = req.body.musique;
+  console.log('artiste',artiste)
+  console.log('musique',musique)
+  fetch(`https://api.deezer.com/search/track?q=${musique}&limit=100`)
+  .then(response => response.json())
+  .then(data => {
+    const urlMusic = data.data[0].link
+    res.json({ result: true, data:urlMusic });
+  })
+  .catch(error => {
+    console.error("Error fetching artist:", error);
+    res.status(500).json({ result: false, error: "Internal server error" });
+  });
+})
 
 
 module.exports = router;
