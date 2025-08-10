@@ -34,7 +34,7 @@ function Settings() {
             <h2> Paramètres sonores</h2>
             <p>Volume général :</p>
             <div className={styles.volume}>
-                <FontAwesomeIcon onClick={() => setVolumeMusique(0)} className={styles.volumeIcon} icon={faVolumeXmark}/>
+                <FontAwesomeIcon onClick={() => setVolumeGeneral(0)} className={styles.volumeIcon} icon={faVolumeXmark}/>
                 <input
                 className={styles.cursor}
                 type="range"
@@ -64,7 +64,7 @@ function Settings() {
 
             <p>Volume SFX :</p>
             <div className={styles.volume}>
-                <FontAwesomeIcon onClick={() => setVolumeMusique(0)} className={styles.volumeIcon} icon={faVolumeXmark}/>
+                <FontAwesomeIcon onClick={() => setVolumeSFX(0)} className={styles.volumeIcon} icon={faVolumeXmark}/>
                 <input
                 className={styles.cursor}
                 type="range"

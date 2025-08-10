@@ -44,7 +44,7 @@ function Custom() {
                 </div>
             </div>
         </div>
-        <Link href="/shop"><p>Visitez le <FontAwesomeIcon icon={faCartPlus} />store pour plus de choix de personnalisation</p></Link>
+        <Link href="/shop" ><p className={styles.lienShop}>Visitez le <FontAwesomeIcon icon={faCartPlus} />store pour plus de choix de personnalisation</p></Link>
       </main>
     </div>
   );

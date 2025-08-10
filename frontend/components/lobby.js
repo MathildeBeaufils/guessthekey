@@ -7,28 +7,31 @@ console.log('Tentative de connexion socket...');
 const socket = io('http://localhost:4000'); // port déterminé dans le backend, spécifique pour le Socket
 
 
-const Lobby = () => {
+const Lobby = ({lobbyCode}) => {
     const router = useRouter();
     const { code } = router.query;
 
     const [lobbyId, setLobbyId] = useState("NomduLobby");
     const [players, setPlayers] = useState([]);
     const [gameStarted, setGameStarted] = useState(false);
-
-
-    useEffect(() => {
-        setLobbyId(code);
-        //Connexion à un lobby existant via son ID
-        socket.emit('joinLobby', code);
-    }, [code])
+    const [manchesDispo, setManchesDispo] = useState([]);
 
     useEffect(() => {
+        if (lobbyCode) {
+            setLobbyId(lobbyCode);
+            socket.emit('joinLobby', lobbyCode);
+        }
+    }, [lobbyCode]);
+    
+
+    useEffect(() => {    
         // Mise à jour des joueureuses présent.es dans le lobby
         socket.on('lobbyPlayers', (playerList) => {
             setPlayers(playerList);
         });
         // Lancement de la partie au click du bouton
         socket.on('gameStarted', () => {
+            console.log("Ceci est un start game");
             setGameStarted(true);
         });
 
@@ -37,7 +40,7 @@ const Lobby = () => {
             socket.off('lobbyPlayers');
             socket.off('gameStarted');
         };
-    }, [lobbyId]);
+    }, []);
 
     const startGame = () => {
         console.log(`Lancement de la partie pour le lobby ${lobbyId}`)
@@ -46,9 +49,10 @@ const Lobby = () => {
 
     useEffect(() => {
         if(gameStarted){
-            router.push(`/gamepage?lobbyId=${lobbyId}`);
+            console.log('Redirection vers la partie')
+            router.push(`/game/${lobbyId}`)
         } 
-    }, [gameStarted, router]);
+    }, [gameStarted, code, router]);
 
     // Infos du lobby
     return (
@@ -61,11 +65,11 @@ const Lobby = () => {
             <div className={styles.info}>
                 <p>Nombre de joueurs du lobby : X / X</p>
                 <p> | </p>
-                <p>Nombre de manche pour la partie :</p>
+                <p>Nombre de manche pour la partie : Y/Y</p>
             </div>
             <div className={styles.ajout}>
                 <button className={styles.button}>Ajouter un membre</button>
-                <button className={styles.button} onClick={startGame}>Ajouter une manche</button>
+                <button className={styles.button} >Ajouter une manche</button>
             </div>
             <div className={styles.tableau}>
                 <div className={styles.players_container}>
@@ -76,8 +80,8 @@ const Lobby = () => {
                 </div>
                 <div className={styles.round_container}>
                     <p>Manches disponibles pour le lobby :</p>
-                    {players.map((playerId) => (
-                        <span key={playerId}>{playerId}</span>
+                    {manchesDispo.map((mancheId) => (
+                        <span key={mancheId}>{mancheId}</span>
                     ))}
                 </div>
                 </div>
