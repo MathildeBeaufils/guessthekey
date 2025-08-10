@@ -13,7 +13,7 @@ function CreateGameLocal() {
   const username = useSelector((state) => state.user.username);
 
   const handleCreate = () => {
-        fetch('http://localhost:3000/lobbies/create', {
+        fetch('http://localhost:4000/lobbies/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ function CreateGameLocal() {
           type="range"
           min="1"
           max="10"
-          defaultValue="5"
+          
           value={numberOfPlayers}
           onChange={(e) => setNumberOfPlayers(e.target.value)}
         />
@@ -50,7 +50,7 @@ function CreateGameLocal() {
           type="range"
           min="1"
           max="10"
-          defaultValue="5"
+          
           value={numberOfRounds}
           onChange={(e) => setNumberOfRounds(e.target.value)}
         />

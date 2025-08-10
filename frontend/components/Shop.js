@@ -27,12 +27,12 @@ function Shop() {
 
                   <div className={styles.item}>
                       <img className={styles.imgItem} src="/perso_test2.png" />
-                      <span>Minautore : XX KP</span>
+                      <span>Squelette : XX KP</span>
                   </div>
 
                   <div className={styles.item}>
                       <img className={styles.imgItem} src="/perso_test3.png" />
-                      <span>Valkyrie 2 : XX KP</span>
+                      <span>Dark oracle : XX KP</span>
                   </div>
 
                   <div className={styles.item}>
@@ -46,32 +46,32 @@ function Shop() {
                   
                   <div className={styles.item}>
                       <img className={styles.imgItem} src="/Head_test3.png" />
-                      <span>Squelette : XX KP</span>
+                      <span> Tête Squelette : XX KP</span>
                   </div>
 
                   <div className={styles.item}>
                       <img className={styles.imgItem} src="/Head_test2.png" />
-                      <span>Minautore : XX KP</span>
+                      <span> Tête Minautore : XX KP</span>
                   </div>
 
                   <div className={styles.item}>
                       <img className={styles.imgItem} src="/Body_test1.png" />
-                      <span>Valkyrie 2 : XX KP</span>
+                      <span> Haut Valkyrie 2 : XX KP</span>
                   </div>
 
                   <div className={styles.item}>
                       <img className={styles.imgItem} src="/Body_test2.png" />
-                      <span>Minautore : XX KP</span>
+                      <span>Haut ange : XX KP</span>
                   </div>
 
                   <div className={styles.item}>
                       <img className={styles.imgItem} src="/Body_test3.png" />
-                      <span>Valkyrie 2 : XX KP</span>
+                      <span>Haut Dark Oracle : XX KP</span>
                   </div>
 
                   <div className={styles.item}>
                       <img className={styles.imgItem} src="/Body_test4.png" />
-                      <span>Minautore : XX KP</span>
+                      <span>Haut squelette 2 : XX KP</span>
                   </div>
                 </div>
             </div>

@@ -1,5 +1,6 @@
 const { Server } = require('socket.io');
 
+
 // Simule un appel API à Deezer. Les URL ont une durée de validité limitée. Elles sont donc a récupérer au moment de jouer la manche via l'API track ou artist
 function getFiveTracks() {
   const tracks = [
@@ -39,160 +40,166 @@ function getFiveTracks() {
   return Promise.all(updateURL);
 }
 
+module.exports = (io) => {
 
+  const lobbies = new Map();
 
-module.exports = (serverInstance) => {
-    const io = new Server(serverInstance, {
-        cors: { origin: '*' }
+  io.on('connection', (socket) => {
+    console.log('Utilisateur connecté:', socket.id);
+
+    socket.on('joinLobby', (lobbyId) => {
+      socket.join(lobbyId);
+      if (!lobbies.has(lobbyId)) {
+        lobbies.set(lobbyId, {
+          players: new Set(),
+          status: 'waiting',
+          currentRoundIndex: 0,
+          roundDuration: 20,
+          timeout: null,
+          rounds: [],
+          scores: new Map()
+        });
+        console.log(`Nouveau lobby créé: ${lobbyId}`);
+      }
+
+      const lobby = lobbies.get(lobbyId);
+      lobby.players.add(socket.id);
+      io.to(lobbyId).emit('lobbyPlayers', [...lobby.players]);
+      console.log(`Utilisateur ${socket.id} a rejoint le lobby ${lobbyId}`);
     });
 
-    const lobbies = new Map();
+    socket.on('send_message', ({ lobbyId, message }) => {
+      io.to(lobbyId).emit('receive_message', message);
+    });
 
-    io.on('connection', (socket) => {
-        console.log('Utilisateur connecté:', socket.id);
+    socket.on('startGame', async (lobbyId) => {
+      console.log(`Démarrage de la partie pour le lobby ${lobbyId}`);
+      const lobby = lobbies.get(lobbyId);
+      if (!lobby || lobby.status === 'in-game') {
+        socket.emit('errorMessage', 'Partie déjà en cours ou lobby invalide');
+        return;
+      }
+      const tracks = await getFiveTracks();
+      lobby.rounds = tracks.map(track => ({ ...track, answers: new Map() }));
+      lobby.currentRoundIndex = 0;
+      lobby.status = 'in-game';
+      lobby.scores = new Map();
+      io.to(lobbyId).emit('gameStarted');
+      console.log("Premier round");
+      setTimeout(() => launchNextRound(lobbyId), 500);
+    });
 
-        socket.on('joinLobby', (lobbyId) => {
-        socket.join(lobbyId);
-        if (!lobbies.has(lobbyId)) {
-            lobbies.set(lobbyId, {
-            players: new Set(),
-            status: 'waiting',
-            currentRoundIndex: 0,
-            roundDuration: 20,
-            timeout: null,
-            rounds: [],
-            scores: new Map()
-            });
-        console.log(`Nouveau lobby créé: ${lobbyId}`)
-        }
-        const lobby = lobbies.get(lobbyId);
-        lobby.players.add(socket.id);
-        console.log(`Utilisateur ${socket.id} a rejoint le lobby ${lobbyId}`);
+    socket.on('answer', ({ lobbyId, title, artist }) => {
+      const lobby = lobbies.get(lobbyId);
+      if (!lobby || lobby.status !== 'in-game') return;
+      const round = lobby.rounds[lobby.currentRoundIndex];
+      if (!round) return;
+
+      // Permet d'envoyer une réponse même si un seul champ est rempli
+      round.answers.set(socket.id, { title: title || '', artist: artist || '' });
+
+      // Vérifie la réponse et envoie uniquement le titre ou l'artiste correct si trouvé
+      const correctTitle = round.title ? round.title.toLowerCase() : '';
+      const correctArtist = round.artist ? round.artist.toLowerCase() : '';
+      const titleAnswer = (title || '').toLowerCase();
+      const artistAnswer = (artist || '').toLowerCase();
+      const titleOk = titleAnswer.includes(correctTitle);
+      const artistOk = artistAnswer.includes(correctArtist);
+      let correctAnswer = {};
+      if (titleOk) correctAnswer.title = round.title;
+      if (artistOk) correctAnswer.artist = round.artist;
+      if (titleOk || artistOk) {
+        socket.emit('roundEnded', {
+          correctAnswer,
+          allAnswers: { [socket.id]: { title: title || '', artist: artist || '' } }
         });
+      }
+    });
 
     socket.on('requestCurrentGameState', (lobbyId) => {
-        const lobby = lobbies.get(lobbyId);
-        if (!lobby) return;
+      const lobby = lobbies.get(lobbyId);
+      if (!lobby) return;
 
-        if (lobby.status === 'in-game') {
-            const round = lobby.rounds[lobby.currentRoundIndex];
-            if (round) {
-            socket.emit('newRound', {
-                index: lobby.currentRoundIndex + 1,
-                total: lobby.rounds.length,
-                previewUrl: round.previewUrl,
-                duration: lobby.roundDuration
-            });
-            console.log("Emission newRound")
-            }
+      if (lobby.status === 'in-game') {
+        const round = lobby.rounds[lobby.currentRoundIndex];
+        if (round) {
+          socket.emit('newRound', {
+            index: lobby.currentRoundIndex + 1,
+            total: lobby.rounds.length,
+            previewUrl: round.previewUrl,
+            duration: lobby.roundDuration
+          });
+          console.log("Emission newRound");
         }
+      }
     });
 
-        socket.on('startGame', async (lobbyId) => {
-            console.log(`Démarrage de la partie pour le lobby ${lobbyId}`);
-            const lobby = lobbies.get(lobbyId);
-            if (!lobby || lobby.status === 'in-game') {
-                socket.emit('errorMessage', 'Partie déjà en cours ou lobby invalide');
-                return;
-            }
+    socket.on('disconnect', () => {
+      for (const [lobbyId, lobby] of lobbies.entries()) {
+        if (lobby.players.has(socket.id)) {
+          lobby.players.delete(socket.id);
 
-            const tracks = await getFiveTracks();
-            lobby.rounds = tracks.map(track => ({ ...track, answers: new Map() }));
-            lobby.currentRoundIndex = 0;
-            lobby.status = 'in-game';
-            lobby.scores = new Map();
-            io.to(lobbyId).emit('gameStarted');
-            console.log("Premier round");
-            setTimeout(() => launchNextRound(lobbyId), 500);
-        });
-
-        socket.on('answer', ({ lobbyId, title, artist }) => {
-            const lobby = lobbies.get(lobbyId);
-            if (!lobby || lobby.status !== 'in-game') return;
-            const round = lobby.rounds[lobby.currentRoundIndex];
-            if (!round) return;
-            // Permet d'envoyer une réponse même si un seul champ est rempli
-            round.answers.set(socket.id, { title: title || '', artist: artist || '' });
-
-            // Vérifie la réponse et envoie uniquement le titre ou l'artiste correct si trouvé
-            const correctTitle = round.title ? round.title.toLowerCase() : '';
-            const correctArtist = round.artist ? round.artist.toLowerCase() : '';
-            const titleAnswer = (title || '').toLowerCase();
-            const artistAnswer = (artist || '').toLowerCase();
-            const titleOk = titleAnswer.includes(correctTitle);
-            const artistOk = artistAnswer.includes(correctArtist);
-            let correctAnswer = {};
-            if (titleOk) correctAnswer.title = round.title;
-            if (artistOk) correctAnswer.artist = round.artist;
-            if (titleOk || artistOk) {
-                socket.emit('roundEnded', {
-                correctAnswer,
-                allAnswers: { [socket.id]: { title: title || '', artist: artist || '' } }
-                });
-            }
-        });
-
-        socket.on('disconnect', () => {
-        for (const [lobbyId, lobby] of lobbies.entries()) {
-            if (lobby.players.has(socket.id)) {
-            lobby.players.delete(socket.id);
-            if (lobby.players.size === 0) {
-                lobbies.delete(lobbyId);
-                console.log(`Lobby ${lobbyId} supprimé (vide)`);
-            }
-            }
+          if (lobby.players.size === 0) {
+            lobbies.delete(lobbyId);
+            console.log(`Lobby ${lobbyId} supprimé (vide)`);
+          } else {
+            // Mise à jour de la liste des joueureuses et envoi de l'info au membres du lobby
+            io.to(lobbyId).emit('lobbyPlayers', [...lobby.players]);
+          }
         }
-        console.log('Joueur déconnecté:', socket.id);
-        });
+      }
+      console.log('Joueur déconnecté:', socket.id);
     });
 
-    function launchNextRound(lobbyId) {
-        const lobby = lobbies.get(lobbyId);
-        if (!lobby) return;
-        console.log(`Lancement du round ${lobby.currentRoundIndex +1}`)
-        if (lobby.currentRoundIndex >= lobby.rounds.length) {
-        console.log("Fin de la parite");
-        endGame(lobbyId);
-        return;
-        }
+  });
 
-        const round = lobby.rounds[lobby.currentRoundIndex];
-        io.to(lobbyId).emit('newRound', {
-        index: lobby.currentRoundIndex + 1,
-        total: lobby.rounds.length,
-        previewUrl: round.previewUrl,
-        duration: lobby.roundDuration
-        });
-
-        lobby.timeout = setTimeout(() => {
-        evaluateRound(lobbyId);
-        }, lobby.roundDuration * 1000);
+  function launchNextRound(lobbyId) {
+    const lobby = lobbies.get(lobbyId);
+    if (!lobby) return;
+    console.log(`Lancement du round ${lobby.currentRoundIndex +1}`);
+    if (lobby.currentRoundIndex >= lobby.rounds.length) {
+      console.log("Fin de la partie");
+      endGame(lobbyId);
+      return;
     }
 
-    function evaluateRound(lobbyId) {
-        const lobby = lobbies.get(lobbyId);
-        if (!lobby) return;
-        const round = lobby.rounds[lobby.currentRoundIndex];
-        if (!round) return;
-        console.log("evaluateRound")
-        // Passage automatique au round suivant
-        lobby.currentRoundIndex++;
-        // RAZ du timer à chaque nouveau round
-        setTimeout(() => launchNextRound(lobbyId), 4000);
-    }
+    const round = lobby.rounds[lobby.currentRoundIndex];
+    io.to(lobbyId).emit('newRound', {
+      index: lobby.currentRoundIndex + 1,
+      total: lobby.rounds.length,
+      previewUrl: round.previewUrl,
+      duration: lobby.roundDuration
+    });
 
-    function endGame(lobbyId) {
-        const lobby = lobbies.get(lobbyId);
-        if (!lobby) return;
+    lobby.timeout = setTimeout(() => {
+      evaluateRound(lobbyId);
+    }, lobby.roundDuration * 1000);
+  }
 
-        io.to(lobbyId).emit('gameEnded', {
-        scores: Object.fromEntries(lobby.scores)
-        });
+  function evaluateRound(lobbyId) {
+    const lobby = lobbies.get(lobbyId);
+    if (!lobby) return;
+    const round = lobby.rounds[lobby.currentRoundIndex];
+    if (!round) return;
+    console.log("evaluateRound");
+    // Passage automatique au round suivant
+    lobby.currentRoundIndex++;
+    // RAZ du timer à chaque nouveau round
+    setTimeout(() => launchNextRound(lobbyId), 4000);
+  }
 
-        lobby.status = 'waiting';
-        lobby.rounds = [];
-        lobby.scores = new Map();
-        lobby.currentRoundIndex = 0;
-        lobby.timeout = null;
-    }
+  function endGame(lobbyId) {
+    const lobby = lobbies.get(lobbyId);
+    if (!lobby) return;
+
+    io.to(lobbyId).emit('gameEnded', {
+      scores: Object.fromEntries(lobby.scores)
+    });
+
+    lobby.status = 'waiting';
+    lobby.rounds = [];
+    lobby.scores = new Map();
+    lobby.currentRoundIndex = 0;
+    lobby.timeout = null;
+  }
 };

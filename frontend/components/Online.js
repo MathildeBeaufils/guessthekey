@@ -39,8 +39,7 @@ function Online() {
     <>
       <Menu/>
       <div className={styles.container}>
-        <h1 className={styles.create}>En ligne</h1>
-        <p className={styles.game_search}>Recherche de parties</p>
+        <h1 className={styles.create}>Recherche de parties en ligne</h1>
         <div className={styles.game_container}>
           {lobbyList}
         </div>
