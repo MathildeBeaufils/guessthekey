@@ -2,6 +2,7 @@ const request = require('supertest');
 const app = require('./app');
 
 
+// faire des MOCKS
 
 const newUser = { username: 'userTest', password: 'test123', email:'test@test.fr' };
 const newUsername = 'usertest2';
@@ -44,14 +45,12 @@ it('Update User', async () => {
         newUsername:newUsername
     });
     expect(res3.statusCode).toBe(200);
-    expect(res3.body.username).toBe(newUsername);
-
+    expect(res3.body.update.modifiedCount).toBe(1);
 });
 
 
 it('DELETE User', async () => {
-    const res4 = await request(app).delete('/users/deleteUser').send({email:newUser.email});
+    const res4 = await request(app).delete(`/users/deleteUser/${newUser.email}`);
     expect(res4.statusCode).toBe(200);
     expect(res4.body.result).toBe(true);
-
 });
