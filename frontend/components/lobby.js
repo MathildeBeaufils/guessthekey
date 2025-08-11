@@ -11,10 +11,12 @@ const Lobby = ({lobbyCode}) => {
     const router = useRouter();
     const { code } = router.query;
 
+
     const [lobbyId, setLobbyId] = useState("NomduLobby");
     const [players, setPlayers] = useState([]);
     const [gameStarted, setGameStarted] = useState(false);
     const [manchesDispo, setManchesDispo] = useState([]);
+
 
     useEffect(() => {
         if (lobbyCode) {
@@ -23,7 +25,6 @@ const Lobby = ({lobbyCode}) => {
         }
     }, [lobbyCode]);
     
-
     useEffect(() => {    
         // Mise à jour des joueureuses présent.es dans le lobby
         socket.on('lobbyPlayers', (playerList) => {
@@ -53,6 +54,7 @@ const Lobby = ({lobbyCode}) => {
             router.push(`/game/${lobbyId}`)
         } 
     }, [gameStarted, code, router]);
+
 
     // Infos du lobby
     return (
