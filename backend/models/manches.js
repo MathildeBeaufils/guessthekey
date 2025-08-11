@@ -12,6 +12,7 @@ const manchesSchema = mongoose.Schema({
   titre5: String,
   artiste5: String,
   key: String,
+  theme:String,
   categories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'categories' }],
   created_at: Date,
   created_by: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
