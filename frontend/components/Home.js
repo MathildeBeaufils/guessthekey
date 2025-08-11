@@ -7,8 +7,7 @@ import Link from "next/link";
 import { useSelector } from 'react-redux';
 
 // A faire:
-// - mettre les liens sur la page
-// - Adapter le fetch
+// - Responsive
 
 function Home() {
   const user = useSelector((state)=>state.user.value);
@@ -20,11 +19,8 @@ function Home() {
     fetch(`http://localhost:3000/users/${user.token}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.data.tableauQuete);
         if (data.data.tableauQuete && data.data.tableauQuete.length >= 1) {
-          console.log('+ de 1')
           setNbQuete(data.data.tableauQuete.length);
-          console.log(nbQuete)
         }
       })
       .catch((error) => {
