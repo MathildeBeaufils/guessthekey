@@ -77,11 +77,10 @@ router.delete('/deleteUser', (req, res) => {
 })
 
 // Route GET pour récupérer un utilisateur à partir de son username
-router.get('/:username', (req, res) => {
-
-  User.findOne({username: req.params.username}).then(data => {
+router.get('/:token', (req, res) => {
+  User.findOne({token: req.params.token}).then(data => {
     if(data){
-      res.json({ result: true, username: data})
+      res.json({ result: true, data: data})
     } else {
       res.json({ result: false, message: "Utilisateur non trouvé"})
     }
@@ -122,7 +121,5 @@ router.post('/updatePassword', (req, res) => {
     }
   });
 });
-
-
 
 module.exports = router;
