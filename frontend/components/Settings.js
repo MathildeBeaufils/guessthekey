@@ -1,17 +1,24 @@
 import styles from '../styles/Settings.module.css';
 import { useRouter } from 'next/router';
 import Menu from './Menu';
-import { useState, useEffect } from 'react';
+import { useState,useEffect} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeXmark, faVolumeHigh,faPalette, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../reducers/users';
 
 
 function Settings() {
 
-    const router = useRouter();
-    const [volumeGeneral, setVolumeGeneral] = useState(50);
-    const [volumeMusique, setVolumeMusique] = useState(50);
-    const [volumeSFX, setVolumeSFX] = useState(50);
+
+
+  const dispatch = useDispatch();
+  const user = useSelector((state)=>state.user.value);
+  const backendUrl = "http://localhost:3000";
+  const router = useRouter();
+  const [volumeGeneral, setVolumeGeneral] = useState(50);
+  const [volumeMusique, setVolumeMusique] = useState(50);
+  const [volumeSFX, setVolumeSFX] = useState(50);
 
     /* Fonctionnalité des boutons de paramètres à mettre en place
     const handleRed () {}
@@ -20,9 +27,35 @@ function Settings() {
     const handleLink () {}
     const handleDelete () {}
     const handleSecurity () {}
-    const handleLogout () {}
     */
 
+  // Verifi que seul les user authentifier puisse acceder a al apage
+  // useEffect(() => {
+  //   if (!user.token) {
+  //     router.push('/');
+  //   }
+  // }, [user.token]);
+
+
+
+  // logout
+  function handleLogout(){
+    dispatch(logout);
+    router.push('/');
+  }
+  
+function handleDelete() {
+  const email = user.email;
+  fetch(`http://localhost:3000/users/deleteUser/${email}`, {
+    method: "DELETE",
+  })
+  .then(res => res.json())
+  .then(() => {
+    dispatch(logout());
+    router.push('/');
+  })
+  .catch(err => console.error("Erreur DELETE:", err));
+}
 
   return (
     <div>
@@ -100,9 +133,9 @@ function Settings() {
         </div>
 
         <button className={styles.btn} onClick={() => handleLink('lier')}>Lier un compte</button>
-        <button className={styles.btn} onClick={() => handleDelete('supprimer')}>Supprimer un compte</button>
+        <button className={styles.btn} onClick={() => handleDelete()}>Supprimer un compte</button>
         <button className={styles.btn} onClick={() => handleSecurity('confidentialité')}>Confidentialité et sécurité</button>
-        <button className={styles.btnLogout} onClick={() => handleLogout('pp')}>Deconnection <FontAwesomeIcon icon={faArrowRightFromBracket} className={styles.logoutIcon}/></button>
+        <button className={styles.btnLogout} onClick={() => handleLogout()}>Deconnection <FontAwesomeIcon icon={faArrowRightFromBracket} className={styles.logoutIcon}/></button>
       </main>
     </div>
   );

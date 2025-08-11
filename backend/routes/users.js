@@ -70,11 +70,14 @@ router.post('/signin', (req, res) => {
 });
 
 // route DELETE (/user/delete) pour supprimer un utilisateur
-router.delete('/deleteUser', (req, res) => {
-  User.deleteOne({ email: req.body.email }).then(user => {
+router.delete('/deleteUser/:email', (req, res) => {
+  const email = req.params.email;
+  User.deleteOne({ email }).then(user => {
     res.json({ result: true, deletedUser: user, message: 'Utilisateur supprimé' });
-  })
-})
+  }).catch(err => {
+    res.json({ result: false, error: err.message });
+  });
+});
 
 // Route GET pour récupérer un utilisateur à partir de son username
 router.get('/:token', (req, res) => {
