@@ -20,7 +20,7 @@ function Menu() {
                 </div>
             </Link>
 
-            <Link href="/profil">
+            <Link href="/custom">
                 <div className={styles.item}>
                     <FontAwesomeIcon icon={faShirt} />
                     <p>PERSONNALISATION</p>

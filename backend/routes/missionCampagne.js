@@ -50,9 +50,10 @@ router.post('/', (req, res) => {
         .then(() => {
         res.json({ message: 'Mission ajoutée à tous les utilisateurs avec succès !' });
         })
-        // pourquoi j'ai une erreur alors que ca fonctionne ?
+        // pourquoi j'ai une erreur alors que ca fonctionne ? 
+        // Parce que tu avais une apostrophe dans message console.error entre guillemets et non entre backtick ? Tu peux retest avec cette modif
         .catch(error => {
-        console.error('Erreur lors de l’ajout de la mission :', error);
+        console.error(`Erreur lors de l'ajout de la mission :`, error);
         res.json({ message: 'Erreur interne', error });
         });
 });

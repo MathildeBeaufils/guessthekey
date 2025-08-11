@@ -29,6 +29,9 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var manchesRouter = require('./routes/manches');
+var queteRouter = require('./routes/quete');
+
+
 var missionsCampagneRouter = require('./routes/missionCampagne');
 
 
@@ -39,44 +42,22 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
 app.use(cors());
-
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/manches', manchesRouter);
 app.use('/missionsCampagne', missionsCampagneRouter);
+app.use('/quete', queteRouter);
 
 // Ajout pour le générateur des nom de lobbies
 app.use('/lobbies', lobbiesRouter);
 
-// Ajout pour les lobbies
-io.on('connection', (socket) => {
-  console.log('Un utilisateur est connecté :', socket.id);
-
-  socket.on('joinLobby', (lobbyId) => {
-    socket.join(lobbyId);
-    console.log(` L'utilisateur ${socket.id} a rejoint le lobby ${lobbyId}`);
-  });
-
-  socket.on('send_message', ({ lobbyId, message }) => {
-    io.to(lobbyId).emit('receive_message', message);
-  });
-
-  socket.on('startGame', (lobbyId) => {
-    console.log(`Partie lancée dans le lobby ${lobbyId}`);
-    io.to(lobbyId).emit('newRound');
-  });
-
-  socket.on('disconnect', () => {
-    console.log('Utilisateur déconnecté :', socket.id);
-  });
-});
-
+// Import et appel du gameSocket avec l'instance io
+const gameSocket = require('./gamesocket');
+gameSocket(io);
 server.listen(4000, () => {
   console.log('Serveur Socket.IO démarré sur http://localhost:4000'); // Express sur le port 3000, utilisé un autre
 });
-
 
 module.exports = app;

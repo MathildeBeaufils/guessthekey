@@ -1,16 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import io from "socket.io-client";
-import { useRouter } from "next/router";
 import styles from "../styles/game.module.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FaVolumeUp, FaVolumeDown, FaVolumeMute } from "react-icons/fa";
 
 const socket = io("http://localhost:4000"); // port déterminé dans le backend, spécifique pour le Socket
 
-function Game() {
-  // Le useRouter a besoin d'un cycle pour récupérer les infos
-  const router = useRouter();
-  const { lobbyId } = router.query;
-  const isReady = router.isReady;
+function Game({lobbyCode}) {
 
   const [status, setStatus] = useState("waiting"); // waiting ou in-game ou ended
   const [round, setRound] = useState(null);
@@ -23,17 +19,23 @@ function Game() {
 
   const audioRef = useRef();
 
-  if (!router.isReady || !lobbyId) {
+  if (!lobbyCode) {
     return <div>Chargement du lobby...</div>;
   }
 
   useEffect(() => {
-    if (!lobbyId || !isReady) return;
+    if (!lobbyCode) return;
 
     // Connection au lobby pour récupérer les infos en instantané
-    socket.emit("joinLobby", lobbyId);
-    console.log(` joined lobby ${lobbyId}`);
-    socket.emit("requestCurrentGameState", lobbyId);
+    socket.emit('joinLobby', lobbyCode);
+    console.log(` joined lobby ${lobbyCode}`);
+
+    socket.emit("requestCurrentGameState", lobbyCode);
+
+    socket.on("gameStarted", () => {
+      console.log("La partie démarre !");
+      setStatus("in-game");
+    });
 
     socket.on("newRound", ({ index, total, previewUrl, duration }) => {
       console.log("New round");
@@ -57,15 +59,12 @@ function Game() {
 
     // Nettoyage au démontage ou si le lobbyId change
     return () => {
+      socket.off("gameStarted");
       socket.off("newRound");
       socket.off("roundEnded");
       socket.off("gameEnded");
     };
-  }, [lobbyId, isReady]);
-
-  if (!isReady) {
-    return <div>Chargement du lobby...</div>;
-  }
+  }, [lobbyCode]);
 
   // Joue la musique à chaque nouveau round, y compris le premier
   useEffect(() => {
@@ -97,7 +96,7 @@ function Game() {
   const sendAnswer = () => {
     if (!answer.title && !answer.artist) return;
     socket.emit("answer", {
-      lobbyId,
+      lobbyId: lobbyCode,
       title: answer.title,
       artist: answer.artist,
     });
@@ -125,13 +124,19 @@ function Game() {
 
   const getVolumeIcon = () => {
     if (volume === 0) {
-        return <FaVolumeMute className={styles.icon} />;
+      return <FaVolumeMute className={styles.icon} />;
     } else if (volume < 0.5) {
-        return <FaVolumeDown className={styles.icon} />;
+      return <FaVolumeDown className={styles.icon} />;
     } else {
-        return <FaVolumeUp className={styles.icon} />;
+      return <FaVolumeUp className={styles.icon} />;
     }
-};
+  };
+
+  // useEffect(() => {
+  //   if (audioRef.current) {
+  //     audioRef.current.volume = volume;
+  //   }
+  // }, [volume]);
 
   return (
     <div className={styles.container}>
