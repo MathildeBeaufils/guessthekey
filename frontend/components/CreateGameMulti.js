@@ -3,15 +3,14 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import Menu from './Menu';
 import { useSelector } from 'react-redux';
-import io from 'socket.io-client';
-const socket = io('http://localhost:4000');
+import socket from '../socket';
 
 
 function CreateGameMulti() {
   const router = useRouter();
   const [numberOfPlayers, setNumberOfPlayers] = useState(5);
   const [numberOfRounds, setNumberOfRounds] = useState(5);
-  const username = useSelector((state) => state.user.username);
+  const username = useSelector((state) => state.user.value.username);
   
   const handleCreate = () => {
     fetch('http://localhost:3000/lobbies/create', {
@@ -24,7 +23,7 @@ function CreateGameMulti() {
         .then((response) => response.json())
         .then((data) => {
             if (data.result) {
-              socket.emit('joinLobby', data.code);
+              socket.emit('joinLobby', {lobbyId: data.code, username});
               router.push(`/lobby/${data.code}`);
             } 
         })

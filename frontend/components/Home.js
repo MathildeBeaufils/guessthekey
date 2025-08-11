@@ -4,25 +4,23 @@ import Menu from "./Menu";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSelector } from 'react-redux';
 
 // A faire:
-// - mettre les liens sur la page
-// - Adapter le fetch
+// - Responsive
 
 function Home() {
+  const user = useSelector((state)=>state.user.value);
   const router = useRouter();
   // Quete, a decommenté et arrangé quand se sera fait ! + decommenté dans le jsx
   const [nbQuete, setNbQuete] = useState(0);
-  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:3000/users")
+    fetch(`http://localhost:3000/users/${user.token}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-        if (data.quete && data.quete.length >= 1) {
-          setNbQuete(data.quete.length);
-          setIsVisible(true);
+        if (data.data.tableauQuete && data.data.tableauQuete.length >= 1) {
+          setNbQuete(data.data.tableauQuete.length);
         }
       })
       .catch((error) => {
@@ -50,10 +48,9 @@ function Home() {
       <main className={styles.main}>
         <h1 className={styles.title}>Guess The Key</h1>
 
-        {/* {isVisible && ( */}
           <Link href="/quest">
             <div className={styles.displayQuete}>
-              {<p className={styles.nbQuate}>{nbQuete}</p>}
+              <p className={styles.nbQuate}>{nbQuete}</p>
               <Image
                 src="/cleDeSol.png"
                 alt="Logo clé de sol"
@@ -62,7 +59,6 @@ function Home() {
               />
             </div>
           </Link>
-        {/* )} */}
 
         <button className={styles.btn} onClick={() => handleSubmit("solo")}>
           Mode Solo

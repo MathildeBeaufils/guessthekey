@@ -47,11 +47,18 @@ module.exports = (io) => {
   io.on('connection', (socket) => {
     console.log('Utilisateur connecté:', socket.id);
 
-    socket.on('joinLobby', (lobbyId) => {
+    socket.on('joinLobby', (data) => {
+      if (!data || !data.lobbyId || !data.username) {
+        console.warn('joinLobby reçu avec des données invalides:', data);
+        return; // On stoppe si données manquantes
+      }
+    
+      const { lobbyId, username } = data;
+      socket.username = username;
       socket.join(lobbyId);
       if (!lobbies.has(lobbyId)) {
         lobbies.set(lobbyId, {
-          players: new Set(),
+          players: new Map(),
           status: 'waiting',
           currentRoundIndex: 0,
           roundDuration: 20,
@@ -63,9 +70,13 @@ module.exports = (io) => {
       }
 
       const lobby = lobbies.get(lobbyId);
-      lobby.players.add(socket.id);
-      io.to(lobbyId).emit('lobbyPlayers', [...lobby.players]);
-      console.log(`Utilisateur ${socket.id} a rejoint le lobby ${lobbyId}`);
+
+      // Ajout l'utilisateur avec son username + socket.id
+      lobby.players.set(username, {socketId: socket.id, score: 0 })
+
+      // on utilise .keys() car on est dans une Map. Ici on récupère tous les pseudo des utilisateurs présents dans la Map
+      io.to(lobbyId).emit('lobbyPlayers', [...lobby.players.keys()]);
+      console.log(`Utilisateur ${socket.id} a rejoint le lobby ${lobbyId} sous le pseudo ${username}`);
     });
 
     socket.on('send_message', ({ lobbyId, message }) => {
@@ -81,6 +92,15 @@ module.exports = (io) => {
       }
       const tracks = await getFiveTracks();
       lobby.rounds = tracks.map(track => ({ ...track, answers: new Map() }));
+
+      lobby.rounds.push({
+        index: 6,
+        total: 6,
+        question: "Quel est le point commun ?",
+        guessTheKey: true,
+        answers: new Map()
+      });
+
       lobby.currentRoundIndex = 0;
       lobby.status = 'in-game';
       lobby.scores = new Map();
@@ -89,13 +109,26 @@ module.exports = (io) => {
       setTimeout(() => launchNextRound(lobbyId), 500);
     });
 
-    socket.on('answer', ({ lobbyId, title, artist }) => {
+    socket.on('answer', ({ lobbyId, title, artist, guessTheKey }) => {
       const lobby = lobbies.get(lobbyId);
       if (!lobby || lobby.status !== 'in-game') return;
       const round = lobby.rounds[lobby.currentRoundIndex];
       if (!round) return;
 
-      // Permet d'envoyer une réponse même si un seul champ est rempli
+      if(round.guessTheKey) {
+        // Gestion du format de réponse pour le round du point commun
+        round.answers.set(socket.id, { freeAnswer: freeAnswer || ""});
+        const isCorrect = (freeAnswer || "").toLowerCase().trim() === "Je suis une très jolie key";
+        if(isCorrect){
+          //Mise à jour du score
+          socket.emit('roundEnded', {
+            correctAnswer: { freeAnswer: "Key"},
+            allAnswers: { [socket.id]: {freeAnswer}}
+          });
+        }
+      } else { // Gestion classique des réponses pour la partie blindtest
+
+        // Permet d'envoyer une réponse même si un seul champ est rempli
       round.answers.set(socket.id, { title: title || '', artist: artist || '' });
 
       // Vérifie la réponse et envoie uniquement le titre ou l'artiste correct si trouvé
@@ -114,7 +147,7 @@ module.exports = (io) => {
           allAnswers: { [socket.id]: { title: title || '', artist: artist || '' } }
         });
       }
-    });
+    }});
 
     socket.on('requestCurrentGameState', (lobbyId) => {
       const lobby = lobbies.get(lobbyId);
@@ -135,20 +168,25 @@ module.exports = (io) => {
     });
 
     socket.on('disconnect', () => {
+      const username = socket.username;
+      if (!username) {
+        console.log(`Déconnexion socket ${socket.id} sans username`);
+        return;
+      }
+      
       for (const [lobbyId, lobby] of lobbies.entries()) {
-        if (lobby.players.has(socket.id)) {
-          lobby.players.delete(socket.id);
-
+        if (lobby.players.has(username)) {
+          lobby.players.delete(username);
+    
           if (lobby.players.size === 0) {
             lobbies.delete(lobbyId);
             console.log(`Lobby ${lobbyId} supprimé (vide)`);
-          } else {
-            // Mise à jour de la liste des joueureuses et envoi de l'info au membres du lobby
-            io.to(lobbyId).emit('lobbyPlayers', [...lobby.players]);
+          } else { // mise a jour des infos du lobby en temps réel
+            io.to(lobbyId).emit('lobbyPlayers', [...lobby.players.keys()]);
           }
         }
       }
-      console.log('Joueur déconnecté:', socket.id);
+      console.log('Joueur déconnecté:', username, socket.id);
     });
 
   });
@@ -164,12 +202,26 @@ module.exports = (io) => {
     }
 
     const round = lobby.rounds[lobby.currentRoundIndex];
-    io.to(lobbyId).emit('newRound', {
-      index: lobby.currentRoundIndex + 1,
-      total: lobby.rounds.length,
-      previewUrl: round.previewUrl,
-      duration: lobby.roundDuration
-    });
+
+    if(round.guessTheKey) {
+      // Round spécial pour le point commun
+      io.to(lobbyId).emit('newRound', {
+        index: round.index,
+        total: round.total,
+        question: round.question,
+        guessTheKey: true,
+        duration: lobby.roundDuration,
+      });
+    } else {
+      // Round blindtest
+      io.to(lobbyId).emit('newRound', {
+        index: lobby.currentRoundIndex + 1,
+        total: lobby.rounds.length,
+        previewUrl: round.previewUrl,
+        duration: lobby.roundDuration
+      });
+    }
+    
 
     lobby.timeout = setTimeout(() => {
       evaluateRound(lobbyId);

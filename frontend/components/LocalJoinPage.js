@@ -2,9 +2,9 @@ import styles from '../styles/localJoinPage.module.css';
 import { useRouter } from 'next/router';
 import Menu from './Menu';
 import { useSelector } from 'react-redux';
-import io from 'socket.io-client';
+import socket from '../socket';
 import { useState } from 'react';
-const socket = io('http://localhost:4000');
+
 
 function LocalJoinPage() {
     const Router = useRouter();
@@ -24,7 +24,7 @@ function LocalJoinPage() {
             .then((response) => response.json())
             .then((data) => {
                 if (data.result) {
-                    socket.emit('joinLobby', data.code);
+                    socket.emit('joinLobby', {lobbyId: data.code, username});
                     router.push(`/lobby/${data.code}`);
                 } 
             })

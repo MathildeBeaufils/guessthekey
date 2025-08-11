@@ -1,10 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
-import io from "socket.io-client";
+import { useSelector } from 'react-redux';
 import styles from "../styles/game.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FaVolumeUp, FaVolumeDown, FaVolumeMute } from "react-icons/fa";
-
-const socket = io("http://localhost:4000"); // port déterminé dans le backend, spécifique pour le Socket
+import socket from '../socket';
 
 function Game({lobbyCode}) {
 
@@ -17,6 +16,8 @@ function Game({lobbyCode}) {
   // Nouvel état pour gérer le volume, de 0 (muet) à 1 (max)
   const [volume, setVolume] = useState(0.0);
 
+  const username = useSelector((state) => state.user.value.username);
+
   const audioRef = useRef();
 
   if (!lobbyCode) {
@@ -27,7 +28,7 @@ function Game({lobbyCode}) {
     if (!lobbyCode) return;
 
     // Connection au lobby pour récupérer les infos en instantané
-    socket.emit('joinLobby', lobbyCode);
+    socket.emit('joinLobby', {lobbyId: lobbyCode, username });
     console.log(` joined lobby ${lobbyCode}`);
 
     socket.emit("requestCurrentGameState", lobbyCode);

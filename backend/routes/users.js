@@ -70,18 +70,20 @@ router.post('/signin', (req, res) => {
 });
 
 // route DELETE (/user/delete) pour supprimer un utilisateur
-router.delete('/deleteUser', (req, res) => {
-  User.deleteOne({ email: req.body.email }).then(user => {
+router.delete('/deleteUser/:email', (req, res) => {
+  const email = req.params.email;
+  User.deleteOne({ email }).then(user => {
     res.json({ result: true, deletedUser: user, message: 'Utilisateur supprimé' });
-  })
-})
+  }).catch(err => {
+    res.json({ result: false, error: err.message });
+  });
+});
 
 // Route GET pour récupérer un utilisateur à partir de son username
-router.get('/:username', (req, res) => {
-
-  User.findOne({username: req.params.username}).then(data => {
+router.get('/:token', (req, res) => {
+  User.findOne({token: req.params.token}).then(data => {
     if(data){
-      res.json({ result: true, username: data})
+      res.json({ result: true, data: data})
     } else {
       res.json({ result: false, message: "Utilisateur non trouvé"})
     }
@@ -90,13 +92,15 @@ router.get('/:username', (req, res) => {
 
 // update username
 router.post('/updateUsername', (req, res) => {
-  const newUsername = req.body.newUsername;
-  User.updateOne({ username: req.body.username }, { username: newUsername })
-    .then(() => {
-      res.json({ result: true, username: newUsername });
+  const { username, newUsername } = req.body;
+
+  User.updateOne({ username }, { username: newUsername })
+    .then((result) => {
+      console.log("Résultat de updateOne :", result);
+      res.json({ result: true, update: result });
     })
     .catch(error => {
-      res.json({ result: false, error: error.message });
+      res.status(500).json({ result: false, error: error.message });
     });
 });
 
@@ -104,25 +108,23 @@ router.post('/updateUsername', (req, res) => {
 
 // update password
 router.post('/updatePassword', (req, res) => {
-  const { email, password, newPassword } = req.body;
-
+  const { email, newPassword } = req.body;
+  if (!email || !newPassword) {
+    return res.status(400).json({ result: false, error: "Champs manquants" });
+  }
   const hash = bcrypt.hashSync(newPassword, 10);
-
   User.findOne({ email }).then(user => {
-    if (user && bcrypt.compareSync(password, user.password)) {
-      User.updateOne({ email }, { password: hash })
-        .then(() => {
-          res.json({ result: true, message: 'Mot de passe changé avec succès' });
-        })
-        .catch(error => {
-          res.json({ result: false, error: error.message });
-        });
-    } else {
-      res.json({ result: false, error: 'Utilisateur introuvable ou mot de passe incorrect' });
+    if (!user) {
+      return res.status(404).json({ result: false, error: "Utilisateur introuvable" });
     }
+    User.updateOne({ email }, { password: hash })
+      .then(() => {
+        res.json({ result: true, message: 'Mot de passe changé avec succès' });
+      })
+      .catch(error => {
+        res.status(500).json({ result: false, error: error.message });
+      });
   });
 });
-
-
 
 module.exports = router;
