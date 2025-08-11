@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useSelector } from 'react-redux';
 import io from 'socket.io-client';
 import { useRouter} from 'next/router';
 import styles from "../styles/lobby.module.css";
@@ -12,18 +13,20 @@ const Lobby = () => {
 const [lobbyId, setLobbyId] = useState("NomduLobby");
 const [players, setPlayers] = useState([]);
 const [gameStarted, setGameStarted] = useState(false);
+const username = useSelector(state => state.user.username);
 
 
 useEffect(() => {
     setLobbyId(code);
     //Connexion à un lobby existant via son ID
-    socket.emit('joinLobby', lobbyId);
+    socket.emit('joinLobby', {lobbyId, username});
 }, [code])
 
 useEffect(() => {
+    
     // Mise à jour des joueureuses présent.es dans le lobby
-    socket.on('lobbyPlayers', (playerList) => {
-        setPlayers(playerList);
+    socket.on('lobbyPlayers', (playersList) => {
+        setPlayers(playersList);
     });
     // Lancement de la partie au click du bouton
     socket.on('gameStarted', () => {
@@ -35,7 +38,7 @@ useEffect(() => {
         socket.off('lobbyPlayers');
         socket.off('gameStarted');
     };
-}, [lobbyId]);
+}, [lobbyId, username]);
 
 const startGame = () => {
     console.log(`Lancement de la partie pour le lobby ${lobbyId}`)
@@ -54,11 +57,12 @@ useEffect(() => {
       <span className={styles.welcome}>Bienvenue dans le {lobbyId}</span>
       <button className={styles.button}>Ajouter un membre</button>
       <div className={styles.players_container}>
-      {players.map((playerId) => (
-        <span key={playerId}>{playerId}</span>
-       
+        <ul>
+        {players.map((playerId) => (
+        <li key={playerId}>{playerId.username}</li>
       ))}
-</div>
+      </ul>
+      </div>
       <button className={styles.button} onClick={startGame}>Lancer la partie</button>
     </div>
   );
