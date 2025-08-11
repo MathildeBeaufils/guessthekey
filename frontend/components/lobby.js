@@ -6,7 +6,7 @@ import styles from "../styles/lobby.module.css";
 console.log('Tentative de connexion socket...');
 import socket from '../socket';
 
-
+//zuuuuuuut
 const Lobby = ({lobbyCode}) => {
     const router = useRouter();
     const { code } = router.query;
