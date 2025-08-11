@@ -31,14 +31,12 @@ function Settings() {
     */
 
   // Verifi que seul les user authentifier puisse acceder a al apage
-  // useEffect(() => {
-  //   if (!user.token) {
-  //     router.push('/');
-  //   }
-  // }, [user.token]);
+  useEffect(() => {
+    if (!user.token) {
+      router.push('/');
+    }
+  }, [user.token]);
 
-
-// $2b$10$tbbCVcqb4XyH0aJ0FL/PMurbwuUPDzJKkip6XXlnZNhYRSFLOfW/a
 
 
   // logout
