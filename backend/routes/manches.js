@@ -81,18 +81,16 @@ router.get('/', function(req, res) {
   });
 });
 
-// Route pour ajouter une manche 
-// key et theme pas en bdd
+// Route pour ajouter une manche
 router.post('/', function(req, res) {
   const categorieId = [];
   const categories = req.body.selectedItem[3].categorie;
   for (let i = 0; i < categories.length; i++) {
     categorieId.push(categories[i]);
   }
-  console.log(categorieId)
   const user = req.body.selectedItem[0].username;
-  const key = req.body.selectedItem[0].key;
-  const theme = req.body.selectedItem[0].theme;
+  const theme = req.body.selectedItem[1].theme;
+  const key = req.body.selectedItem[2].key;
   const titre1=req.body.selectedItem[4].titre[0];
   const titre2=req.body.selectedItem[4].titre[1];
   const titre3=req.body.selectedItem[4].titre[2];
