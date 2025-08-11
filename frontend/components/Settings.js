@@ -179,10 +179,10 @@ function Settings() {
             </div>
         </div>
 
-        <div>
+        <div className={styles.profil}>
           <h3>Profil utilisateur</h3>
           <div className={styles.inputContaire}>
-            <div>
+            <div  className={styles.unInput}>
               <label>
                 Changer de nom d'utilisateur:<br></br>
                 <input
@@ -194,7 +194,7 @@ function Settings() {
                   required
                 />
               </label>
-              <button onClick={changeName} className={styles.recherche} >Valider unsername</button>    
+              <button onClick={changeName} className={styles.Btnrecherche} >Valider unsername</button>    
             </div>
             <div>
               <label>
@@ -208,7 +208,7 @@ function Settings() {
                   required
                 />
               </label>
-              <button onClick={changePassword} className={styles.recherche} >Valider Mot de passe</button>   
+              <button onClick={changePassword} className={styles.Btnrecherche} >Valider Mot de passe</button>   
               
             </div>
           </div>
