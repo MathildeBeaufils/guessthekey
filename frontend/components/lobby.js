@@ -5,17 +5,16 @@ import { useRouter} from 'next/router';
 import styles from "../styles/lobby.module.css";
 console.log('Tentative de connexion socket...');
 import socket from '../socket';
-
-
-const Lobby = ({lobbyCode}) => {
+const Lobby = () => {
     const router = useRouter();
     const { code } = router.query;
     const username = useSelector((state) => state.user.value.username);
 
-    const [lobbyId, setLobbyId] = useState("NomduLobby");
-    const [players, setPlayers] = useState([]);
-    const [gameStarted, setGameStarted] = useState(false);
-    const [manchesDispo, setManchesDispo] = useState([]);
+useEffect(() => {
+    setLobbyId(code);
+    //Connexion à un lobby existant via son ID
+    socket.emit('joinLobby', {lobbyId});
+}, [code])
 
 
     useEffect(() => {
@@ -25,36 +24,32 @@ const Lobby = ({lobbyCode}) => {
         }
     }, [lobbyCode]);
     
-    useEffect(() => {    
-        // Mise à jour des joueureuses présent.es dans le lobby
-        socket.on('lobbyPlayers', (playerList) => {
-            setPlayers(playerList);
-        });
-        // Lancement de la partie au click du bouton
-        socket.on('gameStarted', () => {
-            console.log("Ceci est un start game");
-            setGameStarted(true);
-        });
+    // Mise à jour des joueureuses présent.es dans le lobby
+    socket.on('lobbyPlayers', (playersList) => {
+        setPlayers(playersList);
+    });
+    // Lancement de la partie au click du bouton
+    socket.on('gameStarted', () => {
+        setGameStarted(true);
+    });
 
-        // Fonction de nettoyage : lors du démontage du composant, la socket arrête l'écoute de lobbyPlaers et gameStarted => Evite les doublons
-        return() => {
-            socket.off('lobbyPlayers');
-            socket.off('gameStarted');
-        };
-    }, []);
-
-    const startGame = () => {
-        console.log(`Lancement de la partie pour le lobby ${lobbyId}`)
-        socket.emit('startGame', lobbyId);
+    // Fonction de nettoyage : lors du démontage du composant, la socket arrête l'écoute de lobbyPlaers et gameStarted => Evite les doublons
+    return() => {
+        socket.off('lobbyPlayers');
+        socket.off('gameStarted');
     };
+}, [lobbyId, username]);
 
-    useEffect(() => {
-        if(gameStarted){
-            console.log('Redirection vers la partie')
-            router.push(`/game/${lobbyId}`)
-        } 
-    }, [gameStarted, code, router]);
+const startGame = () => {
+    console.log(`Lancement de la partie pour le lobby ${lobbyId}`)
+    socket.emit('startGame', lobbyId);
+};
 
+useEffect(() => {
+    if(gameStarted){
+        router.push(`/gamepage?lobbyId=${lobbyId}`);
+    } 
+}, [gameStarted, router]);
 
     // Infos du lobby
     return (
