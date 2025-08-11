@@ -153,7 +153,7 @@ router.post('/musicByArtist', (req,res)=>{
   const musique = req.body.musique;
   console.log('artiste',artiste)
   console.log('musique',musique)
-  fetch(`https://api.deezer.com/search/track?q=${musique}&limit=10`)
+  fetch(`https://api.deezer.com/search/track?q=${musique}&limit=6`)
   .then(response => response.json())
   .then(data => {
     const morceauCorrespondant = data.data.find(track => {
