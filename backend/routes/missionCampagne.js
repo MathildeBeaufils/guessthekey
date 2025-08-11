@@ -32,8 +32,7 @@ router.put('/', (req, res) => {
 
 
 
-// creer une mission        // fonctionne mais a tester sur tout les users
-// ajouter creer manche pour faire une mission
+// creer une mission faire la view pour recuperer la manche
 router.post('/', (req, res) => {
     console.log(req.body);
 
@@ -47,7 +46,6 @@ router.post('/', (req, res) => {
 
     newMission.save()
         .then(savedMission => {
-            // Ici on ajoute seulement l'ID de la mission dans chaque utilisateur
             return User.find()
                 .then(utilisateurs => {
                     const promesses = utilisateurs.map(utilisateur => {
