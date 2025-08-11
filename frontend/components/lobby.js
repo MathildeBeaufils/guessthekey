@@ -1,16 +1,16 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Menu from "./Menu";
-import io from 'socket.io-client';
+import { useSelector } from 'react-redux';
 import { useRouter} from 'next/router';
 import styles from "../styles/lobby.module.css";
 console.log('Tentative de connexion socket...');
-const socket = io('http://localhost:4000'); // port déterminé dans le backend, spécifique pour le Socket
+import socket from '../socket';
 
 
 const Lobby = ({lobbyCode}) => {
     const router = useRouter();
     const { code } = router.query;
-
+    const username = useSelector((state) => state.user.value.username);
 
     const [lobbyId, setLobbyId] = useState("NomduLobby");
     const [players, setPlayers] = useState([]);
@@ -21,7 +21,7 @@ const Lobby = ({lobbyCode}) => {
     useEffect(() => {
         if (lobbyCode) {
             setLobbyId(lobbyCode);
-            socket.emit('joinLobby', lobbyCode);
+            socket.emit('joinLobby', {lobbyId: lobbyCode, username});
         }
     }, [lobbyCode]);
     
@@ -76,9 +76,11 @@ const Lobby = ({lobbyCode}) => {
             <div className={styles.tableau}>
                 <div className={styles.players_container}>
                     <p>Joueur·euses dans le lobby :</p>
-                    {players.map((playerId) => (
-                        <span key={playerId}>{playerId}</span>
-                    ))}
+                    
+                        {players.map((playerId) => (
+                        <ul key={playerId}>{playerId}</ul>
+                        ))}
+                    
                 </div>
                 <div className={styles.round_container}>
                     <p>Manches disponibles pour le lobby :</p>
