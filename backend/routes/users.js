@@ -7,7 +7,41 @@ const { checkBody } = require('../modules/checkBody');
 const uid2 = require('uid2');
 const bcrypt = require('bcrypt');
 
+// route POST (/user/guessSignup) pour créer un nouvel utilisateur en tant qu'invité
+router.post('/guessSignup', (req, res) => {
+  if (!checkBody(req.body, ['username'])) {
+    res.json({ result: false, error: 'Champs manquants ou vides' });
+    return;
+  }
+  // création nouvel utilisateur après avoir checké que le nom d'utilisateur n'existe pas déjà
+  User.findOne({ username: req.body.username }).then(data => {
+    if (data === null) {
+      const registrationDate = new Date();
+      
+      const newUser = new User({
+        username: req.body.username,
+        created_at: registrationDate,
+        email: req.body.email,
+        password: '',
+        token: uid2(32),
+        isAdmin: false,
+        nbVictoire: 0,
+        keyPoint: 0,
+        itemTete: '',
+        itemTorse: '',
+        itemJambes: '',
+        itemPieds: '',
+      });
 
+      newUser.save().then(data => {
+        res.json({ result: true, data: data });
+      });
+    } else {
+      // User already exists in database
+      res.json({ result: false, error: "Le nom d'utilisateur existe déjà" });
+    }
+  });
+})
 
 // route POST (/user/signup) pour créer un nouvel utilisateur
 router.post('/signup', (req, res) => {
