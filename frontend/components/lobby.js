@@ -15,7 +15,8 @@ const Lobby = ({lobbyCode}) => {
     const [lobbyId, setLobbyId] = useState("NomduLobby");
     const [players, setPlayers] = useState([]);
     const [gameStarted, setGameStarted] = useState(false);
-    const [manchesDispo, setManchesDispo] = useState([]);
+    const [rounds, setRounds] = useState([]);
+    const [selectedRound, setSelectedRound] = useState({})
 
 
     useEffect(() => {
@@ -40,15 +41,43 @@ const Lobby = ({lobbyCode}) => {
         return() => {
             socket.off('lobbyPlayers');
             socket.off('gameStarted');
-            socket.off('roundCreated');
         };
     }, []);
+
+    // Ecoute pour l'ajout des manches dans le lobby
+        useEffect(() => {
+            socket.on("roundCreated", (roundData) => {
+              setRounds(prev => [...prev, roundData]); // ajoute la manche reçue
+              console.log("lobby round created :" + rounds)
+            });
+        
+            return () => {
+            socket.off("roundCreated");
+            };
+        }, []);
+
+        useEffect(() => {
+            // Réception de la MAJ des rounds créés dans le lobby
+            socket.on("updateRounds", (roundsList) => {
+                console.log("Manches disponibles :", roundsList);
+                setRounds(roundsList);
+            });
+        
+            return () => {
+                socket.off("updateRounds");
+            };
+        }, []);
 
     const startGame = () => {
         console.log(`Lancement de la partie pour le lobby ${lobbyId}`)
         socket.emit('startGame', lobbyId);
     };
 
+    const handleSelect =(selectedRound) => {
+        console.log(`Partie sélectionnée:`, selectedRound)
+        setSelectedRound(selectedRound)
+
+    }
     useEffect(() => {
         if(gameStarted){
             console.log('Redirection vers la partie')
@@ -72,22 +101,34 @@ const Lobby = ({lobbyCode}) => {
             </div>
             <div className={styles.ajout}>
                 <button className={styles.button}>Ajouter un membre</button>
-                <button className={styles.button} >Ajouter une manche</button>
+                <button className={styles.button} onClick={() => router.push(`/createround/${lobbyId}`)}>Ajouter une manche</button>
             </div>
             <div className={styles.tableau}>
                 <div className={styles.players_container}>
                     <p>Joueur·euses dans le lobby :</p>
-                    
                         {players.map((playerId) => (
-                        <ul key={playerId}>{playerId}</ul>
+                            
+                            <ul>
+                                <li key={playerId}>{playerId}</li>
+                            </ul>
                         ))}
                     
                 </div>
                 <div className={styles.round_container}>
                     <p>Manches disponibles pour le lobby :</p>
-                    {manchesDispo.map((mancheId) => (
-                        <span key={mancheId}>{mancheId}</span>
-                    ))}
+                    
+                    {rounds.map((round, index) => {
+                        const themeRound = round.manche.theme;
+                        return (
+                        <ul key={index}>
+                            <li>
+                            {themeRound}
+                            <button onClick={() => handleSelect(round)}>Choisir</button>
+                            </li>
+                        </ul>
+                        );
+                    })}
+                    
                 </div>
                 </div>
             <button className={styles.button} onClick={startGame}>Lancer la partie</button>

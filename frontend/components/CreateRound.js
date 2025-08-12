@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import styles from "../styles/createRound.module.css";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
+import socket from '../socket';
 
 const SongSearchInput = ({
   index,
@@ -48,6 +49,11 @@ const SongSearchInput = ({
 
 function CreateRound() {
   const router = useRouter();
+  const lobbyCode = router.query.lobbyCode;
+
+  // Ne rien faire tant que lobbyCode est undefined
+  if (!lobbyCode) return <div>Chargement...</div>;
+
   const user = useSelector((state) => state.user.value);
   const backendUrl = "http://localhost:3000";
 
@@ -127,7 +133,11 @@ function CreateRound() {
       })
       .then((data) => {
         console.log("Manche créée avec succès !", data);
-        router.push("/lobbypage");
+
+        // Manche envoyé dans le lobby
+        console.log(`LobbyCode ${lobbyCode} dans Create Round`)
+        socket.emit("createRound", { lobbyCode, roundData: data });
+        router.push(`/lobby/${lobbyCode}`);
       })
       .catch((error) => {
         console.error("Échec de la création de la manche :", error);
@@ -147,7 +157,7 @@ function CreateRound() {
       { theme: theme },
       { key: key },
       { categorie: selectedCategories },
-      { titre: selectedSongs },
+      { titre: selectedSongs},
     ];
     handleCreateRound(items);
   };

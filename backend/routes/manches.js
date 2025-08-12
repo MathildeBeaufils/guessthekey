@@ -83,6 +83,8 @@ router.get('/', function(req, res) {
 
 // Route pour ajouter une manche
 router.post('/', function(req, res) {
+  console.log("coucou la route")
+  console.log(req.body)
   const categorieId = [];
   const categories = req.body.selectedItem[3].categorie;
   for (let i = 0; i < categories.length; i++) {
@@ -96,20 +98,25 @@ router.post('/', function(req, res) {
   const titre3=req.body.selectedItem[4].titre[2];
   const titre4=req.body.selectedItem[4].titre[3];
   const titre5=req.body.selectedItem[4].titre[4];
-
+  console.log(req.body.selectedItem[4].titre[0].trackId)
   User.findOne({ username: user}).then(user => {
     const userId = user._id;
     const newManche = new Manche({
     titre1: titre1.title,
     artiste1: titre1.artist,
+    trackId1: titre1.trackId,
     titre2: titre2.title,
     artiste2: titre2.artist,
+    trackId2: titre2.trackId,
     titre3: titre3.title,
     artiste3: titre3.artist,
+    trackId3: titre3.trackId,
     titre4: titre4.title,
     artiste4: titre4.artist,
+    trackId4: titre4.trackId,
     titre5: titre5.title,
     artiste5: titre5.artist,
+    trackId5: titre5.trackId,
     key: key,
     theme: theme,
     categories: categorieId, // tableau d'ID de categorie
@@ -132,10 +139,11 @@ router.post('/searchsong', (req, res) => {
   fetch(`https://api.deezer.com/search/track?q=${search}&limit=10`)
     .then(response => response.json())
     .then(data => {
+      console.log(data)
       const simplifiedData = data.data.map(track => ({
         title: track.title,
         artist: track.artist.name,
-        idArtiste: track.artist.id
+        trackId: track.id
       }));
 
       res.json({ result: true, data: simplifiedData });

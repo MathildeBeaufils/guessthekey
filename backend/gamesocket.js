@@ -1,4 +1,3 @@
-const { useEffect } = require('react');
 const { Server } = require('socket.io');
 
 
@@ -12,6 +11,7 @@ function getFiveTracks() {
     { trackId: 3329777161, title: 'Peacefield', artist: 'Ghost' }
   ];
 
+  
   const updateURL = tracks.map((track) => {
     return fetch(`https://api.deezer.com/track/${track.trackId}`)
       .then((response) => response.json())
@@ -53,7 +53,7 @@ module.exports = (io) => {
         console.warn('joinLobby reçu avec des données invalides:', data);
         return; // On stoppe si données manquantes
       }
-    
+      
       const { lobbyId, username } = data;
       socket.username = username;
       socket.join(lobbyId);
@@ -64,14 +64,19 @@ module.exports = (io) => {
           currentRoundIndex: 0,
           roundDuration: 20,
           timeout: null,
-          rounds: [],
-          scores: new Map()
-          roundHistory: [];
+          rounds: [], // corresponds aux manches créées par les membres du lobby
+          scores: new Map(),
+          roundHistory: [],
         });
         console.log(`Nouveau lobby créé: ${lobbyId}`);
       }
 
       const lobby = lobbies.get(lobbyId);
+
+      if (lobby.rounds && lobby.rounds.length) {
+        socket.emit('updateRounds', lobby.rounds);
+      }
+
 
       // Ajout l'utilisateur avec son username + socket.id
       lobby.players.set(username, {socketId: socket.id, score: 0 })
@@ -81,16 +86,29 @@ module.exports = (io) => {
       console.log(`Utilisateur ${socket.id} a rejoint le lobby ${lobbyId} sous le pseudo ${username}`);
     });
 
-    // Ajout d'une manche
-    useEffect(() => {
-      socket.on('roundCreated', (roundData) => {
-        setRounds(prevRounds => [ ...prevRounds, roundData]);
-      }) 
-    });
+    socket.on("createRound", ({ lobbyCode, roundData }) => {
+      if (!lobbyCode || !roundData) {
+        console.warn('Données manquantes pour createRound', { lobbyCode, roundData });
+        return;
+      }
     
-    socket.on("createRound", ({ lobbyId, roundData }) => {
-      io.to(lobbyId).emit("roundCreated", roundData);
-      console.log(`Round créé dans lobby ${lobbyId}`);
+      const lobby = lobbies.get(lobbyCode);
+      if (!lobby) {
+        console.warn(`Lobby ${lobbyCode} non trouvé`);
+        return;
+      }
+    
+      if(!lobby.rounds){
+        lobby.rounds = [];
+      }
+      lobby.rounds.push(roundData); // Ajout de la manche dans le tableau du lobby
+      lobbies.set(lobbyCode, lobby); // mise a jour des infos du lobby suite à l'ajout de la manche
+
+
+      io.to(lobbyCode).emit("roundCreated", roundData);
+      console.log(`Nouvelle manche créée dans lobby ${lobbyCode}`);
+
+      io.to(lobbyCode).emit('updateRounds', lobby.rounds); // envoi de l'info de la MAJ aux membres du lobby
     });
 
     socket.on('send_message', ({ lobbyId, message }) => {
@@ -174,7 +192,7 @@ module.exports = (io) => {
         lobby.scores.set(socket.id, currentScore +1)
         socket.emit('roundEnded', {
           correctAnswer :{ 
-            ...(titreOK ? { title: round.title} : {}),
+            ...(titleOK ? { title: round.title} : {}),
             ...(artistOk? { artist: round.artist} : {}),
           },
           allAnswers: { [socket.id]: { title: title || '', artist: artist || '' } }
