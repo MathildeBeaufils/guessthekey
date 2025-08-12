@@ -11,12 +11,18 @@
   width: 30%;
   padding: 2%;
   margin: 2%;
-  border-radius: 20px;
-  box-shadow: 15px 15px 25px 1px rgba(0, 0, 0, 0.82);
-  -webkit-box-shadow: 15px 15px 25px 1px rgba(0, 0, 0, 0.82);
-  -moz-box-shadow: 15px 15px 25px 1px rgba(0, 0, 0, 0.82);
+  border-radius: 50px;
+  border: solid #C9333E 1px;
+  box-shadow: 10px 10px 25px 1px rgba(0,0,0,0.82);
+  -webkit-box-shadow: 10px 10px 25px 1px rgba(0,0,0,0.82);
+  -moz-box-shadow: 10px 10px 25px 1px rgba(0,0,0,0.82);
+  cursor: pointer;
   background-color: #c9333d;
   color: white;
+}
+.button:hover{
+  background-color: #E3505A;
+  border: solid #E3505A 1px;
 }
 
 .container_modal {
