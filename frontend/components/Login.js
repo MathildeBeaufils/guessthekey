@@ -24,6 +24,9 @@ const Login = () => {
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
 
+  const [loginError, setLoginError] = useState("");
+  const [signupError,setSignupError]=useState('')
+
   const backendUrl = "http://localhost:3000/users";
 
   const openLoginModal = () => setIsLoginModalOpen(true);
@@ -70,6 +73,7 @@ const Login = () => {
       })
       .catch((error) => {
         console.error("Échec de la connexion :", error);
+        setLoginError('Email ou mot de passe invalide');
       });
   };
 
@@ -94,6 +98,11 @@ const Login = () => {
         return response.json();
       })
       .then((data) => {
+        console.log(data.error)
+        if (data.result === false) {
+          setSignupError(data.error);
+          return;
+        }
         console.log("Inscription réussie !");
         dispatch(login({ 
           token: data.data.token, 
@@ -134,6 +143,12 @@ const Login = () => {
             onClick={(e) => e.stopPropagation()}
             className={styles.modalContainer}
           >
+            {loginError && (
+              <div style={{ color: "red", margin: "10px", backgroundColor:'white', borderRadius:'10px', padding:'5px',display:"flex",justifyContent:"center", fontWeight:'bolder'}}>
+                {loginError}
+              </div>
+            )}
+
             <button
               onClick={closeLoginModal}
               className={styles.modalCloseButton}
@@ -175,6 +190,13 @@ const Login = () => {
             >
               &times;
             </button>
+
+            {signupError && (
+              <div style={{ color: "red", margin: "10px", backgroundColor:'white', borderRadius:'10px', padding:'5px',display:"flex",justifyContent:"center", fontWeight:'bolder'}}>
+                {signupError}
+              </div>
+            )}
+
             <form onSubmit={handleSignup} className={styles.modalContent}>
               <p>Nom d'utilisateur</p>
               <input
