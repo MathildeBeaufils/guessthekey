@@ -3,36 +3,27 @@ var router = express.Router();
 
 require('../models/connection');
 const User = require('../models/users');
+const Mission = require('../models/Missions');
 const { checkBody } = require('../modules/checkBody');
 const uid2 = require('uid2');
 const bcrypt = require('bcrypt');
 
-
-
-// route POST (/user/signup) pour créer un nouvel utilisateur
-router.post('/signup', (req, res) => {
-  if (!checkBody(req.body, ['email','username', 'password'])) {
+// route POST (/user/guessSignup) pour créer un nouvel utilisateur en tant qu'invité
+router.post('/guessSignup', (req, res) => {
+  if (!checkBody(req.body, ['username'])) {
     res.json({ result: false, error: 'Champs manquants ou vides' });
     return;
   }
   // création nouvel utilisateur après avoir checké que le nom d'utilisateur n'existe pas déjà
   User.findOne({ username: req.body.username }).then(data => {
     if (data === null) {
-      const hash = bcrypt.hashSync(req.body.password, 10);
       const registrationDate = new Date();
       
-      //date formaté sous la forme lundi 4 août 2025 à 17:06:19 UTC+2
-      // const formattedDate = new Intl.DateTimeFormat('fr-FR', {
-      //   timeZone: 'Europe/Paris',
-      //   dateStyle: 'full',
-      //   timeStyle: 'long',
-      // }).format(registrationDate);
-
       const newUser = new User({
         username: req.body.username,
         created_at: registrationDate,
         email: req.body.email,
-        password: hash,
+        password: '',
         token: uid2(32),
         isAdmin: false,
         nbVictoire: 0,
@@ -51,6 +42,48 @@ router.post('/signup', (req, res) => {
       res.json({ result: false, error: "Le nom d'utilisateur existe déjà" });
     }
   });
+})
+
+// route POST (/user/signup) pour créer un nouvel utilisateur
+router.post('/signup', (req, res) => {
+  if (!checkBody(req.body, ['email','username', 'password'])) {
+    res.json({ result: false, error: 'Champs manquants ou vides' });
+    return;
+  }
+  Mission.find()
+  .then(data=>{
+    const allMissions = data;
+  User.findOne({ username: req.body.username }).then(data => {
+      if (data === null) {
+        const hash = bcrypt.hashSync(req.body.password, 10);
+        const registrationDate = new Date();
+
+        const newUser = new User({
+          username: req.body.username,
+          created_at: registrationDate,
+          email: req.body.email,
+          password: hash,
+          token: uid2(32),
+          isAdmin: false,
+          nbVictoire: 0,
+          keyPoint: 0,
+          itemTete: '',
+          itemTorse: '',
+          itemJambes: '',
+          itemPieds: '',
+          tableauMissionsCampagne:allMissions,
+        });
+
+        newUser.save().then(data => {
+          res.json({ result: true, data: data });
+        });
+      } else {
+        // User already exists in database
+        res.json({ result: false, error: "Le nom d'utilisateur existe déjà" });
+      }
+    });    
+  })
+  
 })
 
 // route POST (/user/signin) pour se connecter
