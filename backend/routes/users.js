@@ -3,6 +3,7 @@ var router = express.Router();
 
 require('../models/connection');
 const User = require('../models/users');
+const Mission = require('../models/Missions');
 const { checkBody } = require('../modules/checkBody');
 const uid2 = require('uid2');
 const bcrypt = require('bcrypt');
@@ -15,42 +16,40 @@ router.post('/signup', (req, res) => {
     res.json({ result: false, error: 'Champs manquants ou vides' });
     return;
   }
-  // création nouvel utilisateur après avoir checké que le nom d'utilisateur n'existe pas déjà
+  Mission.find()
+  .then(data=>{
+    const allMissions = data;
   User.findOne({ username: req.body.username }).then(data => {
-    if (data === null) {
-      const hash = bcrypt.hashSync(req.body.password, 10);
-      const registrationDate = new Date();
-      
-      //date formaté sous la forme lundi 4 août 2025 à 17:06:19 UTC+2
-      // const formattedDate = new Intl.DateTimeFormat('fr-FR', {
-      //   timeZone: 'Europe/Paris',
-      //   dateStyle: 'full',
-      //   timeStyle: 'long',
-      // }).format(registrationDate);
+      if (data === null) {
+        const hash = bcrypt.hashSync(req.body.password, 10);
+        const registrationDate = new Date();
 
-      const newUser = new User({
-        username: req.body.username,
-        created_at: registrationDate,
-        email: req.body.email,
-        password: hash,
-        token: uid2(32),
-        isAdmin: false,
-        nbVictoire: 0,
-        keyPoint: 0,
-        itemTete: '',
-        itemTorse: '',
-        itemJambes: '',
-        itemPieds: '',
-      });
+        const newUser = new User({
+          username: req.body.username,
+          created_at: registrationDate,
+          email: req.body.email,
+          password: hash,
+          token: uid2(32),
+          isAdmin: false,
+          nbVictoire: 0,
+          keyPoint: 0,
+          itemTete: '',
+          itemTorse: '',
+          itemJambes: '',
+          itemPieds: '',
+          tableauMissionsCampagne:allMissions,
+        });
 
-      newUser.save().then(data => {
-        res.json({ result: true, data: data });
-      });
-    } else {
-      // User already exists in database
-      res.json({ result: false, error: "Le nom d'utilisateur existe déjà" });
-    }
-  });
+        newUser.save().then(data => {
+          res.json({ result: true, data: data });
+        });
+      } else {
+        // User already exists in database
+        res.json({ result: false, error: "Le nom d'utilisateur existe déjà" });
+      }
+    });    
+  })
+  
 })
 
 // route POST (/user/signin) pour se connecter
