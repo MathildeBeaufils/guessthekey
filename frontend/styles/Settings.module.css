@@ -194,8 +194,9 @@
 }
 
 .inputrecherche{
+  margin-top: 10px;
   background-color: white;
-  padding: 5px;
+  padding: 8px;
   border-radius: 20px;
   border: white;
   font-family: 'Hey Comic';
@@ -207,10 +208,13 @@
   background-color: #FF9809;
   border-radius: 20px;
   border: #FF9809;
-  padding: 5px;
+  padding: 8px;
   cursor: pointer;
   font-family: 'Hey Comic';
   letter-spacing: 1px;
+}
+.Btnrecherche:hover{
+  background-color: #de9e43;
 }
 
 @media (min-width: 700px) { 

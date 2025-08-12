@@ -19,7 +19,7 @@ function Settings() {
   const [volumeGeneral, setVolumeGeneral] = useState(50);
   const [volumeMusique, setVolumeMusique] = useState(50);
   const [volumeSFX, setVolumeSFX] = useState(50);
-  const [newName, setNewName]= useState('');
+  const [newName, setNewName]= useState(user.username);
   const [newPassword, setNewPassword]= useState('');
 
     /* Fonctionnalité des boutons de paramètres à mettre en place
@@ -194,7 +194,7 @@ function Settings() {
               </label>
               <button onClick={changeName} className={styles.Btnrecherche} >Valider username</button>    
             </div>
-            <div>
+            <div className={styles.unInput}>
               <label>
                 Changer de mot de passe:<br></br>
                 <input
