@@ -1,3 +1,8 @@
+@font-face {
+  font-family: 'Hey Comic';
+  src: url('../assets/fonts/HeyComicCustom.ttf') format('truetype');
+}
+
 .container {
   background-color: #555563;
   width: 100%;
@@ -8,9 +13,9 @@
   flex-direction: column;
 }
 .button {
-  width: 30%;
+  width: 50%;
   padding: 2%;
-  margin: 2%;
+  margin: 5%;
   border-radius: 50px;
   border: solid #C9333E 1px;
   box-shadow: 10px 10px 25px 1px rgba(0,0,0,0.82);
@@ -19,6 +24,8 @@
   cursor: pointer;
   background-color: #c9333d;
   color: white;
+  font-family: 'Hey Comic';
+  font-size: 25px;
 }
 .button:hover{
   background-color: #E3505A;
@@ -29,6 +36,8 @@
   background-color: white;
   width: 60%;
   height: 50px;
+  font-family: 'Hey Comic';
+
 }
 
 
@@ -44,6 +53,8 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  font-family: 'Hey Comic';
+  font-size: 25px;
 }
 
 .modalContainer {
@@ -64,12 +75,11 @@
   background: none;
   border: none;
   font-size: 2rem;
+  font-family: 'Hey Comic';
   color: white;
   cursor: pointer;
  
 }
-
-
 
 .modalContent {
   display: flex;
@@ -80,8 +90,9 @@
 
 .modalContent p {
   margin: 0;
-  font-weight: 600;
   color: white;
+  font-family: 'Hey Comic';
+  font-size: 30px;
 }
 
 .modalContent input {
@@ -105,7 +116,10 @@
   cursor: pointer;
   
 }
-
+.modalButton{
+  font-family: 'Hey Comic';
+  font-size: 30px;
+}
 
 
 

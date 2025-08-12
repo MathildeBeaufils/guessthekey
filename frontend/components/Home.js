@@ -51,7 +51,7 @@ function Home() {
           <Link href="/quest">
             <div className={styles.displayQuete}>
               <p className={styles.nbQuate}>{nbQuete}</p>
-              <Image
+              <Image className={styles.imgQuete}
                 src="/cleDeSol.png"
                 alt="Logo clé de sol"
                 width={70}

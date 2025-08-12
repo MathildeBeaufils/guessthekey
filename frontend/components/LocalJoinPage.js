@@ -7,7 +7,6 @@ import { useState } from 'react';
 
 
 function LocalJoinPage() {
-    const Router = useRouter();
     const router = useRouter();
     const username = useSelector((state) => state.user.value.username);
     const [code, setCode] = useState('');
@@ -39,7 +38,7 @@ function LocalJoinPage() {
                     <label htmlFor="gameCode">Code de la Partie :</label>
                     <input className={styles.input} type="text" placeholder="Entrez le code de la partie" onChange={(e) => setCode(e.target.value)}/>
                 </div>
-                <button className={styles.btn} onClick={handleJoin}>Valider</button>
+                <button className={styles.btn} onClick={handleJoin}>VALIDER</button>
             </div>        
         </>
 

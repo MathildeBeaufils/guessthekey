@@ -211,7 +211,7 @@ function CreateRound() {
 
           <div className={styles.button_validate}>
             <button onClick={trackValidate} className={styles.valider}>
-              Valider
+              VALIDER
             </button>
           </div>
         </div>
