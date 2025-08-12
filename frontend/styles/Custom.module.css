@@ -1,3 +1,7 @@
+@font-face {
+  font-family: 'Hey Comic';
+  src: url('../assets/fonts/HeyComicCustom.ttf') format('truetype');
+}
 .main {
     display: flex;
     flex-direction: column;
@@ -19,6 +23,8 @@
     color: white;
     cursor: default;
     margin: 15px;
+    font-family: 'Hey Comic';
+    letter-spacing: 1px;
 }
 
 .layout {
@@ -36,6 +42,7 @@
     width: 50%;
     height: 100%;
     gap: 10px;
+    font-family: 'Hey Comic';
 }
 
 .perso {
@@ -45,6 +52,8 @@
     background-color: #cccccb;
     width: 50%;
     height: 100%;
+    font-family: 'Hey Comic';
+    font-size: 20px;
 }
 
 .image {
@@ -84,4 +93,9 @@
 .lienShop:hover {
     cursor: pointer;
     color: #E3505A;
+}
+
+.lienShop{
+    font-family: 'Hey Comic';
+    margin-top: 50px;
 }

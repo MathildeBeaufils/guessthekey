@@ -58,7 +58,7 @@ function userProfile() {
                     <label htmlFor="username">Nom d'utilisateur :</label>
                     <input className={styles.input} type="text" placeholder="Entrer un nom d'utilisateur" onChange={(e) => setInviteUsername(e.target.value)}/>
                 </div>
-                <button className={styles.btn} onClick={handleJoin}>Valider</button>
+                <button className={styles.btn} onClick={handleJoin}>VALIDER</button>
             </div>        
         </>
     );

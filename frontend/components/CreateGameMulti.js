@@ -34,7 +34,7 @@ function CreateGameMulti() {
     <>
       <Menu/>
       <div className={styles.container}>
-        <h1 className={styles.create}>Créer une partie en mulitjoueur</h1>
+        <h1 className={styles.create}>Créer une partie en multijoueur</h1>
 
         <p>Nombre de joueurs : {numberOfPlayers}</p>
         <input
