@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import styles from "../styles/createRound.module.css";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
+import socket from "../socket";
 
 const SongSearchInput = ({
   index,
@@ -46,11 +47,13 @@ const SongSearchInput = ({
   </div>
 );
 
-function CreateRound() {
+function CreateRound({ lobbyCode, username }) {
   const router = useRouter();
   const user = useSelector((state) => state.user.value);
+  // const username = useSelector((state) => state.user.value.username);
   const backendUrl = "http://localhost:3000";
-
+console.log(lobbyCode, username)
+  socket.emit("joinLobby", { lobbyId: lobbyCode, username });
   const [songs, setSongs] = useState(
     Array(5).fill({ search: "", results: [], selected: null })
   );
@@ -66,7 +69,9 @@ function CreateRound() {
       .then((data) => {
         setCategorieList(data.categories);
       })
-      .catch((error) => console.error("Erreur lors du chargement des catégories :", error));
+      .catch((error) =>
+        console.error("Erreur lors du chargement des catégories :", error)
+      );
   }, []);
 
   const handleCategorieChange = (id) => {
@@ -84,7 +89,7 @@ function CreateRound() {
   };
 
   const displayCategorie = categorieList.map((data, i) => (
-    <label key={i} className={styles['category-label']}>
+    <label key={i} className={styles["category-label"]}>
       {data.nom}
       <input
         type="checkbox"
@@ -127,7 +132,7 @@ function CreateRound() {
       })
       .then((data) => {
         console.log("Manche créée avec succès !", data);
-        router.push("/lobbypage");
+        router.push(`/lobby/${lobbyCode}`);
       })
       .catch((error) => {
         console.error("Échec de la création de la manche :", error);
@@ -176,9 +181,7 @@ function CreateRound() {
             />
           </div>
 
-          <div className={styles['category-container']}>
-            {displayCategorie}
-          </div>
+          <div className={styles["category-container"]}>{displayCategorie}</div>
 
           <div className={styles.title_container}>
             {songs.map((s, index) => (
@@ -199,7 +202,11 @@ function CreateRound() {
                   setSongs((prev) =>
                     prev.map((song, i) =>
                       i === index
-                        ? { ...song, selected: item, search: `${item.title} - ${item.artist}` } // <-- Correction ici
+                        ? {
+                            ...song,
+                            selected: item,
+                            search: `${item.title} - ${item.artist}`,
+                          } // <-- Correction ici
                         : song
                     )
                   )
