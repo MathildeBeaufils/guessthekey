@@ -40,6 +40,7 @@ const Lobby = ({lobbyCode}) => {
         return() => {
             socket.off('lobbyPlayers');
             socket.off('gameStarted');
+            socket.off('roundCreated');
         };
     }, []);
 

@@ -1,3 +1,4 @@
+const { useEffect } = require('react');
 const { Server } = require('socket.io');
 
 
@@ -65,6 +66,7 @@ module.exports = (io) => {
           timeout: null,
           rounds: [],
           scores: new Map()
+          roundHistory: [];
         });
         console.log(`Nouveau lobby créé: ${lobbyId}`);
       }
@@ -77,6 +79,18 @@ module.exports = (io) => {
       // on utilise .keys() car on est dans une Map. Ici on récupère tous les pseudo des utilisateurs présents dans la Map
       io.to(lobbyId).emit('lobbyPlayers', [...lobby.players.keys()]);
       console.log(`Utilisateur ${socket.id} a rejoint le lobby ${lobbyId} sous le pseudo ${username}`);
+    });
+
+    // Ajout d'une manche
+    useEffect(() => {
+      socket.on('roundCreated', (roundData) => {
+        setRounds(prevRounds => [ ...prevRounds, roundData]);
+      }) 
+    });
+    
+    socket.on("createRound", ({ lobbyId, roundData }) => {
+      io.to(lobbyId).emit("roundCreated", roundData);
+      console.log(`Round créé dans lobby ${lobbyId}`);
     });
 
     socket.on('send_message', ({ lobbyId, message }) => {
@@ -109,7 +123,7 @@ module.exports = (io) => {
       setTimeout(() => launchNextRound(lobbyId), 500);
     });
 
-    socket.on('answer', ({ lobbyId, title, artist, guessTheKey }) => {
+    socket.on('answer', ({ lobbyId, title, artist, guessTheKey, freeAnswer }) => {
       const lobby = lobbies.get(lobbyId);
       if (!lobby || lobby.status !== 'in-game') return;
       const round = lobby.rounds[lobby.currentRoundIndex];
@@ -118,9 +132,20 @@ module.exports = (io) => {
       if(round.guessTheKey) {
         // Gestion du format de réponse pour le round du point commun
         round.answers.set(socket.id, { freeAnswer: freeAnswer || ""});
+
         const isCorrect = (freeAnswer || "").toLowerCase().trim() === "Je suis une très jolie key";
+
         if(isCorrect){
           //Mise à jour du score
+          const currentScore = lobby.scores.get(socket.id) || 0;
+          lobby.scores.set(socket.id, currentScore +1)
+
+          // Ajout de titre et artiste à l'historique pour la fin de Partie
+          lobby.roundHistory.push({
+            correctAnswer: {freeAnswer: "Key"},
+            allAnswers: Object.fromEntries(round.answers),
+          })
+
           socket.emit('roundEnded', {
             correctAnswer: { freeAnswer: "Key"},
             allAnswers: { [socket.id]: {freeAnswer}}
@@ -136,14 +161,22 @@ module.exports = (io) => {
       const correctArtist = round.artist ? round.artist.toLowerCase() : '';
       const titleAnswer = (title || '').toLowerCase();
       const artistAnswer = (artist || '').toLowerCase();
+
       const titleOk = titleAnswer.includes(correctTitle);
       const artistOk = artistAnswer.includes(correctArtist);
+
       let correctAnswer = {};
       if (titleOk) correctAnswer.title = round.title;
       if (artistOk) correctAnswer.artist = round.artist;
       if (titleOk || artistOk) {
+
+        const currentScore = lobby.scores.get(socket.id) || 0;
+        lobby.scores.set(socket.id, currentScore +1)
         socket.emit('roundEnded', {
-          correctAnswer,
+          correctAnswer :{ 
+            ...(titreOK ? { title: round.title} : {}),
+            ...(artistOk? { artist: round.artist} : {}),
+          },
           allAnswers: { [socket.id]: { title: title || '', artist: artist || '' } }
         });
       }
@@ -245,7 +278,8 @@ module.exports = (io) => {
     if (!lobby) return;
 
     io.to(lobbyId).emit('gameEnded', {
-      scores: Object.fromEntries(lobby.scores)
+      scores: lobby.scores,
+      history: lobby.rounds,
     });
 
     lobby.status = 'waiting';
