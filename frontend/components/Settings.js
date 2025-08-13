@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeXmark, faVolumeHigh,faPalette, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout, updateUsername } from '../reducers/users';
+import SEO from '../components/SEO'
 
 
 function Settings() {
@@ -103,7 +104,8 @@ function Settings() {
 
 
   return (
-    <div>
+    <>
+      <SEO title="Parametre | Guess The Key" description="Configurer vor parametres." />
       <Menu/>
       <main className={styles.main}>
         <h1 className={styles.title}>PARAMETRES</h1>
@@ -217,7 +219,7 @@ function Settings() {
         <button className={styles.btn} onClick={() => handleSecurity('confidentialité')}>Confidentialité et sécurité</button>
         <button className={styles.btnLogout} onClick={() => handleLogout()}>Deconnection <FontAwesomeIcon icon={faArrowRightFromBracket} className={styles.logoutIcon}/></button>
       </main>
-    </div>
+    </>
   );
 }
 
