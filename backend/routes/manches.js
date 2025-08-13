@@ -129,10 +129,11 @@ router.post('/', function(req, res) {
 router.post('/searchsong', (req, res) => {
   const search = req.body.search;
 
-  fetch(`https://api.deezer.com/search/track?q=${search}&limit=10`)
+  fetch(`https://api.deezer.com/search/track?q=${search}&limit=6`)
     .then(response => response.json())
     .then(data => {
       const simplifiedData = data.data.map(track => ({
+        trackId: track.id,
         title: track.title,
         artist: track.artist.name,
         idArtiste: track.artist.id
@@ -148,26 +149,56 @@ router.post('/searchsong', (req, res) => {
 
 
 // route qui recupere l'URL du titre
-router.post('/musicByArtist', (req,res)=>{
+router.post('/musicByArtist', (req, res) => {
   const artiste = req.body.artiste;
   const musique = req.body.musique;
-  console.log('artiste',artiste)
-  console.log('musique',musique)
+
   fetch(`https://api.deezer.com/search/track?q=${musique}&limit=6`)
-  .then(response => response.json())
-  .then(data => {
-    const morceauCorrespondant = data.data.find(track => {
-      const titre = track.title;
-      const nomArtiste = track.artist.name;
-      return titre === musique && nomArtiste === artiste;
+    .then(response => response.json())
+    .then(data => {
+      const morceauCorrespondant = data.data.find(track => {
+        const titre = track.title.trim().toLowerCase();
+        const nomArtiste = track.artist.name.trim().toLowerCase();
+
+        return titre === musique && nomArtiste === artiste
+      });
+
+      if (!morceauCorrespondant) {
+        return res.json({ result: false, error: "Aucun morceau trouvé correspondant à l'artiste et au titre donnés." });
+      }
+
+      const urlMusic = morceauCorrespondant.link;
+      const id = morceauCorrespondant.id;
+
+      return res.json({ result: true, data: { id, urlMusic } });
+    })
+    .catch(error => {
+      console.error("Error fetching artist:", error);
+      res.status(500).json({ result: false, error: "Erreur serveur" });
     });
-    const urlMusic = morceauCorrespondant.link
-    res.json({ result: true, data:urlMusic });
+});
+
+
+// get manche by Id
+router.post('/roundID',(req,res)=>{
+  const id = req.body.id;
+  Manche.findOne({_id:id})
+  .then(data=>{
+    const key = data.key;
+    const theme = data.theme;
+    const tracks = [
+      {artist: data.artiste1, title: data.titre1},
+      {artist: data.artiste2, title: data.titre2},
+      {artist: data.artiste3, title: data.titre3},
+      {artist: data.artiste4, title: data.titre4},
+      {artist: data.artiste5, title: data.titre5},
+    ]
+    if(data){
+        res.json({result: true, key, theme, tracks})
+    } else {
+        res.json({result: false, message: "Pas de manches trouvées"})
+    }
   })
-  .catch(error => {
-    console.error("Error fetching artist:", error);
-    res.status(500).json({ result: false, error: "Internal server error" });
-  });
 })
 
 
