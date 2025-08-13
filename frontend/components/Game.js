@@ -4,10 +4,10 @@ import styles from "../styles/game.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FaVolumeUp, FaVolumeDown, FaVolumeMute } from "react-icons/fa";
 import socket from '../socket';
-import SEO from '../components/SEO'
 
 function Game({lobbyCode}) {
-  // TOUS les hooks doivent être appelés AVANT tout return conditionnel !
+  const [userCorrectAnswers, setUserCorrectAnswers] = useState([]);
+  
   const [status, setStatus] = useState("waiting"); // waiting ou in-game ou ended
   const [tour, setTour] = useState(null);
   const [timeLeft, setTimeLeft] = useState(0);
@@ -18,10 +18,6 @@ function Game({lobbyCode}) {
   const [volume, setVolume] = useState(0.0);
   const username = useSelector((state) => state.user.value.username);
   const audioRef = useRef();
-
-  // NE PAS faire de return avant les hooks !
-
-  // Tous les hooks sont maintenant au bon endroit
 
   if (!lobbyCode) {
     return <div>Chargement du lobby...</div>;
@@ -36,12 +32,6 @@ function Game({lobbyCode}) {
     setVolume(newVolume);
   };
 
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = volume;
-    }
-  }, [volume]);
-  
   useEffect(() => {
     if (!lobbyCode) return;
 
@@ -73,6 +63,24 @@ function Game({lobbyCode}) {
     });
 
     socket.on("roundEnded", ({ correctAnswer, allAnswers }) => {
+      // Enregistre la réponse correcte de l'utilisateur pour rappel Guess The Key
+      if (tour?.type !== "guessTheKey") {
+        const myAnswer = allAnswers && allAnswers[username];
+        if (myAnswer) {
+          let summary = "";
+          if (correctAnswer.title && myAnswer.title && myAnswer.title.toLowerCase().trim() === correctAnswer.title.toLowerCase().trim()) {
+            summary += `Titre : ${correctAnswer.title}`;
+          }
+          if (correctAnswer.artist && myAnswer.artist && myAnswer.artist.toLowerCase().trim() === correctAnswer.artist.toLowerCase().trim()) {
+            if (summary) summary += " | ";
+            summary += `Artiste : ${correctAnswer.artist}`;
+          }
+          if (summary) {
+            setUserCorrectAnswers(prev => [...prev, summary]);
+          }
+        }
+      }
+  if (tourData.index === 1) setUserCorrectAnswers([]);
       setTourResult({ correctAnswer, allAnswers });
     });
 
@@ -163,31 +171,42 @@ function Game({lobbyCode}) {
   };
 
   return (
-    <>
-      <SEO title="En partie | Guess The Key" description="Faites de votre mieu et gagner le plus de points." />
-      <div className={styles.container}>
-      <img className={styles.vynil} src="/source.gif" />
-      <h2>
-        Manche {round?.index} / {round?.total}
-      </h2>
+  <div className={styles.container}>
+  {tour?.type !== "guessTheKey" && (
+        <>
+          <img className={styles.vynil} src="/source.gif" />
+          <h2>
+            Manche {tour?.index} / {tour?.total}
+          </h2>
 
-        <audio ref={audioRef} />
+          <audio ref={audioRef} />
 
-        <div className={styles.volume_container}>
-          {getVolumeIcon()}
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            value={volume}
-            onChange={handleVolumeChange}
-            className={styles.volume_slider}
-          />
-        </div>
-        <p>Temps restant: {timeLeft}s</p>
+          <div className={styles.volume_container}>
+            {getVolumeIcon()}
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={volume}
+              onChange={handleVolumeChange}
+              className={styles.volume_slider}
+            />
+          </div>
+          <p>Temps restant: {timeLeft}s</p>
 
           <div className={styles.input_container}>
+            {/* Résumé des réponses correctes de l'utilisateur */}
+            {userCorrectAnswers.length > 0 && (
+              <div style={{ marginBottom: 10, color: '#2d7a2d', fontSize: 14 }}>
+                <b>Réponses trouvées :</b>
+                <ul style={{ margin: 0, paddingLeft: 18 }}>
+                  {userCorrectAnswers.map((ans, i) => (
+                    <li key={i}>{ans}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
             <input
               className={styles.input}
               placeholder="Titre"

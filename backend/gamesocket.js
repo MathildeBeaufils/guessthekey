@@ -1,6 +1,5 @@
 const { Server } = require('socket.io');
 
-
 function getTracksFromRound(tracksInfo){
 
   if(!tracksInfo){
@@ -41,6 +40,20 @@ module.exports = (io) => {
   const lobbies = new Map();
 
   io.on('connection', (socket) => {
+    // Suppression d'une partie du lobby et de la base de données
+    socket.on('deleteGame', async ({ lobbyCode, gameIndex }) => {
+      const lobby = lobbies.get(lobbyCode);
+      if (!lobby || !Array.isArray(lobby.games) || gameIndex < 0 || gameIndex >= lobby.games.length) return;
+      // Suppression de la partie en mémoire
+      const [removedGame] = lobby.games.splice(gameIndex, 1);
+      lobbies.set(lobbyCode, lobby);
+      io.to(lobbyCode).emit('updateGames', lobby.games);
+      // Suppression en base de données si applicable (exemple)
+      // Si tu as un modèle Game mongoose :
+      // if (removedGame && removedGame._id) {
+      //   try { await Game.deleteOne({ _id: removedGame._id }); } catch (e) { console.error(e); }
+      // }
+    });
     console.log('Utilisateur connecté:', socket.id);
 
     socket.on('joinLobby', (data) => {
@@ -264,23 +277,22 @@ module.exports = (io) => {
     } else {
       // Round classique de blindtest
       const tracks = [];
-      for (let i = 1; i <=5; i++){
-        if (round.manche[`trackId${i}`]) {
-          tracks.push({
-            title: round.manche[`titre${i}`],
-            artist: round.manche[`artiste${i}`],
-            trackId: round.manche[`trackId${i}`],
-          });
-        }
+      
+      if (round.manche && round.manche.trackId) {
+        tracks.push({
+          title: round.manche.titre,
+          artist: round.manche.artiste,
+          trackId: round.manche.trackId,
+        });
       }
   
       getTracksFromRound(tracks).then(tracksWithPreview => {
         // On choisit le morceau correspondant au trackIndex
         const track = tracksWithPreview[round.trackIndex || 0];
-  
+
         const allAnswers = {};
         for (let i = 1; i <= 5; i++) {
-          if (round.manche[`titre${i}`]) {
+          if (round.manche && round.manche[`titre${i}`]) {
             allAnswers[`titre${i}`] = {
               title: round.manche[`titre${i}`],
               artist: round.manche[`artiste${i}`],
@@ -288,16 +300,30 @@ module.exports = (io) => {
             };
           }
         }
-  
-        io.to(lobbyCode).emit('newRound', {
-          index: lobby.currentTourIndex + 1,
-          total: game.tours.length,
-          previewUrl: track.previewUrl,
-          duration: lobby.roundDuration,
-          title: track.title,
-          artist: track.artist,
-          allAnswers: allAnswers,
-        });
+
+        if (track) {
+          io.to(lobbyCode).emit('newRound', {
+            index: lobby.currentTourIndex + 1,
+            total: game.tours.length,
+            previewUrl: track.previewUrl,
+            duration: lobby.roundDuration,
+            title: track.title,
+            artist: track.artist,
+            allAnswers: allAnswers,
+          });
+        } else {
+          io.to(lobbyCode).emit('newRound', {
+            index: lobby.currentTourIndex + 1,
+            total: game.tours.length,
+            previewUrl: null,
+            duration: lobby.roundDuration,
+            title: null,
+            artist: null,
+            allAnswers: allAnswers,
+            error: 'Aucun morceau valide pour ce round.'
+          });
+          console.error('Aucun morceau valide pour ce round, track est undefined.');
+        }
       });
     }
   

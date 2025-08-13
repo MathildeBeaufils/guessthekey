@@ -100,11 +100,23 @@ const Lobby = ({lobbyCode}) => {
                 <div className={styles.round_container}>
                     <p>Parties disponibles pour le lobby :</p>
                     <ul>
-                    {games.map((game, index) => (
-                        <li key={index}>
-                            Thème : {game.theme}
-                        </li>
-                    ))}
+                                        {games.map((game, index) => (
+                                            <li key={index} style={{ display: 'flex', alignItems: 'center' }}>
+                                                Thème : {game.theme}
+                                                {game.tours && (
+                                                    <span> — {game.tours.length} manche{game.tours.length > 1 ? 's' : ''}</span>
+                                                )}
+                                                <button
+                                                    style={{ marginLeft: 8, color: 'red', background: 'none', border: 'none', cursor: 'pointer', fontSize: 18 }}
+                                                    title="Supprimer la partie"
+                                                    onClick={() => {
+                                                        if(window.confirm('Supprimer cette partie ?')){
+                                                            socket.emit('deleteGame', { lobbyCode, gameIndex: index });
+                                                        }
+                                                    }}
+                                                >✖</button>
+                                            </li>
+                                        ))}
                     </ul>
                 </div>
                 </div>

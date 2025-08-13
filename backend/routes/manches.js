@@ -84,7 +84,6 @@ router.get('/', function(req, res) {
 // Route pour ajouter une manche
 router.post('/', function(req, res) {
   console.log("coucou la route")
-  console.log(req.body)
   const categorieId = [];
   const categories = req.body.selectedItem[3].categorie;
   for (let i = 0; i < categories.length; i++) {
