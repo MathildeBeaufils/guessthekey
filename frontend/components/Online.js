@@ -43,7 +43,7 @@ function Online() {
 
   return (
     <>
-      <SEO title="REcherche de partie | Guess The Key" description="Rejoingnez une partie." />
+      <SEO title="Recherche de partie | Guess The Key" description="Rejoingnez une partie." />
       <Menu/>
       <div className={styles.container}>
         <div className={styles.back}>

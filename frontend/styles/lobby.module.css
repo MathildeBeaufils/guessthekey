@@ -62,10 +62,15 @@
   -webkit-box-shadow: 15px 15px 45px 1px rgba(0, 0, 0, 0.82);
   -moz-box-shadow: 15px 15px 45px 1px rgba(0, 0, 0, 0.82);
   background-color: #C9333D;
+  border: 1px solid #C9333D;
   color: white;
   cursor: pointer;
 }
 
+.button:hover{
+  background-color: #E3505A;
+  border: solid #E3505A 1px;
+}
 .tableau {
   display: flex;
   flex-wrap: wrap;

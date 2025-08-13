@@ -21,6 +21,7 @@
   width: 80vh;
   height: 65vh;
   border-radius: 20px;
+  width: 60%;
 }
 .game_search {
   background-color: #c9333d;
@@ -53,7 +54,6 @@
   color: white;
   position: absolute;
   left: 30px;
-  top: 120px;
   border: 1px #555563 solid;
   font-size: 30px;
   cursor: pointer;
