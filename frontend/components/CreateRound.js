@@ -119,7 +119,7 @@ function CreateRound() {
       .catch((error) => console.error("Erreur :", error));
   };
 
-  const handleCreateRound = (items) => {
+  const handleCreateGame = (items) => {
     fetch(`${backendUrl}/manches`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -134,9 +134,13 @@ function CreateRound() {
       .then((data) => {
         console.log("Manche créée avec succès !", data);
 
-        // Manche envoyé dans le lobby
-        console.log(`LobbyCode ${lobbyCode} dans Create Round`)
-        socket.emit("createRound", { lobbyCode, roundData: data });
+        // Crée une partie (game) avec un seul tour (la manche créée)
+        const gameData = {
+          theme: theme,
+          key: key,
+          tours: [data]
+        };
+        socket.emit("createGame", { lobbyCode, gameData });
         router.push(`/lobby/${lobbyCode}`);
       })
       .catch((error) => {
@@ -159,7 +163,7 @@ function CreateRound() {
       { categorie: selectedCategories },
       { titre: selectedSongs},
     ];
-    handleCreateRound(items);
+  handleCreateGame(items);
   };
 
   return (

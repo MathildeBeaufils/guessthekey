@@ -6,85 +6,25 @@ import { FaVolumeUp, FaVolumeDown, FaVolumeMute } from "react-icons/fa";
 import socket from '../socket';
 
 function Game({lobbyCode}) {
-
+  // TOUS les hooks doivent être appelés AVANT tout return conditionnel !
   const [status, setStatus] = useState("waiting"); // waiting ou in-game ou ended
-  const [round, setRound] = useState(null);
+  const [tour, setTour] = useState(null);
   const [timeLeft, setTimeLeft] = useState(0);
   const [answer, setAnswer] = useState({ title: "", artist: "", freeAnswer: "" });
-  const [roundResult, setRoundResult] = useState(null);
+  const [tourResult, setTourResult] = useState(null);
   const [finalScores, setFinalScores] = useState(null);
-  // Nouvel état pour gérer le volume, de 0 (muet) à 1 (max)
+  const [tourHistory, setTourHistory] = useState([]);
   const [volume, setVolume] = useState(0.0);
-
   const username = useSelector((state) => state.user.value.username);
-
   const audioRef = useRef();
+
+  // NE PAS faire de return avant les hooks !
+
+  // Tous les hooks sont maintenant au bon endroit
 
   if (!lobbyCode) {
     return <div>Chargement du lobby...</div>;
   }
-
-  useEffect(() => {
-    if (!lobbyCode) return;
-
-    // Connection au lobby pour récupérer les infos en instantané
-    socket.emit('joinLobby', {lobbyId: lobbyCode, username });
-    console.log(` joined lobby ${lobbyCode}`);
-
-    socket.emit("requestCurrentGameState", lobbyCode);
-
-    socket.on("gameStarted", () => {
-      console.log("La partie démarre !");
-      setStatus("in-game");
-    });
-
-    socket.on("newRound", ({ index, total, previewUrl, duration }) => {
-      console.log("New round");
-      setStatus("in-game");
-      setRound({ index, total, previewUrl, duration });
-      setRoundResult(null);
-      setFinalScores(null);
-      setTimeLeft(duration);
-      setAnswer({ title: "", artist: "" });
-    });
-
-    socket.on("roundEnded", ({ correctAnswer, allAnswers }) => {
-      setRoundResult({ correctAnswer, allAnswers });
-    });
-
-    socket.on("gameEnded", ({ scores, history}) => {
-      setFinalScores(scores);
-      setRoundHistory(history);
-      setStatus("ended");
-      setRound(null);
-    });
-
-    // Nettoyage au démontage ou si le lobbyId change
-    return () => {
-      socket.off("gameStarted");
-      socket.off("newRound");
-      socket.off("roundEnded");
-      socket.off("gameEnded");
-    };
-  }, [lobbyCode]);
-
-  // Joue la musique à chaque nouveau round, y compris le premier
-  useEffect(() => {
-    if (round && audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.src = round.previewUrl;
-      audioRef.current.volume = volume; // Utiliser la valeur du state pour le volume
-      audioRef.current.play();
-    }
-  }, [round]);
-
-  useEffect(() => {
-    let timerId;
-    if (timeLeft > 0) {
-      timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-    }
-    return () => clearTimeout(timerId);
-  }, [timeLeft]);
 
   // Fonction pour gérer le changement de volume via le curseur
   const handleVolumeChange = (e) => {
@@ -95,14 +35,100 @@ function Game({lobbyCode}) {
     setVolume(newVolume);
   };
 
-  const sendAnswer = () => {
-    if (!answer.title && !answer.artist) return;
-    socket.emit("answer", {
-      lobbyId: lobbyCode,
-      title: answer.title,
-      artist: answer.artist,
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+    }
+  }, [volume]);
+  
+  useEffect(() => {
+    if (!lobbyCode) return;
+
+    // Connection au lobby pour récupérer les infos en instantané
+  socket.emit('joinLobby', {lobbyId: lobbyCode, username });
+    console.log(` joined lobby ${lobbyCode}`);
+
+  socket.emit("requestCurrentGameState", lobbyCode);
+
+    socket.on("gameStarted", () => {
+      console.log("La partie démarre !");
+      setStatus("in-game");
     });
-    setAnswer({ title: "", artist: "" });
+
+    socket.on("newRound", (tourData) => {
+      if (status !== "in-game") {
+        setStatus("in-game");
+      }
+
+      setTour({ 
+        ...tourData,
+        answers: new Map()
+      });
+
+      setTourResult(null);
+      setFinalScores(null);
+      setTimeLeft(tourData.duration);
+      setAnswer({ title: "", artist: "", freeAnswer: "" });
+    });
+
+    socket.on("roundEnded", ({ correctAnswer, allAnswers }) => {
+      setTourResult({ correctAnswer, allAnswers });
+    });
+
+    socket.on("gameEnded", ({ scores, history}) => {
+      setFinalScores(scores);
+      setTourHistory(history);
+      setStatus("ended");
+      setTour(null);
+    });
+
+    // Nettoyage au démontage ou si le lobbyId change
+    return () => {
+      socket.off("gameStarted");
+      socket.off("newRound");
+      socket.off("roundEnded");
+      socket.off("gameEnded");
+    };
+  }, [lobbyCode, status]);
+
+  // Joue la musique à chaque nouveau round, y compris le premier
+  useEffect(() => {
+    if (tour?.type !== "guessTheKey" && audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = tour.previewUrl;
+      audioRef.current.volume = volume; // Utiliser la valeur du state pour le volume
+      audioRef.current.play();
+    }
+  }, [tour]);
+
+  useEffect(() => {
+    let timerId;
+    if (timeLeft > 0) {
+      timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+    }
+    return () => clearTimeout(timerId);
+  }, [timeLeft]);
+
+
+
+  const sendAnswer = () => {
+    if (tour.type !== "guessTheKey" && (!answer.title && !answer.artist)) return;
+    if (tour.type === "guessTheKey" && !answer.freeAnswer) return;
+
+    if (tour.type !== "guessTheKey"){
+      socket.emit("answer", {
+        lobbyCode,
+        title: answer.title,
+        artist: answer.artist,
+      });
+    } else if (tour.type === "guessTheKey") {
+      socket.emit('answer', {
+        lobbyCode,
+        freeAnswer: answer.freeAnswer})
+    }
+
+    
+    setAnswer({ title: "", artist: "", freeAnswer: "" });
   };
 
   if (status === "waiting") {
@@ -121,7 +147,6 @@ function Game({lobbyCode}) {
           ))}
         </ul>
         <h3>Réponses de la manche</h3>
-
       </div>
     );
   }
@@ -136,81 +161,116 @@ function Game({lobbyCode}) {
     }
   };
 
-  // useEffect(() => {
-  //   if (audioRef.current) {
-  //     audioRef.current.volume = volume;
-  //   }
-  // }, [volume]);
-
   return (
     <div className={styles.container}>
-      <img className={styles.vynil} src="/source.gif" />
-      <h2>
-        Manche {round?.index} / {round?.total}
-      </h2>
+  {tour?.type !== "guessTheKey" && (
+        <>
+          <img className={styles.vynil} src="/source.gif" />
+          <h2>
+            Manche {tour?.index} / {tour?.total}
+          </h2>
 
-      <audio ref={audioRef} />
+          <audio ref={audioRef} />
 
-      <div className={styles.volume_container}>
-        {getVolumeIcon()}
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={volume}
-          onChange={handleVolumeChange}
-          className={styles.volume_slider}
-        />
-      </div>
-      <p>Temps restant: {timeLeft}s</p>
+          <div className={styles.volume_container}>
+            {getVolumeIcon()}
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={volume}
+              onChange={handleVolumeChange}
+              className={styles.volume_slider}
+            />
+          </div>
+          <p>Temps restant: {timeLeft}s</p>
 
-      <div className={styles.input_container}>
-        <input
-          className={styles.input}
-          placeholder="Titre"
-          value={answer.title}
-          onChange={(e) => setAnswer({ ...answer, title: e.target.value })}
-          disabled={timeLeft === 0}
-          onKeyDown={(e) => e.key === "Enter" && sendAnswer()}
-        />
-        <input
-          className={styles.input}
-          placeholder="Artiste"
-          value={answer.artist}
-          onChange={(e) => setAnswer({ ...answer, artist: e.target.value })}
-          disabled={timeLeft === 0}
-          onKeyDown={(e) => e.key === "Enter" && sendAnswer()}
-        />
-        <div className={styles.button_send}>
-          <button
-            className={styles.button}
-            onClick={sendAnswer}
-            disabled={timeLeft === 0}
-          >
-            Envoyer
-          </button>
-        </div>
-      </div>
+          <div className={styles.input_container}>
+            <input
+              className={styles.input}
+              placeholder="Titre"
+              value={answer.title}
+              onChange={(e) => setAnswer({ ...answer, title: e.target.value })}
+              disabled={timeLeft === 0}
+              onKeyDown={(e) => e.key === "Enter" && sendAnswer()}
+            />
+            <input
+              className={styles.input}
+              placeholder="Artiste"
+              value={answer.artist}
+              onChange={(e) => setAnswer({ ...answer, artist: e.target.value })}
+              disabled={timeLeft === 0}
+              onKeyDown={(e) => e.key === "Enter" && sendAnswer()}
+            />
+            <div className={styles.button_send}>
+              <button
+                className={styles.button}
+                onClick={sendAnswer}
+                disabled={timeLeft === 0}
+              >
+                Envoyer
+              </button>
+            </div>
+          </div>
+        </>
+      )}
 
-      {roundResult && (
+  {tour?.type === "guessTheKey" && (
+        <>
+          <h1>Guess The Key</h1>
+
+          <div className={styles.inputContainer}>
+            <label className={styles.label} htmlFor="gameCode">Quel est le point commun ?</label>
+            <input
+              className={styles.input}
+              type="text"
+              placeholder="Entrez le point commun"
+              value={answer.freeAnswer}
+              onChange={(e) => setAnswer({ ...answer, freeAnswer: e.target.value })}
+              onKeyDown={(e) => e.key === "Enter" && sendAnswer()}
+            />
+          </div>
+
+          <button className={styles.btn} onClick={sendAnswer}>Valider</button>
+        </>
+      )}
+
+      {tourResult && (
         <div>
           <h3>Réponses de la manche :</h3>
-          <p>
-            Réponse correcte: {roundResult.correctAnswer.title} -{" "}
-            {roundResult.correctAnswer.artist}
-          </p>
-          <ul>
-            {Object.entries(roundResult.allAnswers).map(([playerId, ans]) => (
-              <li key={playerId}>
-                {playerId}: {ans.title} - {ans.artist}
-              </li>
-            ))}
-          </ul>
+
+          {tour?.type !== "guessTheKey" && (
+            <>
+              <p>
+                Réponse correcte: {tourResult.correctAnswer.title} - {tourResult.correctAnswer.artist}
+              </p>
+              <ul>
+                {Object.entries(tourResult.allAnswers).map(([playerId, ans]) => (
+                  <li key={playerId}>
+                    {playerId}: {ans.title} - {ans.artist}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+
+          {tour?.type === "guessTheKey" && (
+            <>
+              <p>Réponse correcte: {tourResult.correctAnswer}</p>
+              <ul>
+                {Object.entries(tourResult.allAnswers).map(([playerId, ans]) => (
+                  <li key={playerId}>
+                    {playerId}: {ans}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </div>
       )}
+      
     </div>
   );
 }
-
 export default Game;
