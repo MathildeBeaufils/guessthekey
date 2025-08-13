@@ -5,6 +5,8 @@ import { useSelector } from 'react-redux';
 import socket from '../socket';
 import { useState } from 'react';
 import SEO from '../components/SEO'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faReply} from '@fortawesome/free-solid-svg-icons';
 
 
 function LocalJoinPage() {
@@ -30,11 +32,20 @@ function LocalJoinPage() {
             })
     };
 
+    const handleBack = () => {
+        router.push("/localHostJoin");
+    };
+
     return (
         <>
             <SEO title="Rejoindre un ami | Guess The Key" description="Entrez le code de votre ami pour le rejoindre." />
             <Menu/>
             <div className={styles.container}>
+                <div className={styles.back}>
+                    <button className={styles.backBtn} onClick={handleBack}>
+                        <FontAwesomeIcon icon={faReply} />
+                    </button>
+                </div>
                 <h1>Rejoindre une Partie Locale</h1>
                 <div className={styles.inputContainer}>
                     <label className={styles.inputContainer}>Code de la Partie :

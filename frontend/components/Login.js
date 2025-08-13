@@ -132,7 +132,12 @@ const Login = () => {
     <>
       <SEO title="Connection | Guess The Key" description="Connectez vous pour obtenir plus de contenue Guess The Key." />
 
+
+
       <main className={styles.container}>
+
+        <h1 className={styles.title}>Guess The Key</h1>     
+
         <button onClick={openLoginModal} className={styles.button}>
           SE CONNECTER
         </button>
