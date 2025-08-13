@@ -11,6 +11,7 @@ function getFiveTracks() {
     { trackId: 3329777161, title: 'Peacefield', artist: 'Ghost' }
   ];
 
+  
   const updateURL = tracks.map((track) => {
     return fetch(`https://api.deezer.com/track/${track.trackId}`)
       .then((response) => response.json())
@@ -52,7 +53,7 @@ module.exports = (io) => {
         console.warn('joinLobby reçu avec des données invalides:', data);
         return; // On stoppe si données manquantes
       }
-    
+      
       const { lobbyId, username } = data;
       socket.username = username;
       socket.join(lobbyId);
@@ -63,13 +64,19 @@ module.exports = (io) => {
           currentRoundIndex: 0,
           roundDuration: 20,
           timeout: null,
-          rounds: [],
-          scores: new Map()
+          rounds: [], // corresponds aux manches créées par les membres du lobby
+          scores: new Map(),
+          roundHistory: [],
         });
         console.log(`Nouveau lobby créé: ${lobbyId}`);
       }
 
       const lobby = lobbies.get(lobbyId);
+
+      if (lobby.rounds && lobby.rounds.length) {
+        socket.emit('updateRounds', lobby.rounds);
+      }
+
 
       // Ajout l'utilisateur avec son username + socket.id
       lobby.players.set(username, {socketId: socket.id, score: 0 })
@@ -77,6 +84,31 @@ module.exports = (io) => {
       // on utilise .keys() car on est dans une Map. Ici on récupère tous les pseudo des utilisateurs présents dans la Map
       io.to(lobbyId).emit('lobbyPlayers', [...lobby.players.keys()]);
       console.log(`Utilisateur ${socket.id} a rejoint le lobby ${lobbyId} sous le pseudo ${username}`);
+    });
+
+    socket.on("createRound", ({ lobbyCode, roundData }) => {
+      if (!lobbyCode || !roundData) {
+        console.warn('Données manquantes pour createRound', { lobbyCode, roundData });
+        return;
+      }
+    
+      const lobby = lobbies.get(lobbyCode);
+      if (!lobby) {
+        console.warn(`Lobby ${lobbyCode} non trouvé`);
+        return;
+      }
+    
+      if(!lobby.rounds){
+        lobby.rounds = [];
+      }
+      lobby.rounds.push(roundData); // Ajout de la manche dans le tableau du lobby
+      lobbies.set(lobbyCode, lobby); // mise a jour des infos du lobby suite à l'ajout de la manche
+
+
+      io.to(lobbyCode).emit("roundCreated", roundData);
+      console.log(`Nouvelle manche créée dans lobby ${lobbyCode}`);
+
+      io.to(lobbyCode).emit('updateRounds', lobby.rounds); // envoi de l'info de la MAJ aux membres du lobby
     });
 
     socket.on('send_message', ({ lobbyId, message }) => {
@@ -109,7 +141,7 @@ module.exports = (io) => {
       setTimeout(() => launchNextRound(lobbyId), 500);
     });
 
-    socket.on('answer', ({ lobbyId, title, artist, guessTheKey }) => {
+    socket.on('answer', ({ lobbyId, title, artist, guessTheKey, freeAnswer }) => {
       const lobby = lobbies.get(lobbyId);
       if (!lobby || lobby.status !== 'in-game') return;
       const round = lobby.rounds[lobby.currentRoundIndex];
@@ -118,9 +150,20 @@ module.exports = (io) => {
       if(round.guessTheKey) {
         // Gestion du format de réponse pour le round du point commun
         round.answers.set(socket.id, { freeAnswer: freeAnswer || ""});
+
         const isCorrect = (freeAnswer || "").toLowerCase().trim() === "Je suis une très jolie key";
+
         if(isCorrect){
           //Mise à jour du score
+          const currentScore = lobby.scores.get(socket.id) || 0;
+          lobby.scores.set(socket.id, currentScore +1)
+
+          // Ajout de titre et artiste à l'historique pour la fin de Partie
+          lobby.roundHistory.push({
+            correctAnswer: {freeAnswer: "Key"},
+            allAnswers: Object.fromEntries(round.answers),
+          })
+
           socket.emit('roundEnded', {
             correctAnswer: { freeAnswer: "Key"},
             allAnswers: { [socket.id]: {freeAnswer}}
@@ -136,14 +179,22 @@ module.exports = (io) => {
       const correctArtist = round.artist ? round.artist.toLowerCase() : '';
       const titleAnswer = (title || '').toLowerCase();
       const artistAnswer = (artist || '').toLowerCase();
+
       const titleOk = titleAnswer.includes(correctTitle);
       const artistOk = artistAnswer.includes(correctArtist);
+
       let correctAnswer = {};
       if (titleOk) correctAnswer.title = round.title;
       if (artistOk) correctAnswer.artist = round.artist;
       if (titleOk || artistOk) {
+
+        const currentScore = lobby.scores.get(socket.id) || 0;
+        lobby.scores.set(socket.id, currentScore +1)
         socket.emit('roundEnded', {
-          correctAnswer,
+          correctAnswer :{ 
+            ...(titleOK ? { title: round.title} : {}),
+            ...(artistOk? { artist: round.artist} : {}),
+          },
           allAnswers: { [socket.id]: { title: title || '', artist: artist || '' } }
         });
       }
@@ -245,7 +296,8 @@ module.exports = (io) => {
     if (!lobby) return;
 
     io.to(lobbyId).emit('gameEnded', {
-      scores: Object.fromEntries(lobby.scores)
+      scores: lobby.scores,
+      history: lobby.rounds,
     });
 
     lobby.status = 'waiting';

@@ -2,9 +2,10 @@ import styles from "../styles/Home.module.css";
 import { useRouter } from "next/router";
 import Menu from "./Menu";
 import { useState, useEffect } from "react";
-import Image from "next/image";
+import Image from "next/Image";
 import Link from "next/link";
 import { useSelector } from 'react-redux';
+import SEO from '../components/SEO'
 
 // A faire:
 // - Responsive
@@ -43,7 +44,8 @@ function Home() {
     }
   };
   return (
-    <div>
+    <>
+      <SEO title="Accueil | Guess The Key" description="Page de navigation Guess The Key" />
       <Menu />
       <main className={styles.main}>
         <h1 className={styles.title}>Guess The Key</h1>
@@ -54,23 +56,25 @@ function Home() {
               <Image
                 src="/cleDeSol.png"
                 alt="Logo clé de sol"
-                width={70}
+                width={60}
                 height={100}
               />
             </div>
           </Link>
+        <div className={styles.btnContainer}>
+          <button className={styles.btn} onClick={() => handleSubmit("solo")}>
+            Mode Solo
+          </button>
+          <button className={styles.btn} onClick={() => handleSubmit("multi")}>
+            Multijoueurs
+          </button>
+          <button className={styles.btn} onClick={() => handleSubmit("pp")}>
+            Parties Privées
+          </button>          
+        </div>
 
-        <button className={styles.btn} onClick={() => handleSubmit("solo")}>
-          Mode Solo
-        </button>
-        <button className={styles.btn} onClick={() => handleSubmit("multi")}>
-          Multijoueurs
-        </button>
-        <button className={styles.btn} onClick={() => handleSubmit("pp")}>
-          Parties Privées
-        </button>
       </main>
-    </div>
+    </>
   );
 }
 

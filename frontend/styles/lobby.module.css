@@ -1,3 +1,7 @@
+@font-face {
+  font-family: 'Hey Comic';
+  src: url('../assets/fonts/HeyComicCustom.ttf') format('truetype');
+}
 .container {
   background-color: #555563;
   width: 100vw;
@@ -9,6 +13,8 @@
   overflow: scroll;
   padding: 5px;
   padding-bottom: 5rem;
+  font-family: 'Hey Comic';
+  letter-spacing: 2px;
 }
 
 .container h1 {
@@ -46,19 +52,25 @@
 }
 
 .button {
-  width: 30%;
+  width: 50%;
   padding: 1%;
   margin: 1%;
-  font-size: 1rem;
+  font-family: 'Hey Comic';
+  font-size: 25px;
   border-radius: 20px;
   box-shadow: 15px 15px 45px 1px rgba(0, 0, 0, 0.82);
   -webkit-box-shadow: 15px 15px 45px 1px rgba(0, 0, 0, 0.82);
   -moz-box-shadow: 15px 15px 45px 1px rgba(0, 0, 0, 0.82);
   background-color: #C9333D;
+  border: 1px solid #C9333D;
   color: white;
   cursor: pointer;
 }
 
+.button:hover{
+  background-color: #E3505A;
+  border: solid #E3505A 1px;
+}
 .tableau {
   display: flex;
   flex-wrap: wrap;

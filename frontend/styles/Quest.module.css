@@ -1,3 +1,7 @@
+@font-face {
+  font-family: 'Hey Comic';
+  src: url('../assets/fonts/HeyComicCustom.ttf') format('truetype');
+}
 .container {
   background-color: #555563;
   width: 100%;
@@ -8,6 +12,8 @@
   flex-direction: column;
   color: white;
   padding-bottom: 50px;
+  font-family: 'Hey Comic';
+  font-size: 20px;
 }
 .quest{
   background-color: white;
@@ -15,4 +21,14 @@
   width: 35rem;
   padding: 2rem;
   border-radius: 10px;
+}
+.backBtn{
+  background-color: #555563;
+  color: white;
+  position: absolute;
+  left: 30px;
+  top: 120px;
+  border: 1px #555563 solid;
+  font-size: 30px;
+  cursor: pointer;
 }

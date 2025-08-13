@@ -1,3 +1,7 @@
+@font-face {
+  font-family: 'Hey Comic';
+  src: url('../assets/fonts/HeyComicCustom.ttf') format('truetype');
+}
 .container {
   background-color: #555563;
   width: 100%;
@@ -7,15 +11,16 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  font-family: 'Hey Comic';
 }
 .manche {
   margin-top: -50px;
 }
 .container h1 {
   color: white;
+
 }
 .container p {
-  font-weight: bold;
   margin: 10px;
 }
 
@@ -24,6 +29,7 @@
   border: none;
   height: 40px;
   font-size: 16px;
+  font-family: 'Hey Comic';
   text-align: center;
   padding: 8px 12px;
 }
@@ -83,9 +89,10 @@
   margin-top: 10px;
   margin-right: 20px;
   padding: 8px 12px;
+  font-family: 'Hey Comic';
 }
 .recherche {
-  background-color: #ff9809;
+  background-color: #555563;
   color: white;
   border-radius: 5px;
   border: none;
@@ -95,18 +102,19 @@
   margin-right: 20px;
   padding: 8px 12px;
   cursor: pointer;
+  font-family: 'Hey Comic';
 }
 .valider {
   width: 25%;
   padding: 2%;
   margin: 2%;
   border-radius: 20px;
-  background-color: #ff9809;
-  border: #ff9809;
+  background-color: #555563;
+  border: #555563;
   color: white;
   cursor: pointer;
   font-size: 22px;
-  font-weight: bolder;
+  font-family: 'Hey Comic';
 }
 
 .radioGroup input[type="radio"] {
@@ -132,7 +140,6 @@
 .radioGroup input[type="radio"]:checked + .radioLabel {
   background-color: #ff9809;
   border-color: #ff9809;
-  font-weight: bold;
 }
 
 .button_validate {
@@ -151,6 +158,7 @@
   width: 80%;
   margin-left: auto;
   margin-right: auto;
+  letter-spacing: 2px;
 }
 
 .category-container input[type="checkbox"] {
@@ -174,6 +182,17 @@
 .category-container input[type="checkbox"]:checked + .category-label {
   background-color: #ff9809;
   border-color: #ff9809;
+}
+
+.backBtn{
+  background-color: #555563;
+  color: white;
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  border: 1px #555563 solid;
+  font-size: 30px;
+  cursor: pointer;
 }
 
 @media (max-width: 768px) {

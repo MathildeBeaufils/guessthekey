@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 function PlaylistPredefini(props) {
 
     function goMission(){
+        
         router.push("/test");   
     }
 console.log(props.id)  

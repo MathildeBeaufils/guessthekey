@@ -1,3 +1,7 @@
+@font-face {
+  font-family: 'Hey Comic';
+  src: url('../assets/fonts/HeyComicCustom.ttf') format('truetype');
+}
 .container {
   background-color: #555563;
   width: 100%;
@@ -9,12 +13,15 @@
 }
 .create {
   color: white;
+  font-family: 'Hey Comic';
+  font-size: 40px;
 }
 .game_container {
   background-color: white;
   width: 80vh;
   height: 65vh;
   border-radius: 20px;
+  width: 60%;
 }
 .game_search {
   background-color: #c9333d;
@@ -36,4 +43,18 @@
   width: 12%;
   border: none;
   margin:5px
+}
+.p {
+  font-family: 'Hey Comic';
+  font-size: 16px;
+  color: black;
+}
+.backBtn{
+  background-color: #555563;
+  color: white;
+  position: absolute;
+  left: 30px;
+  border: 1px #555563 solid;
+  font-size: 30px;
+  cursor: pointer;
 }

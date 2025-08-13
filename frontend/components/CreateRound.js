@@ -2,6 +2,10 @@ import { useState, useEffect } from "react";
 import styles from "../styles/createRound.module.css";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
+import SEO from '../components/SEO'
+import socket from '../socket';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faReply} from '@fortawesome/free-solid-svg-icons';
 
 const SongSearchInput = ({
   index,
@@ -48,6 +52,11 @@ const SongSearchInput = ({
 
 function CreateRound() {
   const router = useRouter();
+  const lobbyCode = router.query.lobbyCode;
+
+  // Ne rien faire tant que lobbyCode est undefined
+  if (!lobbyCode) return <div>Chargement...</div>;
+
   const user = useSelector((state) => state.user.value);
   const backendUrl = "http://localhost:3000";
 
@@ -127,7 +136,11 @@ function CreateRound() {
       })
       .then((data) => {
         console.log("Manche créée avec succès !", data);
-        router.push("/lobbypage");
+
+        // Manche envoyé dans le lobby
+        console.log(`LobbyCode ${lobbyCode} dans Create Round`)
+        socket.emit("createRound", { lobbyCode, roundData: data });
+        router.push(`/lobby/${lobbyCode}`);
       })
       .catch((error) => {
         console.error("Échec de la création de la manche :", error);
@@ -147,33 +160,48 @@ function CreateRound() {
       { theme: theme },
       { key: key },
       { categorie: selectedCategories },
-      { titre: selectedSongs },
+      { titre: selectedSongs},
     ];
     handleCreateRound(items);
   };
 
+  const handleBack = () => {
+    router.push(`/lobby/${lobbyCode}`);
+  };
   return (
     <>
+      <SEO title="Creer une manche | Guess The Key" description="Creer une manche pour vos parties" />
       <div className={styles.container}>
+        <div className={styles.back}>
+          <button className={styles.backBtn} onClick={handleBack}>
+            <FontAwesomeIcon icon={faReply} />
+          </button>
+        </div>
         <h1 className={styles.manche}>CRÉATION DE MANCHE</h1>
         <div className={styles.round_container}>
           <div className={styles.input_container}>
-            <p className={styles.container_p}>Nom du thème</p>
-            <input
-              type="text"
-              className={styles.input}
-              value={theme}
-              onChange={(e) => setTheme(e.target.value)}
-              required
-            />
-            <p className={styles.container_p}>Key</p>
-            <input
-              type="text"
-              className={styles.input}
-              value={key}
-              onChange={(e) => setKey(e.target.value)}
-              required
-            />
+            <label>
+              <p className={styles.container_p}>Nom du thème</p>
+              <input
+                type="text"
+                className={styles.input}
+                value={theme}
+                onChange={(e) => setTheme(e.target.value)}
+                required
+              />              
+            </label>
+
+            <label>
+              <p className={styles.container_p}>Key</p>
+              <input
+                type="text"
+                className={styles.input}
+                value={key}
+                onChange={(e) => setKey(e.target.value)}
+                required
+              />              
+            </label>
+
           </div>
 
           <div className={styles['category-container']}>

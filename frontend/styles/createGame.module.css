@@ -1,3 +1,8 @@
+@font-face {
+  font-family: 'Hey Comic';
+  src: url('../assets/fonts/HeyComicCustom.ttf') format('truetype');
+}
+
 .container {
   background-color: #555563;
   width: 100%;
@@ -7,29 +12,68 @@
   justify-content: center;
   flex-direction: column;
 }
-.button {
+.label{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   width: 30%;
+}
+.inputRange{
+  width: 100%;
+}
+.button {
+  width: 50%;
   padding: 2%;
-  margin: 2%;
+  margin: 5%;
   border-radius: 20px;
   box-shadow: 15px 15px 25px 1px rgba(0, 0, 0, 0.82);
   -webkit-box-shadow: 15px 15px 25px 1px rgba(0, 0, 0, 0.82);
   -moz-box-shadow: 15px 15px 25px 1px rgba(0, 0, 0, 0.82);
-  background-color: #FF9809;
+  background-color: #E3505A;
+  border: solid #E3505A 1px;
   color: white;
   cursor: pointer;
+  font-family: 'Hey Comic';
+  font-size: 25px;
 }
+
+.button:hover{
+  background-color: #E3505A;
+  border: solid #E3505A 1px;
+}
+
 .container input {
   margin: 1%;
 }
 .create {
-  margin-top: 2%;
   margin-bottom: 5%;
   color: white;
+  font-family: 'Hey Comic';
+  font-size: 70px;
 }
 
 .container p {
   color: white;
+  font-family: 'Hey Comic';
+}
+
+.backBtn{
+  background-color: #555563;
+  color: white;
+  position: absolute;
+  left: 30px;
+  top: 120px;
+  border: 1px #555563 solid;
+  font-size: 30px;
+  cursor: pointer;
 }
 
 
+  @media (max-width: 800px) { 
+  .create {
+      font-size: 30px;  
+      width: 80%;
+  }
+
+}
