@@ -10,7 +10,7 @@ function Game({lobbyCode}) {
   const [status, setStatus] = useState("waiting"); // waiting ou in-game ou ended
   const [round, setRound] = useState(null);
   const [timeLeft, setTimeLeft] = useState(0);
-  const [answer, setAnswer] = useState({ title: "", artist: "" });
+  const [answer, setAnswer] = useState({ title: "", artist: "", freeAnswer: "" });
   const [roundResult, setRoundResult] = useState(null);
   const [finalScores, setFinalScores] = useState(null);
   // Nouvel état pour gérer le volume, de 0 (muet) à 1 (max)
@@ -52,8 +52,9 @@ function Game({lobbyCode}) {
       setRoundResult({ correctAnswer, allAnswers });
     });
 
-    socket.on("gameEnded", ({ scores }) => {
+    socket.on("gameEnded", ({ scores, history}) => {
       setFinalScores(scores);
+      setRoundHistory(history);
       setStatus("ended");
       setRound(null);
     });
@@ -119,6 +120,8 @@ function Game({lobbyCode}) {
             </li>
           ))}
         </ul>
+        <h3>Réponses de la manche</h3>
+
       </div>
     );
   }
