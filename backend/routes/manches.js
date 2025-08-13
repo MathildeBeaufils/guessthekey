@@ -184,14 +184,15 @@ router.post('/roundID',(req,res)=>{
   const id = req.body.id;
   Manche.findOne({_id:id})
   .then(data=>{
+    console.log(data)
     const key = data.key;
     const theme = data.theme;
     const tracks = [
-      {artist: data.artiste1, title: data.titre1},
-      {artist: data.artiste2, title: data.titre2},
-      {artist: data.artiste3, title: data.titre3},
-      {artist: data.artiste4, title: data.titre4},
-      {artist: data.artiste5, title: data.titre5},
+      {artist: data.artiste1, title: data.titre1, trackID: data.trackId1},
+      {artist: data.artiste2, title: data.titre2, trackID: data.trackId2},
+      {artist: data.artiste3, title: data.titre3, trackID: data.trackId3},
+      {artist: data.artiste4, title: data.titre4, trackID: data.trackId4},
+      {artist: data.artiste5, title: data.titre5, trackID: data.trackId5},
     ]
     if(data){
         res.json({result: true, key, theme, tracks})
