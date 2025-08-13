@@ -23,7 +23,7 @@ router.put('/', (req, res) => {
     User.updateOne(
         {
             username: req.body.username,
-            'tableauMissionsCampagne.nom': req.body.nom
+            'tableauMissionsCampagne.nom': req.body.missionId
         },
         { $set: {'tableauMissionsCampagne.$.terminee': true,}}
     )

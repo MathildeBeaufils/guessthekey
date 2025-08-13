@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck} from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from "next/router";
 import { useDispatch } from 'react-redux';
-import {addTrackId} from '../reducers/missionCampagne'
+import {addTrackId} from '../reducers/missionCampagne.js'
 
 
 
@@ -13,7 +13,7 @@ import {addTrackId} from '../reducers/missionCampagne'
 function PlaylistPredefini(props) {
 
     function goMission(){
-        dispatch(addTrackId({ trackId: props.manches }))
+        dispatch(addTrackId({ trackId: props.manches, missionId: props.id }))
         router.push("/test");   
     }
 

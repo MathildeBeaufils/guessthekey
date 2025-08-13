@@ -1,17 +1,51 @@
 import styles from "../styles/resultatSolo.module.css";
 import {useRouter} from "next/router";
 import Menu from './Menu';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteTrackId } from "../reducers/missionCampagne";
+import { useState, useEffect } from 'react';
+
+
+// A faire
+// - Determiner si le joueur gagne avec 100pts
+// - Afficher les points via reducer ou props ?
+// - Mettre a jour si gagner en bdd + reducer user
+// - verifier si la mission terminee passe a true (probleme route)
+// - faire SEO
+
+
+
 
 function ResultatSolo() {
+
+    const username = useSelector((state) => state.user.value.username);
+    const missionId = useSelector((state) => state.missionCampagne.value.missionId);
+
+
+    useEffect(() => {
+        if (!username || !missionId) return;
+    
+    fetch(`http://localhost:3000/missionsCampagne`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, missionId }),
+      }).then(data=>console.log(data))
+
+    }, [username, missionId]);
+
+
+
+  const dispatch = useDispatch();
   const Router = useRouter();
 
-  const handleNext = (e) => {
-    Router.push('/nextLevel')
-  }
   const handleReplay = (e) => {
-    Router.push('/replay')
+    dispatch(deleteTrackId())
+    Router.push('/solo')
   }
   const handleHome = (e) => {
+
+
+    dispatch(deleteTrackId())
     Router.push('/home')
   }
 
@@ -20,8 +54,7 @@ function ResultatSolo() {
       <Menu />
       <div className={styles.container}>
         <h1 className={styles.title}>Victoire!</h1>
-        <p className={styles.text}>Vous avez obtenu 100 Key Points</p>
-        <button className={styles.button} onClick={handleNext}>Niveau suivant</button>
+        <p className={styles.text}>Vous avez obtenu 100 points sur 150</p>
         <button className={styles.button} onClick={handleReplay}>Rejouer</button>
         <button className={styles.button} onClick={handleHome}>Accueil</button>
       </div>

@@ -1,7 +1,7 @@
 import "../styles/globals.css";
 import { Provider } from "react-redux";
 import user from "../reducers/users";
-import missionCampagne from "../reducers/missionCampagne";
+import missionCampagne from "../reducers/missionCampagne.js";
 import creatRound from "../reducers/creatRound"
 import { persistStore, persistReducer } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';

@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-
+// tout fonctionne ici normalement
+// faire l'envoi de pts vers resultat solo ?
 function Test() {
     const dispatch = useDispatch();
 
     const trackId = useSelector((state) => state.missionCampagne.value.trackId);
-    console.log(trackId)
     const [keyValide, setKeyValide] = useState('');
     const [theme, setTheme] = useState('');
     const [chanson1, setChanson1] = useState('');
@@ -34,7 +34,7 @@ useEffect(() => {
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id: trackId.trackId }),
+        body: JSON.stringify({ id: trackId }),
     })
     .then(response => response.json())
     .then(data => {
@@ -53,9 +53,6 @@ useEffect(() => {
 }, [key, theme, tracks]);
 
 
-    const a = tracks.map((data, i)=>{
-        return <p> {data.title} - {data.artist}</p>
-    })
 
     // 1
     function validerChanson1() {
@@ -164,9 +161,8 @@ useEffect(() => {
     }
 
     return (
-        <div>
-            <p>{point}</p>
-            {a}            
+        <>
+            <p>{point}</p>         
             <div style={{ marginTop:'50px' , marginLeft:'50px'}}>
                 <label>
                     Trouve la chanson<br />
@@ -296,7 +292,7 @@ useEffect(() => {
                 </label>
                 <button onClick={validerKey}>Valider</button><br />
             </div>
-        </div>
+        </>
     );
 }
 

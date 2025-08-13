@@ -48,13 +48,13 @@ function Solo() {
     }, []); 
 
     const displayFacile = facile.map((data, i) => {
-        return <PlaylistPredefini key={[i]} name={data.nom} image={data.image} terminer={data.terminee} manches={data.manches}/>;
+        return <PlaylistPredefini key={[i]} name={data.nom} image={data.image} terminer={data.terminee} manches={data.manches} id={data._id}/>;
     });
     const displayMoyen = moyen.map((data, i) => {
-        return <PlaylistPredefini key={[i]} name={data.nom} image={data.image} terminer={data.terminee} manches={data.manches}/>;
+        return <PlaylistPredefini key={[i]} name={data.nom} image={data.image} terminer={data.terminee} manches={data.manches} id={data._id}/>;
     });
     const displayDifficile = difficile.map((data, i) => {
-        return <PlaylistPredefini key={[i]} name={data.nom} image={data.image} terminer={data.terminee} manches={data.manches}/>;
+        return <PlaylistPredefini key={[i]} name={data.nom} image={data.image} terminer={data.terminee} manches={data.manches} id={data._id}/>;
     });
 
     const handleBack = () => {
