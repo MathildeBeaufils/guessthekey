@@ -4,6 +4,7 @@ import { useState } from "react";
 import Menu from './Menu';
 import { useSelector } from 'react-redux';
 import socket from '../socket';
+import SEO from '../components/SEO'
 
 
 function CreateGameMulti() {
@@ -32,29 +33,39 @@ function CreateGameMulti() {
 
   return (
     <>
+      <SEO title="Creer une partie en ligne | Guess The Key" description="Parametrez votre partie." />
       <Menu/>
       <div className={styles.container}>
         <h1 className={styles.create}>Créer une partie en mulitjoueur</h1>
 
-        <p>Nombre de joueurs : {numberOfPlayers}</p>
-        <input
-          type="range"
-          min="1"
-          max="10"
-          defaultValue="5"
-          value={numberOfPlayers}
-          onChange={(e) => setNumberOfPlayers(e.target.value)}
-        />
 
-        <p>Nombre de manches : {numberOfRounds}</p>
-        <input
-          type="range"
-          min="1"
-          max="10"
-          defaultValue="5"
-          value={numberOfRounds}
-          onChange={(e) => setNumberOfRounds(e.target.value)}
-        />
+        <label className={styles.label}>
+          <p>Nombre de joueurs : {numberOfPlayers}</p>
+          <input
+            className={styles.inputRange}
+            type="range"
+            min="1"
+            max="10"
+            defaultValue="5"
+            value={numberOfPlayers}
+            onChange={(e) => setNumberOfPlayers(e.target.value)}
+          />          
+        </label>
+
+
+        <label className={styles.label}>
+          <p>Nombre de manches : {numberOfRounds}</p>
+          <input
+            className={styles.inputRange}
+            type="range"
+            min="1"
+            max="10"
+            defaultValue="5"
+            value={numberOfRounds}
+            onChange={(e) => setNumberOfRounds(e.target.value)}
+          />          
+        </label>
+
 
         <button className={styles.button} onClick={handleCreate}>
           Créer une partie

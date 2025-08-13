@@ -2,6 +2,7 @@
   font-family: 'Hey Comic';
   src: url('../assets/fonts/HeyComicCustom.ttf') format('truetype');
 }
+
 .container {
   background-color: #555563;
   width: 100%;
@@ -11,6 +12,16 @@
   justify-content: center;
   flex-direction: column;
 }
+.label{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 30%;
+}
+.inputRange{
+  width: 100%;
+}
 .button {
   width: 50%;
   padding: 2%;
@@ -19,12 +30,18 @@
   box-shadow: 15px 15px 25px 1px rgba(0, 0, 0, 0.82);
   -webkit-box-shadow: 15px 15px 25px 1px rgba(0, 0, 0, 0.82);
   -moz-box-shadow: 15px 15px 25px 1px rgba(0, 0, 0, 0.82);
-  background-color: #FF9809;
+  background-color: #E3505A;
   color: white;
   cursor: pointer;
   font-family: 'Hey Comic';
   font-size: 25px;
 }
+
+.button:hover{
+  background-color: #E3505A;
+  border: solid #E3505A 1px;
+}
+
 .container input {
   margin: 1%;
 }

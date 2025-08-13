@@ -3,6 +3,7 @@ import PlaylistPredefini from './PlaylistPredefini';
 import { useState, useEffect } from 'react';
 import Menu from './Menu';
 import { useSelector } from 'react-redux';
+import SEO from '../components/SEO'
 
 
 // A faire:
@@ -57,7 +58,8 @@ function Solo() {
     });
 
     return (
-        <div>
+        <>
+            <SEO title="Campagne | Guess The Key" description="Selectionnez une mission pour jouer." />
             <Menu/>            
             <main className={styles.main}>
                 <h1 className={styles.title}>Solo</h1>
@@ -74,7 +76,7 @@ function Solo() {
                     {displayDifficile}
                 </div>           
             </main>
-        </div>
+        </>
     );
 }
 
