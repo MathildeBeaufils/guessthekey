@@ -1,14 +1,14 @@
-const { Server } = require('socket.io');
 
+const { Server } = require("socket.io");
 
 // Simule un appel API à Deezer. Les URL ont une durée de validité limitée. Elles sont donc a récupérer au moment de jouer la manche via l'API track ou artist
 function getFiveTracks() {
   const tracks = [
-    { trackId: 139470659, title: 'Shape of You', artist: 'Ed Sheeran' },
-    { trackId: 908604612, title: 'Blinding Lights', artist: 'The Weeknd' },
-    { trackId: 8086136, title: 'Someone Like You', artist: 'Adele' },
-    { trackId: 655095912, title: 'Bad Guy', artist: 'Billie Eilish' },
-    { trackId: 3329777161, title: 'Peacefield', artist: 'Ghost' }
+    { trackId: 139470659, title: "Shape of You", artist: "Ed Sheeran" },
+    { trackId: 908604612, title: "Blinding Lights", artist: "The Weeknd" },
+    { trackId: 8086136, title: "Someone Like You", artist: "Adele" },
+    { trackId: 655095912, title: "Bad Guy", artist: "Billie Eilish" },
+    { trackId: 3329777161, title: "Peacefield", artist: "Ghost" },
   ];
 
   
@@ -19,13 +19,13 @@ function getFiveTracks() {
         if (data && data.preview) {
           return {
             ...track,
-            previewUrl: data.preview
+            previewUrl: data.preview,
           };
         } else {
           console.warn(`Pas de preview pour ${track.title}`);
           return {
             ...track,
-            previewUrl: null
+            previewUrl: null,
           };
         }
       })
@@ -33,7 +33,7 @@ function getFiveTracks() {
         console.error(`Erreur pour ${track.title}:`, error);
         return {
           ...track,
-          previewUrl: null
+          previewUrl: null,
         };
       });
   });
@@ -42,15 +42,14 @@ function getFiveTracks() {
 }
 
 module.exports = (io) => {
-
   const lobbies = new Map();
 
-  io.on('connection', (socket) => {
-    console.log('Utilisateur connecté:', socket.id);
+  io.on("connection", (socket) => {
+    console.log("Utilisateur connecté:", socket.id);
 
-    socket.on('joinLobby', (data) => {
+    socket.on("joinLobby", (data) => {
       if (!data || !data.lobbyId || !data.username) {
-        console.warn('joinLobby reçu avec des données invalides:', data);
+        console.warn("joinLobby reçu avec des données invalides:", data);
         return; // On stoppe si données manquantes
       }
       
@@ -60,7 +59,7 @@ module.exports = (io) => {
       if (!lobbies.has(lobbyId)) {
         lobbies.set(lobbyId, {
           players: new Map(),
-          status: 'waiting',
+          status: "waiting",
           currentRoundIndex: 0,
           roundDuration: 20,
           timeout: null,
@@ -79,11 +78,13 @@ module.exports = (io) => {
 
 
       // Ajout l'utilisateur avec son username + socket.id
-      lobby.players.set(username, {socketId: socket.id, score: 0 })
+      lobby.players.set(username, { socketId: socket.id, score: 0 });
 
       // on utilise .keys() car on est dans une Map. Ici on récupère tous les pseudo des utilisateurs présents dans la Map
-      io.to(lobbyId).emit('lobbyPlayers', [...lobby.players.keys()]);
-      console.log(`Utilisateur ${socket.id} a rejoint le lobby ${lobbyId} sous le pseudo ${username}`);
+      io.to(lobbyId).emit("lobbyPlayers", [...lobby.players.keys()]);
+      console.log(
+        `Utilisateur ${socket.id} a rejoint le lobby ${lobbyId} sous le pseudo ${username}`
+      );
     });
 
     socket.on("createRound", ({ lobbyCode, roundData }) => {
@@ -115,39 +116,39 @@ module.exports = (io) => {
       io.to(lobbyId).emit('receive_message', message);
     });
 
-    socket.on('startGame', async (lobbyId) => {
+    socket.on("startGame", async (lobbyId) => {
       console.log(`Démarrage de la partie pour le lobby ${lobbyId}`);
       const lobby = lobbies.get(lobbyId);
-      if (!lobby || lobby.status === 'in-game') {
-        socket.emit('errorMessage', 'Partie déjà en cours ou lobby invalide');
+      if (!lobby || lobby.status === "in-game") {
+        socket.emit("errorMessage", "Partie déjà en cours ou lobby invalide");
         return;
       }
       const tracks = await getFiveTracks();
-      lobby.rounds = tracks.map(track => ({ ...track, answers: new Map() }));
+      lobby.rounds = tracks.map((track) => ({ ...track, answers: new Map() }));
 
       lobby.rounds.push({
         index: 6,
         total: 6,
         question: "Quel est le point commun ?",
         guessTheKey: true,
-        answers: new Map()
+        answers: new Map(),
       });
 
       lobby.currentRoundIndex = 0;
-      lobby.status = 'in-game';
+      lobby.status = "in-game";
       lobby.scores = new Map();
-      io.to(lobbyId).emit('gameStarted');
+      io.to(lobbyId).emit("gameStarted");
       console.log("Premier round");
       setTimeout(() => launchNextRound(lobbyId), 500);
     });
 
     socket.on('answer', ({ lobbyId, title, artist, guessTheKey, freeAnswer }) => {
       const lobby = lobbies.get(lobbyId);
-      if (!lobby || lobby.status !== 'in-game') return;
+      if (!lobby || lobby.status !== "in-game") return;
       const round = lobby.rounds[lobby.currentRoundIndex];
       if (!round) return;
 
-      if(round.guessTheKey) {
+      if (round.guessTheKey) {
         // Gestion du format de réponse pour le round du point commun
         round.answers.set(socket.id, { freeAnswer: freeAnswer || ""});
 
@@ -169,10 +170,14 @@ module.exports = (io) => {
             allAnswers: { [socket.id]: {freeAnswer}}
           });
         }
-      } else { // Gestion classique des réponses pour la partie blindtest
+      } else {
+        // Gestion classique des réponses pour la partie blindtest
 
         // Permet d'envoyer une réponse même si un seul champ est rempli
-      round.answers.set(socket.id, { title: title || '', artist: artist || '' });
+        round.answers.set(socket.id, {
+          title: title || "",
+          artist: artist || "",
+        });
 
       // Vérifie la réponse et envoie uniquement le titre ou l'artiste correct si trouvé
       const correctTitle = round.title ? round.title.toLowerCase() : '';
@@ -198,54 +203,54 @@ module.exports = (io) => {
           allAnswers: { [socket.id]: { title: title || '', artist: artist || '' } }
         });
       }
-    }});
+    });
 
-    socket.on('requestCurrentGameState', (lobbyId) => {
+    socket.on("requestCurrentGameState", (lobbyId) => {
       const lobby = lobbies.get(lobbyId);
       if (!lobby) return;
 
-      if (lobby.status === 'in-game') {
+      if (lobby.status === "in-game") {
         const round = lobby.rounds[lobby.currentRoundIndex];
         if (round) {
-          socket.emit('newRound', {
+          socket.emit("newRound", {
             index: lobby.currentRoundIndex + 1,
             total: lobby.rounds.length,
             previewUrl: round.previewUrl,
-            duration: lobby.roundDuration
+            duration: lobby.roundDuration,
           });
           console.log("Emission newRound");
         }
       }
     });
 
-    socket.on('disconnect', () => {
+    socket.on("disconnect", () => {
       const username = socket.username;
       if (!username) {
         console.log(`Déconnexion socket ${socket.id} sans username`);
         return;
       }
-      
+
       for (const [lobbyId, lobby] of lobbies.entries()) {
         if (lobby.players.has(username)) {
           lobby.players.delete(username);
-    
+
           if (lobby.players.size === 0) {
             lobbies.delete(lobbyId);
             console.log(`Lobby ${lobbyId} supprimé (vide)`);
-          } else { // mise a jour des infos du lobby en temps réel
-            io.to(lobbyId).emit('lobbyPlayers', [...lobby.players.keys()]);
+          } else {
+            // mise a jour des infos du lobby en temps réel
+            io.to(lobbyId).emit("lobbyPlayers", [...lobby.players.keys()]);
           }
         }
       }
-      console.log('Joueur déconnecté:', username, socket.id);
+      console.log("Joueur déconnecté:", username, socket.id);
     });
-
   });
 
   function launchNextRound(lobbyId) {
     const lobby = lobbies.get(lobbyId);
     if (!lobby) return;
-    console.log(`Lancement du round ${lobby.currentRoundIndex +1}`);
+    console.log(`Lancement du round ${lobby.currentRoundIndex + 1}`);
     if (lobby.currentRoundIndex >= lobby.rounds.length) {
       console.log("Fin de la partie");
       endGame(lobbyId);
@@ -254,9 +259,9 @@ module.exports = (io) => {
 
     const round = lobby.rounds[lobby.currentRoundIndex];
 
-    if(round.guessTheKey) {
+    if (round.guessTheKey) {
       // Round spécial pour le point commun
-      io.to(lobbyId).emit('newRound', {
+      io.to(lobbyId).emit("newRound", {
         index: round.index,
         total: round.total,
         question: round.question,
@@ -265,14 +270,13 @@ module.exports = (io) => {
       });
     } else {
       // Round blindtest
-      io.to(lobbyId).emit('newRound', {
+      io.to(lobbyId).emit("newRound", {
         index: lobby.currentRoundIndex + 1,
         total: lobby.rounds.length,
         previewUrl: round.previewUrl,
-        duration: lobby.roundDuration
+        duration: lobby.roundDuration,
       });
     }
-    
 
     lobby.timeout = setTimeout(() => {
       evaluateRound(lobbyId);
@@ -300,7 +304,7 @@ module.exports = (io) => {
       history: lobby.rounds,
     });
 
-    lobby.status = 'waiting';
+    lobby.status = "waiting";
     lobby.rounds = [];
     lobby.scores = new Map();
     lobby.currentRoundIndex = 0;

@@ -1,16 +1,16 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from "react";
 import Menu from "./Menu";
-import { useSelector } from 'react-redux';
-import { useRouter} from 'next/router';
+import { useSelector } from "react-redux";
+import { useRouter } from "next/router";
 import styles from "../styles/lobby.module.css";
-console.log('Tentative de connexion socket...');
-import socket from '../socket';
+console.log("Tentative de connexion socket...");
+import socket from "../socket";
 
 //zuuuuuuut
-const Lobby = ({lobbyCode}) => {
-    const router = useRouter();
-    const { code } = router.query;
-    const username = useSelector((state) => state.user.value.username);
+const Lobby = ({ lobbyCode }) => {
+  const router = useRouter();
+  const { code } = router.query;
+  const username = useSelector((state) => state.user.value.username);
 
     const [lobbyId, setLobbyId] = useState("NomduLobby");
     const [players, setPlayers] = useState([]);
@@ -19,23 +19,23 @@ const Lobby = ({lobbyCode}) => {
     const [selectedRound, setSelectedRound] = useState({})
 
 
-    useEffect(() => {
-        if (lobbyCode) {
-            setLobbyId(lobbyCode);
-            socket.emit('joinLobby', {lobbyId: lobbyCode, username});
-        }
-    }, [lobbyCode]);
-    
-    useEffect(() => {    
-        // Mise à jour des joueureuses présent.es dans le lobby
-        socket.on('lobbyPlayers', (playerList) => {
-            setPlayers(playerList);
-        });
-        // Lancement de la partie au click du bouton
-        socket.on('gameStarted', () => {
-            console.log("Ceci est un start game");
-            setGameStarted(true);
-        });
+  useEffect(() => {
+    if (lobbyCode) {
+      setLobbyId(lobbyCode);
+      socket.emit("joinLobby", { lobbyId: lobbyCode, username });
+    }
+  }, [lobbyCode]);
+
+  useEffect(() => {
+    // Mise à jour des joueureuses présent.es dans le lobby
+    socket.on("lobbyPlayers", (playerList) => {
+      setPlayers(playerList);
+    });
+    // Lancement de la partie au click du bouton
+    socket.on("gameStarted", () => {
+      console.log("Ceci est un start game");
+      setGameStarted(true);
+    });
 
         // Fonction de nettoyage : lors du démontage du composant, la socket arrête l'écoute de lobbyPlaers et gameStarted => Evite les doublons
         return() => {
@@ -68,10 +68,15 @@ const Lobby = ({lobbyCode}) => {
             };
         }, []);
 
-    const startGame = () => {
-        console.log(`Lancement de la partie pour le lobby ${lobbyId}`)
-        socket.emit('startGame', lobbyId);
-    };
+  const startGame = () => {
+    console.log(`Lancement de la partie pour le lobby ${lobbyId}`);
+    socket.emit("startGame", lobbyId);
+  };
+
+  // Fonction pour rediriger vers la page de création de manche
+  const addManche = () => {
+    router.push("/createround");
+  };
 
     const handleSelect =(selectedRound) => {
         console.log(`Partie sélectionnée:`, selectedRound)
@@ -86,8 +91,8 @@ const Lobby = ({lobbyCode}) => {
     }, [gameStarted, code, router]);
 
 
-    // Infos du lobby
-    return (
+  // Infos du lobby
+  return (
     <>
         <Menu />
         <div className={styles.container}>
@@ -134,7 +139,7 @@ const Lobby = ({lobbyCode}) => {
             <button className={styles.button} onClick={startGame}>Lancer la partie</button>
         </div>
     </>
-    );
+  );
 };
 
 export default Lobby;
