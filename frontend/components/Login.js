@@ -136,7 +136,7 @@ const Login = () => {
 
       <main className={styles.container}>
 
-        <h1 className={styles.title}>Guess The Key</h1>     
+      <h1 className={styles.title}>Guess The Key</h1>     
 
         <button onClick={openLoginModal} className={styles.button}>
           SE CONNECTER
