@@ -61,16 +61,18 @@ function Home() {
               />
             </div>
           </Link>
+        <div className={styles.btnContainer}>
+          <button className={styles.btn} onClick={() => handleSubmit("solo")}>
+            Mode Solo
+          </button>
+          <button className={styles.btn} onClick={() => handleSubmit("multi")}>
+            Multijoueurs
+          </button>
+          <button className={styles.btn} onClick={() => handleSubmit("pp")}>
+            Parties Privées
+          </button>          
+        </div>
 
-        <button className={styles.btn} onClick={() => handleSubmit("solo")}>
-          Mode Solo
-        </button>
-        <button className={styles.btn} onClick={() => handleSubmit("multi")}>
-          Multijoueurs
-        </button>
-        <button className={styles.btn} onClick={() => handleSubmit("pp")}>
-          Parties Privées
-        </button>
       </main>
     </>
   );
