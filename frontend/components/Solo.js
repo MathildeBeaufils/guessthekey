@@ -9,10 +9,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faReply} from '@fortawesome/free-solid-svg-icons';
 import {useRouter} from "next/router";
 
-// A faire:
-// - Mettre les props de l'image
-// - Lien vers l'ecoute
-
 
 function Solo() {
     const user = useSelector((state)=>state.user.value);
