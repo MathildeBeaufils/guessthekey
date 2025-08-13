@@ -3,6 +3,9 @@ import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { useState } from 'react';
 import { login } from '../reducers/users';
+import SEO from '../components/SEO'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faReply} from '@fortawesome/free-solid-svg-icons';
 
 function userProfile() {
     const router = useRouter();
@@ -49,17 +52,27 @@ function userProfile() {
       });
   };
 
+  const handleBack = () => {
+    router.push("/");
+  };
+
     return (
         <>
-            <div className={styles.container}>
-                <span className={styles.KPbox}>0 KeyPoints</span>
-                <h1>Votre profil invité</h1>
-                <div className={styles.inputContainer}>
-                    <label htmlFor="username">Nom d'utilisateur :</label>
-                    <input className={styles.input} type="text" placeholder="Entrer un nom d'utilisateur" onChange={(e) => setInviteUsername(e.target.value)}/>
-                </div>
-                <button className={styles.btn} onClick={handleJoin}>VALIDER</button>
-            </div>        
+          <SEO title="Choisir username | Guess The Key" description="Defini toi un username" />
+          <div className={styles.container}>
+              <span className={styles.KPbox}>0 KeyPoints</span>
+              <div className={styles.back}>
+                  <button className={styles.backBtn} onClick={handleBack}>
+                  <FontAwesomeIcon icon={faReply} />
+                  </button>
+              </div>
+              <h1>Votre profil invité</h1>
+              <div className={styles.inputContainer}>
+                  <label htmlFor="username">Nom d'utilisateur :</label>
+                  <input className={styles.input} type="text" placeholder="Entrer un nom d'utilisateur" onChange={(e) => setInviteUsername(e.target.value)}/>
+              </div>
+              <button className={styles.btn} onClick={handleJoin}>VALIDER</button>
+          </div>        
         </>
     );
 }

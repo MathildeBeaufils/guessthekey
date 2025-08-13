@@ -3,11 +3,11 @@ import PlaylistPredefini from './PlaylistPredefini';
 import { useState, useEffect } from 'react';
 import Menu from './Menu';
 import { useSelector } from 'react-redux';
+import SEO from '../components/SEO'
 
-
-// A faire:
-// - Mettre les props de l'image
-// - Lien vers l'ecoute
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faReply} from '@fortawesome/free-solid-svg-icons';
+import {useRouter} from "next/router";
 
 
 function Solo() {
@@ -15,6 +15,7 @@ function Solo() {
     const [facile, setFacile]= useState([]);
     const [moyen, setMoyen]= useState([]);
     const [difficile, setDifficile]= useState([]);
+    const router = useRouter();
 
     useEffect(() => {
 
@@ -56,10 +57,20 @@ function Solo() {
         return <PlaylistPredefini key={[i]} name={data.nom} image={data.image} terminer={data.terminee} />;
     });
 
+    const handleBack = () => {
+        router.push("/home");
+    };
+
     return (
-        <div>
+        <>
+            <SEO title="Campagne | Guess The Key" description="Selectionnez une mission pour jouer." />
             <Menu/>            
             <main className={styles.main}>
+                <div className={styles.back}>
+                    <button className={styles.backBtn} onClick={handleBack}>
+                    <FontAwesomeIcon icon={faReply} />
+                    </button>
+                </div>
                 <h1 className={styles.title}>Solo</h1>
                 <h2 className={styles.h2}>Facile</h2>
                 <div className={styles.ListContainer}>
@@ -74,7 +85,7 @@ function Solo() {
                     {displayDifficile}
                 </div>           
             </main>
-        </div>
+        </>
     );
 }
 

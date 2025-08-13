@@ -2,7 +2,10 @@ import { useState, useEffect } from "react";
 import styles from "../styles/createRound.module.css";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
+import SEO from '../components/SEO'
 import socket from '../socket';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faReply} from '@fortawesome/free-solid-svg-icons';
 
 const SongSearchInput = ({
   index,
@@ -166,28 +169,43 @@ function CreateRound() {
   handleCreateGame(items);
   };
 
+  const handleBack = () => {
+    router.push(`/lobby/${lobbyCode}`);
+  };
   return (
     <>
+      <SEO title="Creer une manche | Guess The Key" description="Creer une manche pour vos parties" />
       <div className={styles.container}>
+        <div className={styles.back}>
+          <button className={styles.backBtn} onClick={handleBack}>
+            <FontAwesomeIcon icon={faReply} />
+          </button>
+        </div>
         <h1 className={styles.manche}>CRÉATION DE MANCHE</h1>
         <div className={styles.round_container}>
           <div className={styles.input_container}>
-            <p className={styles.container_p}>Nom du thème</p>
-            <input
-              type="text"
-              className={styles.input}
-              value={theme}
-              onChange={(e) => setTheme(e.target.value)}
-              required
-            />
-            <p className={styles.container_p}>Key</p>
-            <input
-              type="text"
-              className={styles.input}
-              value={key}
-              onChange={(e) => setKey(e.target.value)}
-              required
-            />
+            <label>
+              <p className={styles.container_p}>Nom du thème</p>
+              <input
+                type="text"
+                className={styles.input}
+                value={theme}
+                onChange={(e) => setTheme(e.target.value)}
+                required
+              />              
+            </label>
+
+            <label>
+              <p className={styles.container_p}>Key</p>
+              <input
+                type="text"
+                className={styles.input}
+                value={key}
+                onChange={(e) => setKey(e.target.value)}
+                required
+              />              
+            </label>
+
           </div>
 
           <div className={styles['category-container']}>

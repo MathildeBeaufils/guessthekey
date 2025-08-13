@@ -4,6 +4,7 @@ import styles from "../styles/game.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FaVolumeUp, FaVolumeDown, FaVolumeMute } from "react-icons/fa";
 import socket from '../socket';
+import SEO from '../components/SEO'
 
 function Game({lobbyCode}) {
   // TOUS les hooks doivent être appelés AVANT tout return conditionnel !
@@ -162,29 +163,29 @@ function Game({lobbyCode}) {
   };
 
   return (
-    <div className={styles.container}>
-  {tour?.type !== "guessTheKey" && (
-        <>
-          <img className={styles.vynil} src="/source.gif" />
-          <h2>
-            Manche {tour?.index} / {tour?.total}
-          </h2>
+    <>
+      <SEO title="En partie | Guess The Key" description="Faites de votre mieu et gagner le plus de points." />
+      <div className={styles.container}>
+      <img className={styles.vynil} src="/source.gif" />
+      <h2>
+        Manche {round?.index} / {round?.total}
+      </h2>
 
-          <audio ref={audioRef} />
+        <audio ref={audioRef} />
 
-          <div className={styles.volume_container}>
-            {getVolumeIcon()}
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.01"
-              value={volume}
-              onChange={handleVolumeChange}
-              className={styles.volume_slider}
-            />
-          </div>
-          <p>Temps restant: {timeLeft}s</p>
+        <div className={styles.volume_container}>
+          {getVolumeIcon()}
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={volume}
+            onChange={handleVolumeChange}
+            className={styles.volume_slider}
+          />
+        </div>
+        <p>Temps restant: {timeLeft}s</p>
 
           <div className={styles.input_container}>
             <input

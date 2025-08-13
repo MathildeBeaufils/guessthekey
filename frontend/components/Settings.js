@@ -7,6 +7,8 @@ import { faVolumeXmark, faVolumeHigh,faPalette, faArrowRightFromBracket } from '
 import { useDispatch, useSelector } from 'react-redux';
 import { logout, updateUsername } from '../reducers/users';
 
+import SEO from '../components/SEO'
+
 
 function Settings() {
 
@@ -41,7 +43,7 @@ function Settings() {
 
   // logout
   function handleLogout(){
-    dispatch(logout);
+    dispatch(logout());
     router.push('/');
   }
   
@@ -103,57 +105,67 @@ function Settings() {
 
 
   return (
-    <div>
+    <>
+      <SEO title="Parametre | Guess The Key" description="Configurer vor parametres." />
       <Menu/>
       <main className={styles.main}>
         <h1 className={styles.title}>PARAMETRES</h1>
 
         <div className={styles.sonores}>
             <h2> Paramètres sonores</h2>
-            <p>Volume général :</p>
-            <div className={styles.volume}>
-                <FontAwesomeIcon onClick={() => setVolumeGeneral(0)} className={styles.volumeIcon} icon={faVolumeXmark}/>
-                <input
-                className={styles.cursor}
-                type="range"
-                min="1"
-                max="100"
-                defaultValue="50"
-                value={volumeGeneral}
-                onChange={(e) => setVolumeGeneral(e.target.value)}
-                />
-                <FontAwesomeIcon icon={faVolumeHigh} className={styles.volumeIcon} onClick={() => setVolumeGeneral(100)} />
-            </div>
+            <label className={styles.sonores}>
+              <p>Volume général :</p>
+              <div className={styles.volume}>
+                  <FontAwesomeIcon onClick={() => setVolumeGeneral(0)} className={styles.volumeIcon} icon={faVolumeXmark}/>
+                  <input
+                  className={styles.cursor}
+                  type="range"
+                  min="1"
+                  max="100"
+                  defaultValue="50"
+                  value={volumeGeneral}
+                  onChange={(e) => setVolumeGeneral(e.target.value)}
+                  />
+                  <FontAwesomeIcon icon={faVolumeHigh} className={styles.volumeIcon} onClick={() => setVolumeGeneral(100)} />
+              </div>              
+            </label>
 
-            <p>Volume musique :</p>
-            <div className={styles.volume}>
-                <FontAwesomeIcon onClick={() => setVolumeMusique(0)} className={styles.volumeIcon} icon={faVolumeXmark}/>
-                <input
-                className={styles.cursor}
-                type="range"
-                min="1"
-                max="100"
-                defaultValue="50"
-                value={volumeMusique}
-                onChange={(e) => setVolumeMusique(e.target.value)}
-                />
-                <FontAwesomeIcon icon={faVolumeHigh} className={styles.volumeIcon} onClick={() => setVolumeMusique(100)} />
-            </div>
 
-            <p>Volume SFX :</p>
-            <div className={styles.volume}>
-                <FontAwesomeIcon onClick={() => setVolumeSFX(0)} className={styles.volumeIcon} icon={faVolumeXmark}/>
-                <input
-                className={styles.cursor}
-                type="range"
-                min="1"
-                max="100"
-                defaultValue="50"
-                value={volumeSFX}
-                onChange={(e) => setVolumeSFX(e.target.value)}
-                />
-                <FontAwesomeIcon icon={faVolumeHigh} className={styles.volumeIcon} onClick={() => setVolumeSFX(100)} />
-            </div>
+            <label className={styles.sonores}>
+              <p>Volume musique :</p>
+              <div className={styles.volume}>
+                  <FontAwesomeIcon onClick={() => setVolumeMusique(0)} className={styles.volumeIcon} icon={faVolumeXmark}/>
+                  <input
+                  className={styles.cursor}
+                  type="range"
+                  min="1"
+                  max="100"
+                  defaultValue="50"
+                  value={volumeMusique}
+                  onChange={(e) => setVolumeMusique(e.target.value)}
+                  />
+                  <FontAwesomeIcon icon={faVolumeHigh} className={styles.volumeIcon} onClick={() => setVolumeMusique(100)} />
+              </div>              
+            </label>
+
+
+            <label className={styles.sonores}>
+              <p>Volume SFX :</p>
+              <div className={styles.volume}>
+                  <FontAwesomeIcon onClick={() => setVolumeSFX(0)} className={styles.volumeIcon} icon={faVolumeXmark}/>
+                  <input
+                  className={styles.cursor}
+                  type="range"
+                  min="1"
+                  max="100"
+                  defaultValue="50"
+                  value={volumeSFX}
+                  onChange={(e) => setVolumeSFX(e.target.value)}
+                  />
+                  <FontAwesomeIcon icon={faVolumeHigh} className={styles.volumeIcon} onClick={() => setVolumeSFX(100)} />
+              </div>              
+            </label>
+
         </div>
 
         <div className={styles.affichage}>
@@ -217,7 +229,7 @@ function Settings() {
         <button className={styles.btn} onClick={() => handleSecurity('confidentialité')}>Confidentialité et sécurité</button>
         <button className={styles.btnLogout} onClick={() => handleLogout()}>Deconnection <FontAwesomeIcon icon={faArrowRightFromBracket} className={styles.logoutIcon}/></button>
       </main>
-    </div>
+    </>
   );
 }
 

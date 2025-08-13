@@ -92,7 +92,7 @@
   font-family: 'Hey Comic';
 }
 .recherche {
-  background-color: #ff9809;
+  background-color: #555563;
   color: white;
   border-radius: 5px;
   border: none;
@@ -109,8 +109,8 @@
   padding: 2%;
   margin: 2%;
   border-radius: 20px;
-  background-color: #ff9809;
-  border: #ff9809;
+  background-color: #555563;
+  border: #555563;
   color: white;
   cursor: pointer;
   font-size: 22px;
@@ -182,6 +182,17 @@
 .category-container input[type="checkbox"]:checked + .category-label {
   background-color: #ff9809;
   border-color: #ff9809;
+}
+
+.backBtn{
+  background-color: #555563;
+  color: white;
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  border: 1px #555563 solid;
+  font-size: 30px;
+  cursor: pointer;
 }
 
 @media (max-width: 768px) {
