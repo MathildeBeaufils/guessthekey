@@ -3,6 +3,9 @@ import styles from "../styles/createRound.module.css";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import SEO from '../components/SEO'
+import socket from '../socket';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faReply} from '@fortawesome/free-solid-svg-icons';
 
 const SongSearchInput = ({
   index,
@@ -162,10 +165,18 @@ function CreateRound() {
     handleCreateRound(items);
   };
 
+  const handleBack = () => {
+    router.push(`/lobby/${lobbyCode}`);
+  };
   return (
     <>
       <SEO title="Creer une manche | Guess The Key" description="Creer une manche pour vos parties" />
       <div className={styles.container}>
+        <div className={styles.back}>
+          <button className={styles.backBtn} onClick={handleBack}>
+            <FontAwesomeIcon icon={faReply} />
+          </button>
+        </div>
         <h1 className={styles.manche}>CRÉATION DE MANCHE</h1>
         <div className={styles.round_container}>
           <div className={styles.input_container}>
