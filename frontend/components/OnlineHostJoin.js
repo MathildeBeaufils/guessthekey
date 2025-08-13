@@ -1,6 +1,7 @@
 import styles from "../styles/hostJoin.module.css";
 import {useRouter} from "next/router";
 import Menu from './Menu';
+import SEO from '../components/SEO'
 
 function OnlineLocalHostJoin() {
     const Router = useRouter();
@@ -12,6 +13,7 @@ function OnlineLocalHostJoin() {
     }
     return (
         <>
+            <SEO title="Multijoueur | Guess The Key" description="Hebergez ou rejoingnez une partie pour plus de fun." />   
             <Menu/>
             <div className={styles.container}>
                 <h1 className={styles.title}>Parties</h1>

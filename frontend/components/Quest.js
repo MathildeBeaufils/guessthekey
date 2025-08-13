@@ -1,10 +1,12 @@
 import styles from "../styles/Quest.module.css";
 import Menu from "./Menu";
 import quests from "../../backend/collection/quest"
+import SEO from '../components/SEO'
 
 function Quest() {
   return (
     <>
+      <SEO title="Quetes | Guess The Key" description="Liste de vos quetes." />
       <Menu />
       <div className={styles.container}>
         <h1>QUÊTES</h1>

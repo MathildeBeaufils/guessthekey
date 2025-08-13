@@ -92,7 +92,7 @@
   font-family: 'Hey Comic';
 }
 .recherche {
-  background-color: #ff9809;
+  background-color: #555563;
   color: white;
   border-radius: 5px;
   border: none;
@@ -109,8 +109,8 @@
   padding: 2%;
   margin: 2%;
   border-radius: 20px;
-  background-color: #ff9809;
-  border: #ff9809;
+  background-color: #555563;
+  border: #555563;
   color: white;
   cursor: pointer;
   font-size: 22px;

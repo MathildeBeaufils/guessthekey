@@ -44,7 +44,9 @@
     gap: 10px;
     font-family: 'Hey Comic';
 }
-
+.Inventaire{
+    color: white
+}
 .perso {
     display: flex;
     flex-direction: column;

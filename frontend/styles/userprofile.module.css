@@ -34,18 +34,22 @@
     flex-direction: column;
 }
 .btn{
-   width: 25%;
+  width: 25%;
   padding: 2%;
   margin: 2%;
   border-radius: 20px;
   box-shadow: 15px 15px 25px 1px rgba(0, 0, 0, 0.82);
   -webkit-box-shadow: 15px 15px 25px 1px rgba(0, 0, 0, 0.82);
   -moz-box-shadow: 15px 15px 25px 1px rgba(0, 0, 0, 0.82);
-  background-color: #FF9809;
+  background-color: #C9333E;
   color: white;
   cursor: pointer;
   font-family: 'Hey Comic';
   font-size: 25px;
+}
+
+.btn:hover{
+  background-color: #E3505A;
 }
 .container h1 {
   color: white;

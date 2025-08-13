@@ -2,6 +2,7 @@ import styles from "../styles/Online.module.css";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Menu from './Menu';
+import SEO from '../components/SEO'
 
 function Online() {
   const router = useRouter();
@@ -37,6 +38,7 @@ function Online() {
 
   return (
     <>
+      <SEO title="REcherche de partie | Guess The Key" description="Rejoingnez une partie." />
       <Menu/>
       <div className={styles.container}>
         <h1 className={styles.create}>Recherche de parties en ligne</h1>

@@ -4,6 +4,7 @@ import Menu from './Menu';
 import { useSelector } from 'react-redux';
 import socket from '../socket';
 import { useState } from 'react';
+import SEO from '../components/SEO'
 
 
 function LocalJoinPage() {
@@ -31,12 +32,14 @@ function LocalJoinPage() {
 
     return (
         <>
+            <SEO title="Rejoindre un ami | Guess The Key" description="Entrez le code de votre ami pour le rejoindre." />
             <Menu/>
             <div className={styles.container}>
                 <h1>Rejoindre une Partie Locale</h1>
                 <div className={styles.inputContainer}>
-                    <label htmlFor="gameCode">Code de la Partie :</label>
-                    <input className={styles.input} type="text" placeholder="Entrez le code de la partie" onChange={(e) => setCode(e.target.value)}/>
+                    <label className={styles.inputContainer}>Code de la Partie :
+                        <input className={styles.input} type="text" placeholder="Entrez le code de la partie" onChange={(e) => setCode(e.target.value)}/>
+                    </label>
                 </div>
                 <button className={styles.btn} onClick={handleJoin}>VALIDER</button>
             </div>        

@@ -4,13 +4,15 @@ import Menu from "./Menu";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartPlus} from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
+import SEO from '../components/SEO'
 
 function Custom() {
   const router = useRouter();
 
 
   return (
-    <div>
+    <>
+      <SEO title="Personnalisation | Guess The Key" description="Personnalisez votre personnage" />
       <Menu />
       <main className={styles.main}>
         <h1 className={styles.title}>PERSONNALISATION</h1>
@@ -18,7 +20,7 @@ function Custom() {
         <div className={styles.layout}>
             
             <div className={styles.items}>
-                <span>Inventaire</span>
+                <span className={styles.Inventaire}>Inventaire</span>
                 <div className={styles.tete}>
                     <span>Tête</span>
                 </div>
@@ -40,13 +42,13 @@ function Custom() {
             <div className={styles.perso}>
                 <span>Votre personnage</span>
                 <div className={styles.image}>
-                    <img className={styles.imgPerso} src="/perso_test1.png" />
+                    <img className={styles.imgPerso} src="/perso_test1.png" alt='image de votre personnage'/>
                 </div>
             </div>
         </div>
         <Link href="/shop" ><p className={styles.lienShop}>Visitez le <FontAwesomeIcon icon={faCartPlus} />store pour plus de choix de personnalisation</p></Link>
       </main>
-    </div>
+    </>
   );
 }
 

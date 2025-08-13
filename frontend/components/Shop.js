@@ -5,12 +5,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartPlus, faBasketShopping} from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import Image from 'next/Image'
+import SEO from '../components/SEO'
 
 function Shop() {
   const router = useRouter();
 
   return (
-    <div>
+    <>
+      <SEO title="Magasin | Guess The Key" description="Acheter des objets pour paraitre au dessus de vos amis" />
       <Menu />
       <main className={styles.main}>
         <h1 className={styles.title}>BOUTIQUE</h1>
@@ -21,22 +23,22 @@ function Shop() {
             <h2>Panoplies complètes</h2>
                 <div className={styles.categories}>
                   <div className={styles.item}>
-                      <img className={styles.imgItem} src="/perso_test1.png" />
+                      <img className={styles.imgItem} src="/perso_test1.png" alt='image dun article'/>
                       <span>Valkyrie 2 : XX KP</span>
                   </div>
 
                   <div className={styles.item}>
-                      <img className={styles.imgItem} src="/perso_test2.png" />
+                      <img className={styles.imgItem} src="/perso_test2.png" alt='image dun article' />
                       <span>Squelette : XX KP</span>
                   </div>
 
                   <div className={styles.item}>
-                      <img className={styles.imgItem} src="/perso_test3.png" />
+                      <img className={styles.imgItem} src="/perso_test3.png" alt='image dun article' />
                       <span>Dark oracle : XX KP</span>
                   </div>
 
                   <div className={styles.item}>
-                      <img className={styles.imgItem} src="/perso_test4.png" />
+                      <img className={styles.imgItem} src="/perso_test4.png"  alt='image dun article'/>
                       <span>Minautore : XX KP</span>
                   </div>
                   </div>
@@ -45,32 +47,32 @@ function Shop() {
                 <div className={styles.categories}>
                   
                   <div className={styles.item}>
-                      <img className={styles.imgItem} src="/Head_test3.png" />
+                      <img className={styles.imgItem} src="/Head_test3.png"  alt='image dun article'/>
                       <span> Tête Squelette : XX KP</span>
                   </div>
 
                   <div className={styles.item}>
-                      <img className={styles.imgItem} src="/Head_test2.png" />
+                      <img className={styles.imgItem} src="/Head_test2.png"  alt='image dun article'/>
                       <span> Tête Minautore : XX KP</span>
                   </div>
 
                   <div className={styles.item}>
-                      <img className={styles.imgItem} src="/Body_test1.png" />
+                      <img className={styles.imgItem} src="/Body_test1.png" alt='image dun article' />
                       <span> Haut Valkyrie 2 : XX KP</span>
                   </div>
 
                   <div className={styles.item}>
-                      <img className={styles.imgItem} src="/Body_test2.png" />
+                      <img className={styles.imgItem} src="/Body_test2.png" alt='image dun article' />
                       <span>Haut ange : XX KP</span>
                   </div>
 
                   <div className={styles.item}>
-                      <img className={styles.imgItem} src="/Body_test3.png" />
+                      <img className={styles.imgItem} src="/Body_test3.png" alt='image dun article' />
                       <span>Haut Dark Oracle : XX KP</span>
                   </div>
 
                   <div className={styles.item}>
-                      <img className={styles.imgItem} src="/Body_test4.png" />
+                      <img className={styles.imgItem} src="/Body_test4.png" alt='image dun article' />
                       <span>Haut squelette 2 : XX KP</span>
                   </div>
                 </div>
@@ -106,7 +108,7 @@ function Shop() {
             <p className={styles.panier}> <FontAwesomeIcon icon={faBasketShopping} /> Voir mon panier</p>
         </div>
       </main>
-    </div>
+    </>
   );
 }
 
