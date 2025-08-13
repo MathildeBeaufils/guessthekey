@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 
 function Test() {
+    const dispatch = useDispatch();
 
+    const trackId = useSelector((state) => state.missionCampagne.value.trackId);
+    console.log(trackId)
     const [keyValide, setKeyValide] = useState('');
     const [theme, setTheme] = useState('');
     const [chanson1, setChanson1] = useState('');
@@ -20,24 +25,26 @@ function Test() {
     const [point, setPoint] = useState(0);
 
 
+
 useEffect(() => {
+    if (!trackId) return;
+
     fetch(`http://localhost:3000/manches/roundID`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-    body: JSON.stringify({
-        id: '689b1c3d165e3079b8793c48'
-    }),
+        body: JSON.stringify({ id: trackId.trackId }),
     })
     .then(response => response.json())
     .then(data => {
         console.log(data);
         setKeyValide(data.key);
         setTheme(data.theme);
-        setTracks(data.tracks)
+        setTracks(data.tracks);
     });
-}, [])
+}, [trackId]);
+
 
 useEffect(() => {
     console.log('Mise à jour key:', key);

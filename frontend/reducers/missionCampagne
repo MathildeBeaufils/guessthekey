@@ -9,7 +9,7 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
         addTrackId: (state, action) => {
-            state.value.trackId = action.payload.trackId;
+            state.value.trackId = action.payload;
         },
     },
 });

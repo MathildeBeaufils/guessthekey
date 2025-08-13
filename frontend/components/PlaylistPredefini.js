@@ -3,6 +3,9 @@ import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck} from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from "next/router";
+import { useDispatch } from 'react-redux';
+import {addTrackId} from '../reducers/missionCampagne'
+
 
 
 
@@ -10,13 +13,11 @@ import { useRouter } from "next/router";
 function PlaylistPredefini(props) {
 
     function goMission(){
-        
+        dispatch(addTrackId({ trackId: props.manches }))
         router.push("/test");   
     }
-console.log(props.id)  
 
-
-
+    const dispatch = useDispatch();
     const router = useRouter();
     let afficheTerminer = null;
     if(props && props.terminer){
