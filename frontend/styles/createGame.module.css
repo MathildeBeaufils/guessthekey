@@ -31,6 +31,7 @@
   -webkit-box-shadow: 15px 15px 25px 1px rgba(0, 0, 0, 0.82);
   -moz-box-shadow: 15px 15px 25px 1px rgba(0, 0, 0, 0.82);
   background-color: #E3505A;
+  border: solid #E3505A 1px;
   color: white;
   cursor: pointer;
   font-family: 'Hey Comic';
@@ -46,11 +47,10 @@
   margin: 1%;
 }
 .create {
-  margin-top: 2%;
-  margin-bottom: 10%;
+  margin-bottom: 5%;
   color: white;
   font-family: 'Hey Comic';
-  font-size: 30px;
+  font-size: 70px;
 }
 
 .container p {
@@ -58,4 +58,22 @@
   font-family: 'Hey Comic';
 }
 
+.backBtn{
+  background-color: #555563;
+  color: white;
+  position: absolute;
+  left: 30px;
+  top: 120px;
+  border: 1px #555563 solid;
+  font-size: 30px;
+  cursor: pointer;
+}
 
+
+  @media (max-width: 800px) { 
+  .create {
+      font-size: 30px;  
+      width: 80%;
+  }
+
+}

@@ -214,6 +214,7 @@
   cursor: pointer;
   font-family: 'Hey Comic';
   letter-spacing: 1px;
+  margin-top: 20px;
 }
 .Btnrecherche:hover{
   background-color: #f26500;

@@ -21,6 +21,7 @@
   width: 80vh;
   height: 65vh;
   border-radius: 20px;
+  width: 60%;
 }
 .game_search {
   background-color: #c9333d;
@@ -47,4 +48,13 @@
   font-family: 'Hey Comic';
   font-size: 16px;
   color: black;
+}
+.backBtn{
+  background-color: #555563;
+  color: white;
+  position: absolute;
+  left: 30px;
+  border: 1px #555563 solid;
+  font-size: 30px;
+  cursor: pointer;
 }

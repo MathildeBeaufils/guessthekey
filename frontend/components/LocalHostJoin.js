@@ -2,20 +2,30 @@ import styles from "../styles/hostJoin.module.css";
 import {useRouter} from "next/router";
 import Menu from './Menu';
 import SEO from '../components/SEO'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faReply} from '@fortawesome/free-solid-svg-icons';
 
 function LocalHostJoin() {
-    const Router = useRouter();
+    const router = useRouter();
     const handleHost = (e) => {
-        Router.push('/creategamelocal')
+        router.push('/creategamelocal')
     }
     const handleJoin = (e) => {
-        Router.push('/joingamelocal')
+        router.push('/joingamelocal')
     }
+    const handleBack = () => {
+        router.push("/home");
+    };
     return (
         <>
             <SEO title="Multijoueur avec vos amis | Guess The Key" description="Hebergez ou rejoingnez une partie pour plus de fun." />
             <Menu/>     
             <div className={styles.container}>
+                <div className={styles.back}>
+                    <button className={styles.backBtn} onClick={handleBack}>
+                    <FontAwesomeIcon icon={faReply} />
+                    </button>
+                </div>
                 <h1 className={styles.title}>Parties</h1>
                     <button className={styles.button} onClick={handleHost}>Héberger</button>
                     <button className={styles.button} onClick={handleJoin}>Rejoindre</button>

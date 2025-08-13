@@ -5,6 +5,8 @@ import Menu from './Menu';
 import { useSelector } from 'react-redux';
 import socket from '../socket';
 import SEO from '../components/SEO'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faReply} from '@fortawesome/free-solid-svg-icons';
 
 
 function CreateGameMulti() {
@@ -30,13 +32,21 @@ function CreateGameMulti() {
         })
 };
 
+  const handleBack = () => {
+        router.push("/onlineHostJoin");
+  };
 
   return (
     <>
       <SEO title="Creer une partie en ligne | Guess The Key" description="Parametrez votre partie." />
       <Menu/>
       <div className={styles.container}>
-        <h1 className={styles.create}>Créer une partie en mulitjoueur</h1>
+        <div className={styles.back}>
+          <button className={styles.backBtn} onClick={handleBack}>
+          <FontAwesomeIcon icon={faReply} />
+          </button>
+        </div>
+        <h1 className={styles.create}>Créer une partie en multijoueurs</h1>
 
 
         <label className={styles.label}>

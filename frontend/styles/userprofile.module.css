@@ -64,4 +64,13 @@
     font-size: 20px; 
     font-family: 'Hey Comic';
 }
-
+.backBtn{
+  background-color: #555563;
+  color: white;
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  border: 1px #555563 solid;
+  font-size: 30px;
+  cursor: pointer;
+}

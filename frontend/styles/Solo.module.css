@@ -1,6 +1,6 @@
 @font-face {
-  font-family: 'Hey Comic';
-  src: url('../assets/fonts/HeyComicCustom.ttf') format('truetype');
+    font-family: 'Hey Comic';
+    src: url('../assets/fonts/HeyComicCustom.ttf') format('truetype');
 }
 .main {
     display: flex;
@@ -8,7 +8,7 @@
     justify-content: center;
     align-items: center;
     height: auto;
-    min-height: 90vh;
+    min-height: 100vh;
     background-color: #555563;
     margin-bottom: 50px;
 }
@@ -75,10 +75,20 @@
     gap: 10px;
     flex-wrap: wrap;
     height: auto;
+    min-height: 30vh;
     width: 70%;
-    margin-bottom: 80px;
-}
 
+}
+.backBtn{
+    background-color: #555563;
+    color: white;
+    position: absolute;
+    left: 30px;
+    top: 120px;
+    border: 1px #555563 solid;
+    font-size: 30px;
+    cursor: pointer;
+}
 
 @media (min-width: 700px) { 
     .ListContainer{
