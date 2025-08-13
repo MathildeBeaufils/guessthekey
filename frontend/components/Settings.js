@@ -192,7 +192,7 @@ function Settings() {
                   required
                 />
               </label>
-              <button onClick={changeName} className={styles.Btnrecherche} >Valider unsername</button>    
+              <button onClick={changeName} className={styles.Btnrecherche} >Valider username</button>    
             </div>
             <div className={styles.unInput}>
               <label>

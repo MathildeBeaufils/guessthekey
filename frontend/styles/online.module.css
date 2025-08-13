@@ -1,3 +1,7 @@
+@font-face {
+  font-family: 'Hey Comic';
+  src: url('../assets/fonts/HeyComicCustom.ttf') format('truetype');
+}
 .container {
   background-color: #555563;
   width: 100%;
@@ -9,6 +13,8 @@
 }
 .create {
   color: white;
+  font-family: 'Hey Comic';
+  font-size: 40px;
 }
 .game_container {
   background-color: white;
@@ -36,4 +42,9 @@
   width: 12%;
   border: none;
   margin:5px
+}
+.p {
+  font-family: 'Hey Comic';
+  font-size: 16px;
+  color: black;
 }
