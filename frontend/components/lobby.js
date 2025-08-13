@@ -5,8 +5,6 @@ import { useRouter} from 'next/router';
 import styles from "../styles/lobby.module.css";
 console.log('Tentative de connexion socket...');
 import socket from '../socket';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faReply} from '@fortawesome/free-solid-svg-icons';
 
 //zuuuuuuut
 const Lobby = ({lobbyCode}) => {

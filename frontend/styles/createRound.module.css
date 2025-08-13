@@ -184,6 +184,17 @@
   border-color: #ff9809;
 }
 
+.backBtn{
+  background-color: #555563;
+  color: white;
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  border: 1px #555563 solid;
+  font-size: 30px;
+  cursor: pointer;
+}
+
 @media (max-width: 768px) {
   .manche {
     font-size: 2rem;
