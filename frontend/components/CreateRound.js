@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import styles from "../styles/createRound.module.css";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
+import socket from '../socket';
 
 const SongSearchInput = ({
   index,
@@ -46,7 +47,7 @@ const SongSearchInput = ({
   </div>
 );
 
-function CreateRound({ lobbyCode, username }) {
+function CreateRound() {
   const router = useRouter();
   const lobbyCode = router.query.lobbyCode;
 
@@ -54,10 +55,8 @@ function CreateRound({ lobbyCode, username }) {
   if (!lobbyCode) return <div>Chargement...</div>;
 
   const user = useSelector((state) => state.user.value);
-  // const username = useSelector((state) => state.user.value.username);
   const backendUrl = "http://localhost:3000";
-console.log(lobbyCode, username)
-  socket.emit("joinLobby", { lobbyId: lobbyCode, username });
+
   const [songs, setSongs] = useState(
     Array(5).fill({ search: "", results: [], selected: null })
   );
@@ -73,9 +72,7 @@ console.log(lobbyCode, username)
       .then((data) => {
         setCategorieList(data.categories);
       })
-      .catch((error) =>
-        console.error("Erreur lors du chargement des catégories :", error)
-      );
+      .catch((error) => console.error("Erreur lors du chargement des catégories :", error));
   }, []);
 
   const handleCategorieChange = (id) => {
@@ -93,7 +90,7 @@ console.log(lobbyCode, username)
   };
 
   const displayCategorie = categorieList.map((data, i) => (
-    <label key={i} className={styles["category-label"]}>
+    <label key={i} className={styles['category-label']}>
       {data.nom}
       <input
         type="checkbox"
@@ -136,7 +133,11 @@ console.log(lobbyCode, username)
       })
       .then((data) => {
         console.log("Manche créée avec succès !", data);
-        router.push("/lobbypage");
+
+        // Manche envoyé dans le lobby
+        console.log(`LobbyCode ${lobbyCode} dans Create Round`)
+        socket.emit("createRound", { lobbyCode, roundData: data });
+        router.push(`/lobby/${lobbyCode}`);
       })
       .catch((error) => {
         console.error("Échec de la création de la manche :", error);
@@ -185,7 +186,9 @@ console.log(lobbyCode, username)
             />
           </div>
 
-          <div className={styles["category-container"]}>{displayCategorie}</div>
+          <div className={styles['category-container']}>
+            {displayCategorie}
+          </div>
 
           <div className={styles.title_container}>
             {songs.map((s, index) => (
@@ -206,11 +209,7 @@ console.log(lobbyCode, username)
                   setSongs((prev) =>
                     prev.map((song, i) =>
                       i === index
-                        ? {
-                            ...song,
-                            selected: item,
-                            search: `${item.title} - ${item.artist}`,
-                          } // <-- Correction ici
+                        ? { ...song, selected: item, search: `${item.title} - ${item.artist}` } // <-- Correction ici
                         : song
                     )
                   )
@@ -222,7 +221,7 @@ console.log(lobbyCode, username)
 
           <div className={styles.button_validate}>
             <button onClick={trackValidate} className={styles.valider}>
-              VALIDER
+              Valider
             </button>
           </div>
         </div>
