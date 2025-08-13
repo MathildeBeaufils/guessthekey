@@ -22,3 +22,13 @@
   padding: 2rem;
   border-radius: 10px;
 }
+.backBtn{
+  background-color: #555563;
+  color: white;
+  position: absolute;
+  left: 30px;
+  top: 120px;
+  border: 1px #555563 solid;
+  font-size: 30px;
+  cursor: pointer;
+}

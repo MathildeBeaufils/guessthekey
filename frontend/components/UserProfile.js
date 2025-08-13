@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { useState } from 'react';
 import { login } from '../reducers/users';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faReply} from '@fortawesome/free-solid-svg-icons';
 
 function userProfile() {
     const router = useRouter();
@@ -49,9 +51,18 @@ function userProfile() {
       });
   };
 
+  const handleBack = () => {
+    router.push("/");
+  };
+
     return (
         <>
             <div className={styles.container}>
+                <div className={styles.back}>
+                    <button className={styles.backBtn} onClick={handleBack}>
+                    <FontAwesomeIcon icon={faReply} />
+                    </button>
+                </div>
                 <span className={styles.KPbox}>0 KeyPoints</span>
                 <h1>Votre profil invité</h1>
                 <div className={styles.inputContainer}>

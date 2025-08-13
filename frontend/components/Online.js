@@ -2,6 +2,8 @@ import styles from "../styles/Online.module.css";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Menu from './Menu';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faReply} from '@fortawesome/free-solid-svg-icons';
 
 function Online() {
   const router = useRouter();
@@ -34,11 +36,19 @@ function Online() {
     }
   })
 
+  const handleBack = () => {
+    router.push("/onlineHostJoin");
+    };
 
   return (
     <>
       <Menu/>
       <div className={styles.container}>
+        <div className={styles.back}>
+          <button className={styles.backBtn} onClick={handleBack}>
+            <FontAwesomeIcon icon={faReply} />
+          </button>
+        </div>
         <h1 className={styles.create}>Recherche de parties en ligne</h1>
         <div className={styles.game_container}>
           {lobbyList}

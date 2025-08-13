@@ -4,6 +4,8 @@ import { useState } from "react";
 import Menu from './Menu';
 import { useSelector } from 'react-redux';
 import socket from '../socket';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faReply} from '@fortawesome/free-solid-svg-icons';
 
 function CreateGameLocal() {
   const router = useRouter();
@@ -29,10 +31,19 @@ function CreateGameLocal() {
             })
     };
 
+    const handleBack = () => {
+        router.push("/localHostJoin");
+    };
+
   return (
     <>
       <Menu/>
       <div className={styles.container}>
+        <div className={styles.back}>
+          <button className={styles.backBtn} onClick={handleBack}>
+          <FontAwesomeIcon icon={faReply} />
+          </button>
+        </div>
         <h1 className={styles.create}>Créer une partie en local</h1>
 
         <p>Nombre de joueurs : {numberOfPlayers}</p>

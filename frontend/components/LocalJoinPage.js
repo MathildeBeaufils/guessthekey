@@ -4,6 +4,8 @@ import Menu from './Menu';
 import { useSelector } from 'react-redux';
 import socket from '../socket';
 import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faReply} from '@fortawesome/free-solid-svg-icons';
 
 
 function LocalJoinPage() {
@@ -29,10 +31,19 @@ function LocalJoinPage() {
             })
     };
 
+    const handleBack = () => {
+        router.push("/localHostJoin");
+    };
+
     return (
         <>
             <Menu/>
             <div className={styles.container}>
+                <div className={styles.back}>
+                    <button className={styles.backBtn} onClick={handleBack}>
+                        <FontAwesomeIcon icon={faReply} />
+                    </button>
+                </div>
                 <h1>Rejoindre une Partie Locale</h1>
                 <div className={styles.inputContainer}>
                     <label htmlFor="gameCode">Code de la Partie :</label>
