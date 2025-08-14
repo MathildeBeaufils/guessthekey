@@ -1,12 +1,22 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSelector } from 'react-redux';
 import styles from "../styles/game.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FaVolumeUp, FaVolumeDown, FaVolumeMute } from "react-icons/fa";
 import socket from '../socket';
 import SEO from '../components/SEO'
+import { useRouter } from 'next/router';
 
 function Game({lobbyCode}) {
+
+  const user = useSelector((state) => state.user.value);
+    const router = useRouter();
+    // Verifi que seul les user authentifier puisse acceder a la page
+    useEffect(() => {
+        if (!user.token) {
+        router.push('/');
+        }
+    }, [user]);
 
   const [status, setStatus] = useState("waiting"); // waiting ou in-game ou ended
   const [round, setRound] = useState(null);

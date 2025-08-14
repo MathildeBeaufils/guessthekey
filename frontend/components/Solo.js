@@ -13,6 +13,13 @@ import {useRouter} from "next/router";
 
 function Solo() {
 
+    // Verifi que seul les user authentifier puisse acceder a la page
+    useEffect(() => {
+        if (!user.token) {
+        router.push('/');
+        }
+    }, [user]);
+
     const dispatch = useDispatch();
     // supprime du reducer la track en cour
     dispatch(deleteTrackId())

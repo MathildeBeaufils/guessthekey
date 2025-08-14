@@ -11,12 +11,21 @@ const Lobby = ({lobbyCode}) => {
     const router = useRouter();
     const { code } = router.query;
     const username = useSelector((state) => state.user.value.username);
+    const user = useSelector((state) => state.user.value);
 
     const [lobbyId, setLobbyId] = useState("NomduLobby");
     const [players, setPlayers] = useState([]);
     const [gameStarted, setGameStarted] = useState(false);
     const [rounds, setRounds] = useState([]);
     const [selectedRound, setSelectedRound] = useState({})
+
+
+    // Verifi que seul les user authentifier puisse acceder a la page
+    useEffect(() => {
+        if (!user.token) {
+        router.push('/');
+        }
+    }, [user]);
 
 
     useEffect(() => {

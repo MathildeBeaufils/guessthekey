@@ -54,6 +54,15 @@ function CreateRound() {
   const router = useRouter();
   const lobbyCode = router.query.lobbyCode;
 
+
+  // Verifi que seul les user authentifier puisse acceder a la page
+  useEffect(() => {
+      if (!user.token) {
+      router.push('/');
+      }
+  }, [user]);
+  
+
   // Ne rien faire tant que lobbyCode est undefined
   if (!lobbyCode) return <div>Chargement...</div>;
 

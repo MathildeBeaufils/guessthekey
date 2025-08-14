@@ -8,14 +8,21 @@ import SEO from '../components/SEO'
 
 
 function ResultatSolo() {
+  
+    const router = useRouter();
+    // Verifi que seul les user authentifier puisse acceder a la page
+    useEffect(() => {
+        if (!user.token) {
+        router.push('/');
+        }
+    }, [user]);
 
+    const user = useSelector((state) => state.user.value);
     const username = useSelector((state) => state.user.value.username);
     const missionId = useSelector((state) => state.missionCampagne.value.missionId);
     const pts = useSelector((state) => state.missionCampagne.value.points);
     const [title, setTitle] = useState('');
     const [points, setPoints] = useState(pts);
-
-
 
     useEffect(() => {
       console.log(points)
@@ -33,33 +40,26 @@ function ResultatSolo() {
         .then(data => console.log(data))
         .catch(err => console.error("Erreur fetch:", err));
 
-
-
-
       }else{
         setTitle('Defaite!')
       }   
       
-
-
     }, [username, missionId, title]);
 
-
-
   const dispatch = useDispatch();
-  const Router = useRouter();
 
   const handleReplay = (e) => {
     dispatch(deleteTrackId())
-    Router.push('/solo')
+    router.push('/solo')
   }
   const handleHome = (e) => {
     dispatch(deleteTrackId())
-    Router.push('/home')
+    router.push('/home')
   }
 
   return (
     <>
+      <Menu />
       <SEO title="Resultat | Guess The Key" description="Votre mission est terminé, voici votre resultat." />
       <div className={styles.container}>
         <h1 className={styles.title}>{title}</h1>

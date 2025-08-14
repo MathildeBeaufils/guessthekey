@@ -3,10 +3,21 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addPoints } from '../reducers/missionCampagne';
 import ResultatSolo from './ResultatSolo'
+import { useRouter } from 'next/router';
 
 
 function Test() {
     const dispatch = useDispatch();
+    const user = useSelector((state) => state.user.value);
+
+
+    const router = useRouter();
+    // Verifi que seul les user authentifier puisse acceder a la page
+    useEffect(() => {
+        if (!user.token) {
+        router.push('/');
+        }
+    }, [user]);
 
     const trackId = useSelector((state) => state.missionCampagne.value.trackId);
     const [keyValide, setKeyValide] = useState('');
@@ -382,7 +393,7 @@ useEffect(() => {
     if (index < composants.length - 1) {
         const timer = setTimeout(() => {
             setIndex(prev => prev + 1);
-        }, 30000); // 30 secondes
+        }, 10000); // 30 secondes
 
         return () => clearTimeout(timer);
     }
