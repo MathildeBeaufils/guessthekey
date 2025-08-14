@@ -8,8 +8,7 @@ import SEO from '../components/SEO'
 
 
 // A faire
-// - Mettre a jour si gagner en bdd + reducer user
-// - verifier si la mission terminee passe a true (probleme route)
+// - Mettre a jour si gagner reducer user
 
 
 
@@ -35,7 +34,11 @@ function ResultatSolo() {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username, missionId }),
-        }).then(data=>console.log(data))
+      })
+        .then(res => res.json())
+        .then(data => console.log(data))
+        .catch(err => console.error("Erreur fetch:", err));
+
 
 
 
