@@ -4,9 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addPoints } from '../reducers/missionCampagne';
 import ResultatSolo from './ResultatSolo'
 import { useRouter } from 'next/router';
+import Menu from './Menu';
 
 
-function Test() {
+function GameSolo() {
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.value);
 
@@ -186,7 +187,7 @@ useEffect(() => {
     }
 
 
-    // Liste des composants -----------------------------------------------------
+    // Liste des composants 
     function Composant1() {
     return (
         <div  className={styles.inputContainer}>
@@ -393,30 +394,31 @@ useEffect(() => {
     if (index < composants.length - 1) {
         const timer = setTimeout(() => {
             setIndex(prev => prev + 1);
-        }, 10000); // 30 secondes
+        }, 30000); // 30 secondes
 
         return () => clearTimeout(timer);
     }
 }, [index]);
 
     return (
-        <main className={styles.main}>
+        <>
+            <Menu />
+            <main className={styles.main}>
 
 
-        {index !== 6 && (
-            <>
-                <p className={styles.points}>{point} Points</p>
-                <p className={styles.mancheNb}>Manche {index + 1}/6</p>
-                <img className={styles.vynil} src="/source.gif" />      
-            </>
-        )}
-
-
-            
+            {index !== 6 && (
+                <>
+                    <p className={styles.points}>{point} Points</p>
+                    <p className={styles.mancheNb}>Manche {index + 1}/6</p>
+                    <img className={styles.vynil} src="/source.gif" />      
+                </>
+            )}
             {composants[index]}
 
-        </main>
+        </main>        
+        </>
+
     );
 }
 
-export default Test;
+export default GameSolo;

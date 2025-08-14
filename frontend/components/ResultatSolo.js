@@ -1,6 +1,6 @@
 import styles from "../styles/resultatSolo.module.css";
 import {useRouter} from "next/router";
-import Menu from './Menu';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteTrackId } from "../reducers/missionCampagne";
 import { useState, useEffect } from 'react';
@@ -59,7 +59,7 @@ function ResultatSolo() {
 
   return (
     <>
-      <Menu />
+
       <SEO title="Resultat | Guess The Key" description="Votre mission est terminé, voici votre resultat." />
       <div className={styles.container}>
         <h1 className={styles.title}>{title}</h1>

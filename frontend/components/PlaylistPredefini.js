@@ -14,7 +14,7 @@ function PlaylistPredefini(props) {
 
     function goMission(){
         dispatch(addTrackId({ trackId: props.manches, missionId: props.id }))
-        router.push("/test");   
+        router.push("/gameSolo");   
     }
 
     const dispatch = useDispatch();
