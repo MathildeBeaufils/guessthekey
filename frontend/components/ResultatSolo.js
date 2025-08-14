@@ -7,12 +7,6 @@ import { useState, useEffect } from 'react';
 import SEO from '../components/SEO'
 
 
-// A faire
-// - Mettre a jour si gagner reducer user
-
-
-
-
 function ResultatSolo() {
 
     const username = useSelector((state) => state.user.value.username);
