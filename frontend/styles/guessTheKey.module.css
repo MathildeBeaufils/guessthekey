@@ -1,4 +1,4 @@
-.container{
+.container {
   background-color: #555563;
   width: 100%;
   height: 100vh;
@@ -6,21 +6,27 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
 }
-.inputContainer{
-    margin: 2%;
-    color: white;
-    font-size: 22px;
-    font-weight: bolder;
-    display: flex;
+
+.inputContainer {
+  margin: 20px;
+  color: white;
+  font-size: 22px;
+  font-weight: bolder;
+  display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  width: 100%;
 }
-.btn{
-   width: 25%;
-  padding: 2%;
-  margin: 2%;
+
+.btn {
+  width: 25%;
+  max-width: 250px;
+  padding: 15px 10px;
+  margin: 20px 0;
   border-radius: 20px;
   box-shadow: 15px 15px 25px 1px rgba(0, 0, 0, 0.82);
   -webkit-box-shadow: 15px 15px 25px 1px rgba(0, 0, 0, 0.82);
@@ -30,22 +36,83 @@
   cursor: pointer;
   font-size: 22px;
   font-weight: bolder;
+  border: none;
 }
+
 .container h1 {
   color: white;
   font-size: 80px;
   font-weight: bolder;
+  text-align: center;
 }
-.input{
-    margin-top: 15%;
-    padding: 10px;
-    border-radius: 5px;
-    border: none;
-    font-size: 22px; 
+
+.input {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  font-size: 22px;
+  width: 80%;
+  max-width: 400px;
+  height: 50px;
+}
+
+.label {
+  color: white;
+  font-size: 35px;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+  .container h1 {
+    font-size: 60px;
+  }
+
+  .inputContainer {
     width: 80%;
-    height: 50%;
+  }
+
+  .label {
+    font-size: 30px;
+  }
+
+  .input {
+    width: 90%;
+    font-size: 20px;
+  }
+
+  .btn {
+    width: 40%;
+    font-size: 20px;
+  }
 }
-.label{
-    color: white;
-    font-size: 35px;
+
+@media (max-width: 480px) {
+  .container {
+    padding: 10px;
+  }
+
+  .container h1 {
+    font-size: 40px;
+  }
+
+  .inputContainer {
+    width: 95%;
+  }
+
+  .label {
+    font-size: 25px;
+  }
+
+  .input {
+    width: 100%;
+    font-size: 18px;
+    height: 45px;
+  }
+
+  .btn {
+    width: 60%;
+    font-size: 18px;
+    padding: 12px 10px;
+  }
 }
