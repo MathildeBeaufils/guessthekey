@@ -11,18 +11,23 @@ const Lobby = ({lobbyCode}) => {
     const router = useRouter();
     const { code } = router.query;
     const username = useSelector((state) => state.user.value.username);
+    // Toujours utiliser le lobbyCode le plus fiable
+    const effectiveLobbyCode = lobbyCode || code;
 
     // lobbyCode est passé en props et utilisé partout
     const [players, setPlayers] = useState([]);
     const [gameStarted, setGameStarted] = useState(false);
     const [games, setGames] = useState([]);
+    const [errorMsg, setErrorMsg] = useState("");
     // const [selectedRound, setSelectedRound] = useState({});
 
 
     useEffect(() => {
-        if (!lobbyCode) return
-        
-    socket.emit('joinLobby', {lobbyId: lobbyCode, username});
+        socket.on('errorMessage', (msg) => {
+            setErrorMsg(msg);
+        });
+    if (!effectiveLobbyCode) return;
+    socket.emit('joinLobby', {lobbyId: effectiveLobbyCode, username});
         
         // Mise à jour des joueureuses présent.es dans le lobby
         socket.on('lobbyPlayers', (playerList) => {
@@ -53,12 +58,13 @@ const Lobby = ({lobbyCode}) => {
             socket.off('gameStarted');
             socket.off('gameCreated');
             socket.off('updateGames');
+            socket.off('errorMessage');
         };
     }, [lobbyCode, username]);
 
     const startGame = () => {
-    console.log(`Lancement de la partie pour le lobby ${lobbyCode}`)
-    socket.emit('startGame', lobbyCode);
+    console.log(`Lancement de la partie pour le lobby ${effectiveLobbyCode}`)
+    socket.emit('startGame', effectiveLobbyCode);
     };
 
     // }
@@ -75,7 +81,9 @@ const Lobby = ({lobbyCode}) => {
     <>
         <Menu />
         <div className={styles.container}>
-            
+            {errorMsg && (
+                <div style={{ color: 'red', fontWeight: 'bold', marginBottom: 16 }}>{errorMsg}</div>
+            )}
             <h1 className={styles.welcome}>Bienvenue dans le lobby : {lobbyCode}</h1>
             <p>Partagez le code du lobby pour que les membres le rejoigne</p>
             <div className={styles.info}>

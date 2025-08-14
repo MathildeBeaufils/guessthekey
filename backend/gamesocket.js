@@ -71,7 +71,7 @@ module.exports = (io) => {
           status: 'waiting',
           currentGameIndex: 0, // index de la partie en cours
           currentTourIndex: 0, // index du tour en cours dans la partie
-          roundDuration: 20,
+          roundDuration: 2, // remettre à 20 après les tests
           timeout: null,
           games: [], // tableau de parties, chaque partie a un tableau de tours
           scores: new Map(),
@@ -136,6 +136,22 @@ module.exports = (io) => {
       io.to(lobbyCode).emit('gameStarted');
 
       console.log("Premier tour de la partie");
+      setTimeout(() => launchNextTour(lobbyCode), 500);
+    });
+
+    socket.on('startNextGame', ({ lobbyCode }) => {
+      const lobby = lobbies.get(lobbyCode);
+      if (!lobby) return;
+      // Vérifie s'il y a une partie suivante
+      if (lobby.currentGameIndex + 1 >= lobby.games.length) {
+        socket.emit('errorMessage', 'Aucune partie suivante disponible');
+        return;
+      }
+      lobby.currentGameIndex++;
+      lobby.currentTourIndex = 0;
+      lobby.status = 'in-game';
+      lobby.scores = new Map();
+      io.to(lobbyCode).emit('gameStarted');
       setTimeout(() => launchNextTour(lobbyCode), 500);
     });
 
@@ -264,72 +280,72 @@ module.exports = (io) => {
 
     const round = game.tours[lobby.currentTourIndex];
 
-    // Initialisation du trackIndex si absent
-    if(round.guessTheKey) {
-      // Round spécial pour le point commun
+    // Si c'est un Guess The Key (point commun)
+    if (round.guessTheKey || round.type === 'guessTheKey') {
       io.to(lobbyCode).emit('newRound', {
-        index: round.index,
-        total: round.total,
+        index: lobby.currentTourIndex + 1,
+        total: game.tours.length,
         question: round.question,
         guessTheKey: true,
+        key: round.key,
         duration: lobby.roundDuration,
       });
-    } else {
-      // Round classique de blindtest
-      const tracks = [];
-      
-      if (round.manche && round.manche.trackId) {
-        tracks.push({
-          title: round.manche.titre,
-          artist: round.manche.artiste,
-          trackId: round.manche.trackId,
-        });
-      }
-  
-      getTracksFromRound(tracks).then(tracksWithPreview => {
-        // On choisit le morceau correspondant au trackIndex
-        const track = tracksWithPreview[round.trackIndex || 0];
-
-        const allAnswers = {};
-        for (let i = 1; i <= 5; i++) {
-          if (round.manche && round.manche[`titre${i}`]) {
-            allAnswers[`titre${i}`] = {
-              title: round.manche[`titre${i}`],
-              artist: round.manche[`artiste${i}`],
-              trackId: round.manche[`trackId${i}`],
-            };
-          }
-        }
-
-        if (track) {
-          io.to(lobbyCode).emit('newRound', {
-            index: lobby.currentTourIndex + 1,
-            total: game.tours.length,
-            previewUrl: track.previewUrl,
-            duration: lobby.roundDuration,
-            title: track.title,
-            artist: track.artist,
-            allAnswers: allAnswers,
-          });
-        } else {
-          io.to(lobbyCode).emit('newRound', {
-            index: lobby.currentTourIndex + 1,
-            total: game.tours.length,
-            previewUrl: null,
-            duration: lobby.roundDuration,
-            title: null,
-            artist: null,
-            allAnswers: allAnswers,
-            error: 'Aucun morceau valide pour ce round.'
-          });
-          console.error('Aucun morceau valide pour ce round, track est undefined.');
-        }
-      });
+      lobby.timeout = setTimeout(() => {
+        evaluateTour(lobbyCode);
+      }, lobby.roundDuration * 1000);
+      return;
     }
-  
-    lobby.timeout = setTimeout(() => {
-      evaluateTour(lobbyCode);
-    }, lobby.roundDuration * 1000);
+
+    // Sinon, round classique de blindtest
+    // Si pas de morceau valide, on saute ce round
+    if (!(round.manche && round.manche.trackId)) {
+      console.warn('Round sans morceau valide, on passe au suivant.');
+      lobby.currentTourIndex++;
+      setTimeout(() => launchNextTour(lobbyCode), 100);
+      return;
+    }
+
+    const tracks = [{
+      title: round.manche.titre,
+      artist: round.manche.artiste,
+      trackId: round.manche.trackId,
+    }];
+
+    getTracksFromRound(tracks).then(tracksWithPreview => {
+      const track = tracksWithPreview[round.trackIndex || 0];
+
+      const allAnswers = {};
+      for (let i = 1; i <= 5; i++) {
+        if (round.manche && round.manche[`titre${i}`]) {
+          allAnswers[`titre${i}`] = {
+            title: round.manche[`titre${i}`],
+            artist: round.manche[`artiste${i}`],
+            trackId: round.manche[`trackId${i}`],
+          };
+        }
+      }
+
+      if (track) {
+        io.to(lobbyCode).emit('newRound', {
+          index: lobby.currentTourIndex + 1,
+          total: game.tours.length,
+          previewUrl: track.previewUrl,
+          duration: lobby.roundDuration,
+          title: track.title,
+          artist: track.artist,
+          allAnswers: allAnswers,
+        });
+      } else {
+        console.error('Aucun morceau valide pour ce round, track est undefined. On saute au suivant.');
+        lobby.currentTourIndex++;
+        setTimeout(() => launchNextTour(lobbyCode), 100);
+        return;
+      }
+
+      lobby.timeout = setTimeout(() => {
+        evaluateTour(lobbyCode);
+      }, lobby.roundDuration * 1000);
+    });
   }
 
   function evaluateTour(lobbyId) {
@@ -342,20 +358,32 @@ module.exports = (io) => {
     console.log("evaluateTour");
 
     // Gestion des points à faire ici et MAJ des scores avant le round suivant
-    lobby.roundHistory.push({
+    if (round.guessTheKey) {
+      lobby.roundHistory.push({
         roundIndex: lobby.currentRoundIndex,
-        correctAnswer: round.guessTheKey
-            ? { freeAnswer: "Key" }
-            : {
-                title: round.tracks
-                    ? round.tracks[round.trackIndex]?.title
-                    : round.title,
-                artist: round.tracks
-                    ? round.tracks[round.trackIndex]?.artist
-                    : round.artist
-            },
+        correctAnswer: { freeAnswer: round.key || '-' },
         allAnswers: Object.fromEntries(round.answers)
-    });
+      });
+    } else if (round.manche) {
+      // On récupère le bon titre/artiste pour ce tour (blindtest)
+      // On suppose que chaque round correspond à une position (1 à 5)
+      const idx = lobby.currentTourIndex;
+      const titre = round.manche[`titre${idx+1}`] || round.manche.titre || '-';
+      const artiste = round.manche[`artiste${idx+1}`] || round.manche.artiste || '-';
+      const key = round.manche.key || '-';
+      lobby.roundHistory.push({
+        roundIndex: lobby.currentRoundIndex,
+        correctAnswer: { title: titre, artist: artiste, freeAnswer: key },
+        allAnswers: Object.fromEntries(round.answers)
+      });
+    } else {
+      // fallback
+      lobby.roundHistory.push({
+        roundIndex: lobby.currentRoundIndex,
+        correctAnswer: { title: round.title || '-', artist: round.artist || '-', freeAnswer: round.key || '-' },
+        allAnswers: Object.fromEntries(round.answers)
+      });
+    }
 
     // Gestion spécifique du blindtest : plusieurs extraits dans un même round
     if (round.type === "blindtest") {
