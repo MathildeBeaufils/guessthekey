@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { addPoints } from '../reducers/missionCampagne';
 
 // tout fonctionne ici normalement
 // faire l'envoi de pts vers resultat solo ?
@@ -58,6 +59,7 @@ useEffect(() => {
     function validerChanson1() {
         if (chanson1.trim().toLowerCase() === tracks[0].title.toLowerCase()) {
         setPoint(point + 10)
+        dispatch(addPoints({points:10}))
         console.log(' Chanson1 ok');
         } else {
         console.log('Chanson1 pasOK');
@@ -67,6 +69,7 @@ useEffect(() => {
     function validerArtiste1() {
         if (artiste1.trim().toLowerCase() === tracks[0].artist.toLowerCase()) {
             setPoint(point + 10)
+            dispatch(addPoints({points:10}))
             console.log('Artiste1 ok');
         } else {
             console.log('Artiste1 pasOK');
@@ -77,6 +80,7 @@ useEffect(() => {
     function validerChanson2() {
         if (chanson2.trim().toLowerCase() === tracks[1].title.toLowerCase()) {
             setPoint(point + 10)
+            dispatch(addPoints({points:10}))
             console.log('Chanson2 ok');
         } else {
             console.log('Chanson2 pasOK');
@@ -86,6 +90,7 @@ useEffect(() => {
     function validerArtiste2() {
         if (artiste2.trim().toLowerCase() === tracks[1].artist.toLowerCase()) {
             setPoint(point + 10)
+            dispatch(addPoints({points:10}))
             console.log('Artiste2 ok');
         } else {
             console.log('Artiste2 pasOK');
@@ -96,6 +101,7 @@ useEffect(() => {
     function validerChanson3() {
         if (chanson3.trim().toLowerCase() === tracks[2].title.toLowerCase()) {
             setPoint(point + 10)
+            dispatch(addPoints({points:10}))
             console.log('Chanson3 ok');
         } else {
             console.log('Chanson3 pasOK');
@@ -105,6 +111,7 @@ useEffect(() => {
     function validerArtiste3() {
         if (artiste3.trim().toLowerCase() === tracks[2].artist.toLowerCase()) {
             setPoint(point + 10)
+            dispatch(addPoints({points:10}))
             console.log('Artiste3 ok');
         } else {
             console.log('Artiste3 pasOK');
@@ -115,6 +122,7 @@ useEffect(() => {
     function validerChanson4() {
         if (chanson4.trim().toLowerCase() === tracks[3].title.toLowerCase()) {
             setPoint(point + 10)
+            dispatch(addPoints({points:10}))
             console.log('Chanson4 ok');
         } else {
             console.log('Chanson4 pasOK');
@@ -124,6 +132,7 @@ useEffect(() => {
     function validerArtiste4() {
         if (artiste4.trim().toLowerCase() === tracks[3].artist.toLowerCase()) {
             setPoint(point + 10)
+            dispatch(addPoints({points:10}))
             console.log('Artiste4 ok');
         } else {
             console.log('Artiste4 pasOK');
@@ -134,6 +143,7 @@ useEffect(() => {
     function validerChanson5() {
         if (chanson5.trim().toLowerCase() === tracks[4].title.toLowerCase()) {
             setPoint(point + 10)
+            dispatch(addPoints({points:10}))
             console.log('Chanson5 ok');
         } else {
             console.log('Chanson5 pasOK');
@@ -143,6 +153,7 @@ useEffect(() => {
     function validerArtiste5() {
         if (artiste5.trim().toLowerCase() === tracks[4].artist.toLowerCase()) {
             setPoint(point + 10)
+            dispatch(addPoints({points:10}))
             console.log('Artiste5 ok');
         } else {
             console.log('Artiste5 pasOK');
@@ -154,6 +165,7 @@ useEffect(() => {
     function validerKey() {
         if (key.trim().toLowerCase() === keyValide.toLowerCase()) {
             setPoint(point + 50)
+            dispatch(addPoints({points:50}))
             console.log('key ok');
         } else {
             console.log('key pasOK');
