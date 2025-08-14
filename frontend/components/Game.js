@@ -436,69 +436,71 @@ function Game({lobbyCode}) {
             </tr>
           </thead>
           <tbody>
-            {userRecapAnswers.map(([titre, artiste], i) => {
-              if (i < 5) {
-                return (
-                  <tr key={i}>
-                    <td style={{ borderBottom: '1px solid #eee' }}>Tour {i+1}</td>
-                    <td style={{ borderBottom: '1px solid #eee' }}>{titre !== 'Réponse non trouvée' ? titre : ''}</td>
-                    <td style={{ borderBottom: '1px solid #eee' }}>{artiste !== 'Réponse non trouvée' ? artiste : ''}</td>
-                  </tr>
-                );
-              }
-              // Affiche Guess The Key comme 6e ligne si trouvée, uniquement la clé
-              if (i === 5 && titre !== 'Réponse non trouvée') {
-                return (
-                  <tr key={i}>
-                    <td style={{ borderBottom: '1px solid #eee' }}>Guess The Key</td>
-                    <td style={{ borderBottom: '1px solid #eee' }} colSpan={2}>{titre}</td>
-                  </tr>
-                );
-              }
-              return null;
-            })}
-          </tbody>
-        </table>
-      </div>
+           {userRecapAnswers.map(([titre, artiste], i) => {
+                if (i < 5 && (titre !== 'Réponse non trouvée' || artiste !== 'Réponse non trouvée')) {
+                  return (
+                    <tr key={i}>
+                      <td style={{ borderBottom: '1px solid #eee' }}>Tour {i+1}</td>
+                      <td style={{ borderBottom: '1px solid #eee' }}>{titre !== 'Réponse non trouvée' ? titre : ''}</td>
+                      <td style={{ borderBottom: '1px solid #eee' }}>{artiste !== 'Réponse non trouvée' ? artiste : ''}</td>
+                    </tr>
+                  );
+                }
+                // Affiche Guess The Key comme 6e ligne si trouvée
+                if (i === 5 && titre !== 'Réponse non trouvée') {
+                  return (
+                    <tr key={i}>
+                      <td style={{ borderBottom: '1px solid #eee' }}>Guess The Key</td>
+                      <td style={{ borderBottom: '1px solid #eee' }}>{titre}</td>
+                      <td style={{ borderBottom: '1px solid #eee' }}></td>
+                    </tr>
+                  );
+                }
+                return null;
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   </>
 )}
 
-{tourResult && (
-          <div style={{ marginTop: '20px' }}>
-            <h3>Réponses de la manche :</h3>
-  
-            {tour?.type !== "guessTheKey" && (
-              <>
-                <p>
-                  Réponse correcte: {tourResult.correctAnswer.title} - {tourResult.correctAnswer.artist}
-                </p>
-                <ul>
-                  {Object.entries(tourResult.allAnswers).map(([playerId, ans]) => (
-                    <li key={playerId}>
-                      {playerId}: {ans.title} - {ans.artist}
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-  
-            {tour?.type === "guessTheKey" && (
-              <>
-                <p>Réponse correcte: {tourResult.correctAnswer}</p>
-                <ul>
-                  {Object.entries(tourResult.allAnswers).map(([playerId, ans]) => (
-                    <li key={playerId}>
-                      {playerId}: {ans}
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-          </div>
-        )}
-        
-      </div>
-    );
-  }
-  export default Game;
+      {tourResult && (
+        <div style={{ marginTop: '20px' }}>
+          <h3>Réponses de la manche :</h3>
+
+          {tour?.type !== "guessTheKey" && (
+            <>
+              <p>
+                Réponse correcte: {tourResult.correctAnswer.title} - {tourResult.correctAnswer.artist}
+              </p>
+              <ul>
+                {Object.entries(tourResult.allAnswers).map(([playerId, ans]) => (
+                  <li key={playerId}>
+                    {playerId}: {ans.title} - {ans.artist}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+
+          {tour?.type === "guessTheKey" && (
+            <>
+              <p>Réponse correcte: {tourResult.correctAnswer}</p>
+              <ul>
+                {Object.entries(tourResult.allAnswers).map(([playerId, ans]) => (
+                  <li key={playerId}>
+                    {playerId}: {ans}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </div>
+      )}
+     
+    </div>
+  );
+}
+export default Game;
