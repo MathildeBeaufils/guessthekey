@@ -4,6 +4,7 @@ import Menu from './Menu';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteTrackId } from "../reducers/missionCampagne";
 import { useState, useEffect } from 'react';
+import SEO from '../components/SEO'
 
 
 // A faire
@@ -11,7 +12,6 @@ import { useState, useEffect } from 'react';
 // - Afficher les points via reducer ou props ?
 // - Mettre a jour si gagner en bdd + reducer user
 // - verifier si la mission terminee passe a true (probleme route)
-// - faire SEO
 
 
 
@@ -51,6 +51,7 @@ function ResultatSolo() {
 
   return (
     <>
+      <SEO title="Resultat | Guess The Key" description="Votre mission est terminé, voici votre resultat." />
       <Menu />
       <div className={styles.container}>
         <h1 className={styles.title}>Victoire!</h1>

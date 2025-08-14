@@ -2,7 +2,8 @@ import styles from '../styles/Solo.module.css';
 import PlaylistPredefini from './PlaylistPredefini';
 import { useState, useEffect } from 'react';
 import Menu from './Menu';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteTrackId } from "../reducers/missionCampagne";
 import SEO from '../components/SEO'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,7 +12,12 @@ import {useRouter} from "next/router";
 
 
 function Solo() {
+
+    const dispatch = useDispatch();
+    // supprime du reducer la track en cour
+    dispatch(deleteTrackId())
     const user = useSelector((state)=>state.user.value);
+    
     const [facile, setFacile]= useState([]);
     const [moyen, setMoyen]= useState([]);
     const [difficile, setDifficile]= useState([]);
