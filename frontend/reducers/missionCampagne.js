@@ -4,7 +4,7 @@ const initialState = {
     value: { trackId: '', missionId :'' },
 };
 
-export const userSlice = createSlice({
+export const missionSlice = createSlice({
     name: 'missionCampagne',
     initialState,
     reducers: {
@@ -21,5 +21,5 @@ export const userSlice = createSlice({
     },
 });
 
-export const { addTrackId, deleteTrackId } = userSlice.actions;
-export default userSlice.reducer;
+export const { addTrackId, deleteTrackId } = missionSlice.actions;
+export default missionSlice.reducer;
