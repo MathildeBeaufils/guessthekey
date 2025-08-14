@@ -11,79 +11,69 @@ const Lobby = ({lobbyCode}) => {
     const router = useRouter();
     const { code } = router.query;
     const username = useSelector((state) => state.user.value.username);
+    // Toujours utiliser le lobbyCode le plus fiable
+    const effectiveLobbyCode = lobbyCode || code;
 
-    const [lobbyId, setLobbyId] = useState("NomduLobby");
+    // lobbyCode est passé en props et utilisé partout
     const [players, setPlayers] = useState([]);
     const [gameStarted, setGameStarted] = useState(false);
-    const [rounds, setRounds] = useState([]);
-    const [selectedRound, setSelectedRound] = useState({})
+    const [games, setGames] = useState([]);
+    const [errorMsg, setErrorMsg] = useState("");
+    // const [selectedRound, setSelectedRound] = useState({});
 
 
     useEffect(() => {
-        if (lobbyCode) {
-            setLobbyId(lobbyCode);
-            socket.emit('joinLobby', {lobbyId: lobbyCode, username});
-        }
-    }, [lobbyCode]);
-    
-    useEffect(() => {    
+        socket.on('errorMessage', (msg) => {
+            setErrorMsg(msg);
+        });
+    if (!effectiveLobbyCode) return;
+    socket.emit('joinLobby', {lobbyId: effectiveLobbyCode, username});
+        
         // Mise à jour des joueureuses présent.es dans le lobby
         socket.on('lobbyPlayers', (playerList) => {
             setPlayers(playerList);
         });
-        // Lancement de la partie au click du bouton
+
+        // Lancement du jeu au click du bouton Start
         socket.on('gameStarted', () => {
-            console.log("Ceci est un start game");
             setGameStarted(true);
+        });
+
+
+
+        // Ecoute pour l'ajout des Parties dans le lobby (si besoin d'un event gameCreated)
+        socket.on("gameCreated", (gameData) => {
+            setGames(prev => [...prev, gameData]); // ajoute la nouvelle partie créée
+        });
+
+        // Réception de la MAJ des parties créés dans le lobby
+        socket.on("updateGames", (gamesList) => {
+            console.log("Parties disponibles :", gamesList);
+            setGames(gamesList);
         });
 
         // Fonction de nettoyage : lors du démontage du composant, la socket arrête l'écoute de lobbyPlaers et gameStarted => Evite les doublons
         return() => {
             socket.off('lobbyPlayers');
             socket.off('gameStarted');
+            socket.off('gameCreated');
+            socket.off('updateGames');
+            socket.off('errorMessage');
         };
-    }, []);
-
-    // Ecoute pour l'ajout des manches dans le lobby
-        useEffect(() => {
-            socket.on("roundCreated", (roundData) => {
-              setRounds(prev => [...prev, roundData]); // ajoute la manche reçue
-              console.log("lobby round created :" + rounds)
-            });
-        
-            return () => {
-            socket.off("roundCreated");
-            };
-        }, []);
-
-        useEffect(() => {
-            // Réception de la MAJ des rounds créés dans le lobby
-            socket.on("updateRounds", (roundsList) => {
-                console.log("Manches disponibles :", roundsList);
-                setRounds(roundsList);
-            });
-        
-            return () => {
-                socket.off("updateRounds");
-            };
-        }, []);
+    }, [lobbyCode, username]);
 
     const startGame = () => {
-        console.log(`Lancement de la partie pour le lobby ${lobbyId}`)
-        socket.emit('startGame', lobbyId);
+    console.log(`Lancement de la partie pour le lobby ${effectiveLobbyCode}`)
+    socket.emit('startGame', effectiveLobbyCode);
     };
 
-    const handleSelect =(selectedRound) => {
-        console.log(`Partie sélectionnée:`, selectedRound)
-        setSelectedRound(selectedRound)
-
-    }
+    // }
     useEffect(() => {
         if(gameStarted){
             console.log('Redirection vers la partie')
-            router.push(`/game/${lobbyId}`)
+            router.push(`/game/${lobbyCode}`)
         } 
-    }, [gameStarted, code, router]);
+    }, [gameStarted, router, lobbyCode]);
 
 
     // Infos du lobby
@@ -91,8 +81,10 @@ const Lobby = ({lobbyCode}) => {
     <>
         <Menu />
         <div className={styles.container}>
-            
-            <h1 className={styles.welcome}>Bienvenue dans le lobby : {lobbyId}</h1>
+            {errorMsg && (
+                <div style={{ color: 'red', fontWeight: 'bold', marginBottom: 16 }}>{errorMsg}</div>
+            )}
+            <h1 className={styles.welcome}>Bienvenue dans le lobby : {lobbyCode}</h1>
             <p>Partagez le code du lobby pour que les membres le rejoigne</p>
             <div className={styles.info}>
                 <p>Nombre de joueurs du lobby : X / X</p>
@@ -101,37 +93,42 @@ const Lobby = ({lobbyCode}) => {
             </div>
             <div className={styles.ajout}>
                 <button className={styles.button}>Ajouter un membre</button>
-                <button className={styles.button} onClick={() => router.push(`/createround/${lobbyId}`)}>Ajouter une manche</button>
+                <button className={styles.button} onClick={() => router.push(`/createround/${lobbyCode}`)}>Ajouter une manche</button>
             </div>
             <div className={styles.tableau}>
                 <div className={styles.players_container}>
                     <p>Joueur·euses dans le lobby :</p>
-                        {players.map((playerId) => (
-                            
-                            <ul>
+                        <ul>
+                            {players.map((playerId) => (
                                 <li key={playerId}>{playerId}</li>
-                            </ul>
-                        ))}
+                            ))}
+                        </ul>
                     
                 </div>
                 <div className={styles.round_container}>
-                    <p>Manches disponibles pour le lobby :</p>
-                    
-                    {rounds.map((round, index) => {
-                        const themeRound = round.manche.theme;
-                        return (
-                        <ul key={index}>
-                            <li>
-                            {themeRound}
-                            <button onClick={() => handleSelect(round)}>Choisir</button>
-                            </li>
-                        </ul>
-                        );
-                    })}
-                    
+                    <p>Parties disponibles pour le lobby :</p>
+                    <ul>
+                                        {games.map((game, index) => (
+                                            <li key={index} style={{ display: 'flex', alignItems: 'center' }}>
+                                                Thème : {game.theme}
+                                                {game.tours && (
+                                                    <span> — {game.tours.length} manche{game.tours.length > 1 ? 's' : ''}</span>
+                                                )}
+                                                <button
+                                                    style={{ marginLeft: 8, color: 'red', background: 'none', border: 'none', cursor: 'pointer', fontSize: 18 }}
+                                                    title="Supprimer la partie"
+                                                    onClick={() => {
+                                                        if(window.confirm('Supprimer cette partie ?')){
+                                                            socket.emit('deleteGame', { lobbyCode, gameIndex: index });
+                                                        }
+                                                    }}
+                                                >✖</button>
+                                            </li>
+                                        ))}
+                    </ul>
                 </div>
                 </div>
-            <button className={styles.button} onClick={startGame}>Lancer la partie</button>
+            <button className={styles.button} onClick={startGame}>Start</button>
         </div>
     </>
     );
