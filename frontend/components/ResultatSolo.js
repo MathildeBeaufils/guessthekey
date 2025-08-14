@@ -61,7 +61,6 @@ function ResultatSolo() {
   return (
     <>
       <SEO title="Resultat | Guess The Key" description="Votre mission est terminé, voici votre resultat." />
-      <Menu />
       <div className={styles.container}>
         <h1 className={styles.title}>{title}</h1>
         <p className={styles.text}>Vous avez obtenu {points} points sur 150</p>
