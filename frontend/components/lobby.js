@@ -11,8 +11,6 @@ const Lobby = ({lobbyCode}) => {
     const router = useRouter();
     const { code } = router.query;
     const username = useSelector((state) => state.user.value.username);
-    // Toujours utiliser le lobbyCode le plus fiable
-    const effectiveLobbyCode = lobbyCode || code;
 
     // lobbyCode est passé en props et utilisé partout
     const [players, setPlayers] = useState([]);
@@ -26,8 +24,8 @@ const Lobby = ({lobbyCode}) => {
         socket.on('errorMessage', (msg) => {
             setErrorMsg(msg);
         });
-    if (!effectiveLobbyCode) return;
-    socket.emit('joinLobby', {lobbyId: effectiveLobbyCode, username});
+    if (!lobbyCode) return;
+    socket.emit('joinLobby', {lobbyId: lobbyCode, username});
         
         // Mise à jour des joueureuses présent.es dans le lobby
         socket.on('lobbyPlayers', (playerList) => {
@@ -63,8 +61,8 @@ const Lobby = ({lobbyCode}) => {
     }, [lobbyCode, username]);
 
     const startGame = () => {
-    console.log(`Lancement de la partie pour le lobby ${effectiveLobbyCode}`)
-    socket.emit('startGame', effectiveLobbyCode);
+    console.log(`Lancement de la partie pour le lobby ${lobbyCode}`)
+    socket.emit('startGame', lobbyCode);
     };
 
     // }
@@ -86,13 +84,12 @@ const Lobby = ({lobbyCode}) => {
             )}
             <h1 className={styles.welcome}>Bienvenue dans le lobby : {lobbyCode}</h1>
             <p>Partagez le code du lobby pour que les membres le rejoigne</p>
-            <div className={styles.info}>
-                <p>Nombre de joueurs du lobby : X / X</p>
+            {/* <div className={styles.info}>
+                <p>Nombre de joueurs du lobby : {players.length}</p>
                 <p> | </p>
-                <p>Nombre de manche pour la partie : Y/Y</p>
-            </div>
+                <p>Nombre de manches pour la partie : {games.length > 0 ? games[0].tours.length : 0}</p>
+            </div> */}
             <div className={styles.ajout}>
-                <button className={styles.button}>Ajouter un membre</button>
                 <button className={styles.button} onClick={() => router.push(`/createround/${lobbyCode}`)}>Ajouter une manche</button>
             </div>
             <div className={styles.tableau}>
@@ -118,10 +115,10 @@ const Lobby = ({lobbyCode}) => {
                                                     style={{ marginLeft: 8, color: 'red', background: 'none', border: 'none', cursor: 'pointer', fontSize: 18 }}
                                                     title="Supprimer la partie"
                                                     onClick={() => {
-                                                        if(window.confirm('Supprimer cette partie ?')){
-                                                            socket.emit('deleteGame', { lobbyCode, gameIndex: index });
-                                                        }
-                                                    }}
+                                                            if(window.confirm('Supprimer cette partie ?')){
+                                                                socket.emit('deleteGame', { lobbyCode, gameIndex: index });
+                                                            }
+                                                        }}
                                                 >✖</button>
                                             </li>
                                         ))}

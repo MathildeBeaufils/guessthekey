@@ -71,7 +71,7 @@ module.exports = (io) => {
           status: 'waiting',
           currentGameIndex: 0, // index de la partie en cours
           currentTourIndex: 0, // index du tour en cours dans la partie
-          roundDuration: 2, // remettre à 20 après les tests
+          roundDuration: 16, // remettre à 20 après les tests
           timeout: null,
           games: [], // tableau de parties, chaque partie a un tableau de tours
           scores: new Map(),
@@ -88,7 +88,7 @@ module.exports = (io) => {
       }
 
       // Ajout l'utilisateur avec son username + socket.id
-      lobby.players.set(username, {socketId: socket.id, score: 0 })
+  lobby.players.set(username, {socketId: socket.id, score: 0 })
 
       // on utilise .keys() car on est dans une Map. Ici on récupère tous les pseudo des utilisateurs présents dans la Map
       io.to(lobbyId).emit('lobbyPlayers', [...lobby.players.keys()]);
@@ -132,6 +132,10 @@ module.exports = (io) => {
       lobby.currentTourIndex = 0;
       lobby.status = 'in-game';
       lobby.scores = new Map();
+      // Initialise les scores à 0 pour tous les joueurs
+      for (const username of lobby.players.keys()) {
+        lobby.scores.set(username, 0);
+      }
 
       io.to(lobbyCode).emit('gameStarted');
 
@@ -151,11 +155,16 @@ module.exports = (io) => {
       lobby.currentTourIndex = 0;
       lobby.status = 'in-game';
       lobby.scores = new Map();
+      // Initialise les scores à 0 pour tous les joueurs
+      for (const username of lobby.players.keys()) {
+        lobby.scores.set(username, 0);
+      }
       io.to(lobbyCode).emit('gameStarted');
       setTimeout(() => launchNextTour(lobbyCode), 500);
     });
 
     socket.on('answer', ({ lobbyId, title, artist, guessTheKey, freeAnswer }) => {
+
       const lobby = lobbies.get(lobbyId);
       if (!lobby || lobby.status !== 'in-game') return;
       const game = lobby.games[lobby.currentGameIndex];
@@ -164,59 +173,107 @@ module.exports = (io) => {
       if (!round) return;
 
       if(round.guessTheKey) {
-
         const keyValue = round.key;
-        // Gestion du format de réponse pour le round du point commun
-        round.answers.set(socket.id, { freeAnswer: freeAnswer});
+        // Stocke la réponse comme une string pour ce mode
+        round.answers.set(socket.username, typeof freeAnswer === 'string' ? freeAnswer : '');
 
-        const isCorrect = (freeAnswer).toLowerCase().trim() === keyValue.toLowerCase().trim();
-
+        const isCorrect = (freeAnswer || '').toLowerCase().trim() === (keyValue || '').toLowerCase().trim();
         if(isCorrect){
-          //Mise à jour du score
-          const currentScore = lobby.scores.get(socket.id);
-          lobby.scores.set(socket.id, currentScore +1)
+          // Mise à jour du score
+          const currentScore = lobby.scores.get(socket.username) || 0;
+          lobby.scores.set(socket.username, currentScore + 50);
+        }
+        // Prépare le mapping scores username -> score
+        const scoresObj = {};
+        for (const [username, score] of lobby.scores.entries()) {
+          scoresObj[username] = score;
+        }
+        // Envoie scoreUpdate à tous les joueurs du lobby (mise à jour temps réel)
+        io.to(lobbyId).emit('scoreUpdate', { scores: scoresObj });
 
-          // Ajout de titre et artiste à l'historique pour la fin de Partie
-          lobby.roundHistory.push({
-            correctAnswer: {freeAnswer: keyValue},
+        // Ajout de la clé à l'historique pour la fin de Partie
+        lobby.roundHistory.push({
+          correctAnswer: {freeAnswer: keyValue},
+          allAnswers: Object.fromEntries(round.answers),
+        });
+        // Envoie roundEnded à tous les joueurs du lobby
+        for (const [username, player] of lobby.players.entries()) {
+          const socketId = player.socketId;
+          io.to(socketId).emit('roundEnded', {
+            correctAnswer: keyValue,
             allAnswers: Object.fromEntries(round.answers),
-          })
-
-          socket.emit('roundEnded', {
-            correctAnswer: { freeAnswer: keyValue},
-            allAnswers: { [socket.id]: {freeAnswer}}
+            scores: scoresObj
           });
         }
       } else { // Gestion classique des réponses pour la partie blindtest
-
         // Permet d'envoyer une réponse même si un seul champ est rempli
-      round.answers.set(socket.id, { title, artist });
+        round.answers.set(socket.username, { title, artist });
 
-      // Vérifie la réponse et envoie uniquement le titre ou l'artiste correct si trouvé
-      const correctTitle = round.title ? round.title.toLowerCase() : '';
-      const correctArtist = round.artist ? round.artist.toLowerCase() : '';
-      const titleAnswer = (title || '').toLowerCase();
-      const artistAnswer = (artist || '').toLowerCase();
+        // Récupère l'index du round courant (pour multi-extraits)
+        const idx = lobby.currentTourIndex;
+        // Prend la bonne réponse depuis round.manche
+        let roundTitle = '';
+        let roundArtist = '';
+        if (round.manche) {
+          roundTitle = round.manche[`titre${idx+1}`] || round.manche.titre || '';
+          roundArtist = round.manche[`artiste${idx+1}`] || round.manche.artiste || '';
+        }
+        const correctTitle = roundTitle ? roundTitle.toLowerCase() : '';
+        const correctArtist = roundArtist ? roundArtist.toLowerCase() : '';
+        const titleAnswer = (title || '').toLowerCase();
+        const artistAnswer = (artist || '').toLowerCase();
 
-      const titleOk = titleAnswer.includes(correctTitle);
-      const artistOk = artistAnswer.includes(correctArtist);
+        const titleOk = titleAnswer === correctTitle && correctTitle !== '';
+        const artistOk = artistAnswer === correctArtist && correctArtist !== '';
 
-      let correctAnswer = {};
-      if (titleOk) correctAnswer.title = round.title;
-      if (artistOk) correctAnswer.artist = round.artist;
-      if (titleOk || artistOk) {
-
-        const currentScore = lobby.scores.get(socket.id) || 0;
-        lobby.scores.set(socket.id, currentScore +1)
-        socket.emit('roundEnded', {
-          correctAnswer :{ 
-            ...(titleOk ? { title: round.title} : {}),
-            ...(artistOk? { artist: round.artist} : {}),
-          },
-          allAnswers: { [socket.id]: { title: title || '', artist: artist || '' } }
-        });
+        let correctAnswer = {};
+        let pointsToAdd = 0;
+        if (titleOk) {
+          correctAnswer.title = roundTitle;
+          pointsToAdd += 10;
+          const currentScore = lobby.scores.get(socket.username) || 0;
+          lobby.scores.set(socket.username, currentScore + 10);
+          
+          // Mise à jour temps réel après titre trouvé
+          const scoresObj = {};
+          for (const [username, score] of lobby.scores.entries()) {
+            scoresObj[username] = score;
+          }
+          io.to(lobbyId).emit('scoreUpdate', { scores: scoresObj });
+        }
+        if (artistOk) {
+          console.log('[SCORE] Comparaison artiste:', artistAnswer, correctArtist, '->', artistOk);
+          correctAnswer.artist = roundArtist;
+          pointsToAdd += 10;
+          const currentScore = lobby.scores.get(socket.username) || 0;
+          lobby.scores.set(socket.username, currentScore + 10);
+          console.log('[SCORE] Nouveau score pour', socket.username, ':', lobby.scores.get(socket.username));
+          // Mise à jour temps réel après artiste trouvé
+          const scoresObj = {};
+          for (const [username, score] of lobby.scores.entries()) {
+            scoresObj[username] = score;
+          }
+          io.to(lobbyId).emit('scoreUpdate', { scores: scoresObj });
+        }
+        // scores de fin de tour
+        const scoresObj = {};
+        for (const [username, score] of lobby.scores.entries()) {
+          scoresObj[username] = score;
+        }
+        // Envoie roundEnded à tous les joueurs du lobby à la fin du round
+        for (const [username, player] of lobby.players.entries()) {
+          const socketId = player.socketId;
+          io.to(socketId).emit('roundEnded', {
+            correctAnswer :{ 
+              ...(titleOk ? { title: roundTitle} : {}),
+              ...(artistOk? { artist: roundArtist} : {}),
+            },
+            allAnswers: Object.fromEntries(round.answers),
+            scores: scoresObj
+          });
+        }
       }
-    }});
+    });
 
     socket.on('requestCurrentGameState', (lobbyId) => {
       const lobby = lobbies.get(lobbyId);
@@ -357,7 +414,7 @@ module.exports = (io) => {
     if (!round) return;
     console.log("evaluateTour");
 
-    // Gestion des points à faire ici et MAJ des scores avant le round suivant
+    
     if (round.guessTheKey) {
       lobby.roundHistory.push({
         roundIndex: lobby.currentRoundIndex,
@@ -366,7 +423,7 @@ module.exports = (io) => {
       });
     } else if (round.manche) {
       // On récupère le bon titre/artiste pour ce tour (blindtest)
-      // On suppose que chaque round correspond à une position (1 à 5)
+      // Chaque round correspond à une position (1 à 5)
       const idx = lobby.currentTourIndex;
       const titre = round.manche[`titre${idx+1}`] || round.manche.titre || '-';
       const artiste = round.manche[`artiste${idx+1}`] || round.manche.artiste || '-';
@@ -377,7 +434,7 @@ module.exports = (io) => {
         allAnswers: Object.fromEntries(round.answers)
       });
     } else {
-      // fallback
+      
       lobby.roundHistory.push({
         roundIndex: lobby.currentRoundIndex,
         correctAnswer: { title: round.title || '-', artist: round.artist || '-', freeAnswer: round.key || '-' },
@@ -403,19 +460,28 @@ module.exports = (io) => {
     const lobby = lobbies.get(lobbyId);
     if (!lobby) return;
 
+    // Transforme la Map en objet simple pour le frontend
+    const scoresObj = {};
+    for (const [username, score] of lobby.scores.entries()) {
+      scoresObj[username] = score;
+    }
     io.to(lobbyId).emit('gameEnded', {
-      scores: lobby.scores,
+      scores: scoresObj,
       history: lobby.roundHistory,
     });
 
-    // Reset du lobby pour la partie d'après
-  lobby.status = 'waiting';
-  lobby.games = [];
-  lobby.scores = new Map();
-  lobby.roundHistory = [];
-  lobby.currentGameIndex = 0;
-  lobby.currentTourIndex = 0;
-  clearTimeout(lobby.timeout);
-  lobby.timeout = null;
+    // Supprime uniquement la partie terminée du tableau des parties
+    if (Array.isArray(lobby.games) && lobby.games.length > 0) {
+      lobby.games.splice(lobby.currentGameIndex, 1);
+    }
+    lobby.status = 'waiting';
+    lobby.scores = new Map();
+    lobby.roundHistory = [];
+    lobby.currentGameIndex = 0;
+    lobby.currentTourIndex = 0;
+    clearTimeout(lobby.timeout);
+    lobby.timeout = null;
+    // Met à jour la liste des parties côté clients
+    io.to(lobbyId).emit('updateGames', lobby.games);
   }
 };
