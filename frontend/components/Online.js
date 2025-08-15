@@ -1,4 +1,4 @@
-import styles from "../styles/Online.module.css";
+import styles from "../styles/online.module.css";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Menu from './Menu';
@@ -11,7 +11,7 @@ function Online() {
   const [inProgress, setInProgress] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:3000/lobbies')
+  fetch(`${process.env.NEXT_PUBLIC_API_URL}/lobbies`)
     .then(response => response.json())
     .then(data => {
       if(data.result === false){

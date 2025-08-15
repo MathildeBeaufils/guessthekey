@@ -28,7 +28,7 @@ const Login = () => {
   const [loginError, setLoginError] = useState("");
   const [signupError,setSignupError]=useState('')
 
-  const backendUrl = "http://localhost:3000/users";
+  const backendUrl = `${process.env.NEXT_PUBLIC_API_URL}/users`;
 
   const openLoginModal = () => setIsLoginModalOpen(true);
   const openSignupModal = () => setIsSignupModalOpen(true);

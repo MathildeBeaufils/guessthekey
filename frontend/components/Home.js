@@ -17,7 +17,7 @@ function Home() {
   const [nbQuete, setNbQuete] = useState(0);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/users/${user.token}`)
+  fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user.token}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.data.tableauQuete && data.data.tableauQuete.length >= 1) {

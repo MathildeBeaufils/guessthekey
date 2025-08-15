@@ -15,7 +15,7 @@ function CreateGameLocal() {
   const username = useSelector((state) => state.user.value.username);
 
   const handleCreate = () => {
-        fetch('http://localhost:4000/lobbies/create', {
+  fetch(`${process.env.NEXT_PUBLIC_API_URL}/lobbies/create`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
