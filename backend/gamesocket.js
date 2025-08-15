@@ -48,11 +48,6 @@ module.exports = (io) => {
       const [removedGame] = lobby.games.splice(gameIndex, 1);
       lobbies.set(lobbyCode, lobby);
       io.to(lobbyCode).emit('updateGames', lobby.games);
-      // Suppression en base de données si applicable (exemple)
-      // Si tu as un modèle Game mongoose :
-      // if (removedGame && removedGame._id) {
-      //   try { await Game.deleteOne({ _id: removedGame._id }); } catch (e) { console.error(e); }
-      // }
     });
     console.log('Utilisateur connecté:', socket.id);
 

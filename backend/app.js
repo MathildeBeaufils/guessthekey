@@ -21,6 +21,7 @@ const io = new Server(server, {
   }
 });
 
+app.use(express.json());
 
 var path = require('path');
 var cookieParser = require('cookie-parser');

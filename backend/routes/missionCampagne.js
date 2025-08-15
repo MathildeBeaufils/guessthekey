@@ -20,15 +20,24 @@ router.get('/:token', (req, res) => {
 
 // update mission d'un User // fonctionne
 router.put('/', (req, res) => {
+    console.log('je suis la')
+    console.log(req.body)
     User.updateOne(
         {
             username: req.body.username,
-            'tableauMissionsCampagne.nom': req.body.nom
+            'tableauMissionsCampagne._id': req.body.missionId
         },
-        { $set: {'tableauMissionsCampagne.$.terminee': true,}}
+        { $set: { 'tableauMissionsCampagne.$.terminee': true } }
     )
-    .then(res.json({result: true}))
+    .then(() => {
+        res.json({ result: true });
+    })
+    .catch((error) => {
+        console.error(error);
+        res.status(500).json({ result: false, error: error.message });
+    });
 });
+
 
 
 
