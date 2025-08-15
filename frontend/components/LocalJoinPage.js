@@ -7,12 +7,21 @@ import { useState } from 'react';
 import SEO from '../components/SEO'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faReply} from '@fortawesome/free-solid-svg-icons';
+import {  useEffect } from "react";
 
 
 function LocalJoinPage() {
     const router = useRouter();
     const username = useSelector((state) => state.user.value.username);
+    const user = useSelector((state) => state.user.value);
     const [code, setCode] = useState('');
+
+    // Verifi que seul les user authentifier puisse acceder a la page
+    useEffect(() => {
+        if (!user.token) {
+        router.push('/');
+        }
+    }, [user]);
 
     const handleJoin = () => {
         console.log(username)

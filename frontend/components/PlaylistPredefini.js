@@ -2,17 +2,29 @@ import styles from '../styles/PlaylistPredefini.module.css';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck} from '@fortawesome/free-solid-svg-icons';
+import { useRouter } from "next/router";
+import { useDispatch } from 'react-redux';
+import {addTrackId} from '../reducers/missionCampagne.js'
+
 
 
 
 
 function PlaylistPredefini(props) {
+
+    function goMission(){
+        dispatch(addTrackId({ trackId: props.manches, missionId: props.id }))
+        router.push("/gameSolo");   
+    }
+
+    const dispatch = useDispatch();
+    const router = useRouter();
     let afficheTerminer = null;
     if(props && props.terminer){
         afficheTerminer = <FontAwesomeIcon icon={faCheck} className={styles.check} />
     }
     return (
-        <div className={styles.btn}>
+        <div className={styles.btn} onClick={goMission}>
             {afficheTerminer}
             <Image
                 src="/asset/pngtree-gold-treble-clef-metal-design-melody-vector-png-image_8307084-removebg-preview.png" // {props.image}

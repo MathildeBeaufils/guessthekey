@@ -175,13 +175,26 @@ function Game({lobbyCode}) {
 
   // Joue la musique à chaque nouveau round, y compris le premier
   useEffect(() => {
-    if (tour?.type !== "guessTheKey" && audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.src = tour.previewUrl;
-      audioRef.current.volume = volume; // Utiliser la valeur du state pour le volume
-      audioRef.current.play();
+    const audio = audioRef.current;
+    if (tour?.type !== "guessTheKey" && audio) {
+      audio.pause();
+      audio.src = tour.previewUrl;
+      audio.volume = volume;
+
+      const handleLoaded = () => {
+        audio.play().catch((err) => {
+          console.warn("Erreur lecture audio :", err);
+        });
+      };
+
+      audio.addEventListener('loadeddata', handleLoaded);
+
+      return () => {
+        audio.removeEventListener('loadeddata', handleLoaded);
+      };
     }
   }, [tour]);
+
 
   useEffect(() => {
     let timerId;
