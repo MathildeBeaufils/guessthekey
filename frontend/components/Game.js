@@ -284,6 +284,7 @@ function Game({lobbyCode}) {
       .sort((a, b) => b[1] - a[1])
       .map(([playerId, score], idx) => ({ playerId, score, rank: idx + 1 }));
 
+    // Score du joueur courant
     const myScore = classement.find(e => e.playerId === username)?.score ?? points;
 
     return (
@@ -361,6 +362,7 @@ function Game({lobbyCode}) {
           <p>Temps restant: {timeLeft}s</p>
 
           <div className={styles.input_container}>
+            {/* Résumé des réponses de la partie (blindtest) supprimé */}
             
             {/* Feedback immédiat sous chaque input pour le blindtest */}
             <input
