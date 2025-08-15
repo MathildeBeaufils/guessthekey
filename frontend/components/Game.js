@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import styles from "../styles/game.module.css";

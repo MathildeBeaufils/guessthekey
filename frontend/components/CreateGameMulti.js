@@ -15,6 +15,7 @@ function CreateGameMulti() {
   const [numberOfRounds, setNumberOfRounds] = useState(5);
   const username = useSelector((state) => state.user.value.username);
   const user = useSelector((state) => state.user.value);
+  const [showModal, setShowModal] = useState(!user?.isSignedUp);
 
 
     // Verifi que seul les user authentifier puisse acceder a la page

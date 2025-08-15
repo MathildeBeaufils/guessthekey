@@ -10,7 +10,6 @@ import { useState, useEffect } from "react";
 
 function Quest() {
   const user = useSelector((state) => state.user.value);
-  const user = useSelector((state) => state.user.value);
   const router = useRouter();
   const [showModal, setShowModal] = useState(!user?.isSignedUp);
 
