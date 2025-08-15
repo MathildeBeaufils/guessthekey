@@ -44,6 +44,7 @@ function userProfile() {
           keyPoint: data.data.keyPoint,
           nbVictoire: data.data.nbVictoire,
           isAdmin: data.data.isAdmin,
+          isSignedUp: data.data.isSignedUp,
         }));
         router.push("/home")
       })

@@ -30,6 +30,7 @@ const userSchema = mongoose.Schema({
   email: String,
   token: String,
   password: String,
+  isSignedUp: Boolean,
   isAdmin: Boolean,
   nbVictoire: Number,
   keyPoint: Number,

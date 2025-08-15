@@ -17,6 +17,7 @@ function Solo() {
     // supprime du reducer la track en cour
     dispatch(deleteTrackId())
     const user = useSelector((state)=>state.user.value);
+    const [showModal, setShowModal] = useState(!user?.isSignedUp);
     
     const [facile, setFacile]= useState([]);
     const [moyen, setMoyen]= useState([]);
@@ -71,7 +72,7 @@ function Solo() {
         <>
             <SEO title="Campagne | Guess The Key" description="Selectionnez une mission pour jouer." />
             <Menu/>            
-            <main className={styles.main}>
+            <main className={styles.main} style={showModal ? { filter: 'blur(6px)', pointerEvents: 'none' } : {}}>
                 <div className={styles.back}>
                     <button className={styles.backBtn} onClick={handleBack}>
                     <FontAwesomeIcon icon={faReply} />
@@ -91,6 +92,20 @@ function Solo() {
                     {displayDifficile}
                 </div>           
             </main>
+            {showModal && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modal}>
+                        <button
+                            onClick={handleBack}
+                            className={styles.closeBtn}
+                        >
+                            &times;
+                        </button>
+                        <h2>ACCES RESERVE</h2>
+                        <p>Vous devez vous inscrire ou vous connecter pour accéder à cette page.</p>
+                    </div>
+                </div>
+            )}
         </>
     );
 }

@@ -6,15 +6,23 @@ import { faCartPlus, faBasketShopping} from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import Image from 'next/Image'
 import SEO from '../components/SEO'
+import { useSelector } from 'react-redux';
+import { useState } from 'react';
 
 function Shop() {
   const router = useRouter();
+  const user = useSelector((state)=>state.user.value);
+  const [showModal, setShowModal] = useState(!user?.isSignedUp);
+
+  const handleBack = () => {
+        router.push("/home");
+    };
 
   return (
     <>
       <SEO title="Magasin | Guess The Key" description="Acheter des objets pour paraitre au dessus de vos amis" />
       <Menu />
-      <main className={styles.main}>
+      <main className={styles.main} style={showModal ? { filter: 'blur(6px)', pointerEvents: 'none' } : {}}>
         <h1 className={styles.title}>BOUTIQUE</h1>
 
         <div className={styles.layout}>
@@ -108,6 +116,20 @@ function Shop() {
             <p className={styles.panier}> <FontAwesomeIcon icon={faBasketShopping} /> Voir mon panier</p>
         </div>
       </main>
+      {showModal && (
+              <div className={styles.modalOverlay}>
+                <div className={styles.modal}>
+                  <button
+                    onClick={handleBack}
+                    className={styles.closeBtn}
+                  >
+                    &times;
+                  </button>
+                  <h2>ACCES RESERVE</h2>
+                  <p>Vous devez vous inscrire ou vous connecter pour accéder à cette page.</p>
+                </div>
+              </div>
+            )}
     </>
   );
 }

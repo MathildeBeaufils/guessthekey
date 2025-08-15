@@ -14,6 +14,8 @@ function CreateGameMulti() {
   const [numberOfPlayers, setNumberOfPlayers] = useState(5);
   const [numberOfRounds, setNumberOfRounds] = useState(5);
   const username = useSelector((state) => state.user.value.username);
+  const user = useSelector((state)=>state.user.value);
+  const [showModal, setShowModal] = useState(!user?.isSignedUp);
   
   const handleCreate = () => {
     fetch('http://localhost:3000/lobbies/create', {
@@ -40,7 +42,7 @@ function CreateGameMulti() {
     <>
       <SEO title="Creer une partie en ligne | Guess The Key" description="Parametrez votre partie." />
       <Menu/>
-      <div className={styles.container}>
+      <div className={styles.container} style={showModal ? { filter: 'blur(6px)', pointerEvents: 'none' } : {}}>
         <div className={styles.back}>
           <button className={styles.backBtn} onClick={handleBack}>
           <FontAwesomeIcon icon={faReply} />
@@ -81,6 +83,20 @@ function CreateGameMulti() {
           Créer une partie
         </button>
       </div>
+      {showModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
+            <button
+              onClick={handleBack}
+              className={styles.closeBtn}
+            >
+              &times;
+            </button>
+            <h2>ACCES RESERVE</h2>
+            <p>Vous devez vous inscrire ou vous connecter pour accéder à cette page.</p>
+          </div>
+        </div>
+      )}
     </>
   );
 }
