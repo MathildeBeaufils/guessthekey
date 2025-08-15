@@ -423,7 +423,7 @@ function Game({lobbyCode}) {
       )}
       <button className={styles.btn} onClick={sendAnswer} style={{marginTop: 8}}>Valider</button>
 
-      {/* Tableau des bonnes réponses trouvées par l'utilisateur, y compris Guess The Key */}
+      {/* Tableau des bonnes réponses trouvées par l'utilisateur, y compris GuessTheKey */}
       {/* Affichage du tableau des bonnes réponses, toujours visible dans tous les tours */}
       <div style={{ marginTop: 24, color: '#2d7a2d', fontSize: 14 }}>
         <b>Tableau de vos bonnes réponses :</b>
