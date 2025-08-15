@@ -245,7 +245,7 @@ function CreateRound() {
                   setSongs((prev) =>
                     prev.map((song, i) =>
                       i === index
-                        ? { ...song, selected: item, search: `${item.title} - ${item.artist}` } // <-- Correction ici
+                        ? { ...song, selected: item, search: `${item.title} - ${item.artist}` }
                         : song
                     )
                   )
