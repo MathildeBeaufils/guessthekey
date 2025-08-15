@@ -194,30 +194,67 @@
   font-size: 30px;
   cursor: pointer;
 }
-
+/* Media query pour les tablettes */
 @media (max-width: 768px) {
-  .manche {
-    font-size: 2rem;
-  }
-
   .round_container {
-    padding: 20px;
+    width: 95%; 
   }
-
+  .input_container {
+    width: 90%;
+  }
   .title_button {
-    max-width: none;
+    width: 90%; 
+    padding: 4%;
+    font-size: 18px;
+  }
+  .inputrecherche, .recherche {
+    width: 45%; 
+  }
+  .valider {
+    width: 60%;
+    font-size: 24px;
+  }
+  .category-container .category-label {
+    font-size: 16px;
+    padding: 12px 18px;
+  }
+}
+/* Media query pour les telephones */
+@media (max-width: 550px) {
+  .container {
+    padding: 10px;
+  }
+  .round_container {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+  .input {
+    width: 95%;
+  }
+  .input_container {
     width: 100%;
   }
-
-  .modal_content {
-    padding: 20px;
+  .title_container {
+    flex-direction: column; 
   }
-
-  .modal_title {
-    font-size: 1.5rem;
+  .title_button {
+    width: 95%;
   }
-
-  .modal_buttons_wrapper {
+  .inputrecherche, .recherche {
+    width: 95%;
+    margin-right: 0;
+  }
+  .valider {
+    width: 80%;
+    font-size: 20px;
+  }
+  .category-container {
     flex-direction: column;
+    width: 100%;
+  }
+  .category-container .category-label {
+    width: 80%;
+    text-align: center;
   }
 }
