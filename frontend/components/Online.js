@@ -21,7 +21,7 @@ function Online() {
   }, [user]);
 
   useEffect(() => {
-  fetch(`${process.env.NEXT_PUBLIC_API_URL}/lobbies`)
+  fetch('http://localhost:3000/lobbies')
     .then(response => response.json())
     .then(data => {
       if(data.result === false){

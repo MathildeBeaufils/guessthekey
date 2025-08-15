@@ -24,7 +24,7 @@ function CreateGameLocal() {
     }, [user]);
 
   const handleCreate = () => {
-  fetch(`${process.env.NEXT_PUBLIC_API_URL}/lobbies/create`, {
+  fetch('http://localhost:4000/lobbies/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
