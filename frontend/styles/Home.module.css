@@ -1,3 +1,13 @@
+@font-face {
+  font-family: 'Hey Comic';
+  src: url('../assets/fonts/HeyComicCustom.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: "ToastyMilk";
+  src: url('../assets/fonts/Toasty\ Milk.ttf') format('truetype');
+}
+
 .main {
   display: flex;
   flex-direction: column;
@@ -8,22 +18,28 @@
   background-color: #555563;
 }
 
-.title {
+.main h1{
   line-height: 1.15;
-  font-size: 4rem;
   color: white;
   margin-bottom: -20px;
-  margin-top: -10%;
+  margin-top: 2%;
   cursor: default;
+  font-family: 'ToastyMilk';
+  font-size: 100px;  
+}
+.btnContainer{
+  display: flex;
+  flex-direction: column;
+  width: 30%;
 }
 .btn{
   background-color: #C9333E;
-  font-size: 22px;
-  font-weight: bolder;
+  font-family: 'Hey Comic';
+  font-size: 30px;
   color: white;
   padding: 10px;
   border-radius: 50px;
-  width: 60%;
+  min-width: 100%;
   border: solid #C9333E 1px;
   margin-top: 30px;
   box-shadow: 10px 10px 25px 1px rgba(0,0,0,0.82);
@@ -50,46 +66,41 @@
   margin-left: 50px;
 }
 .displayQuete{
-  margin-left: -35%;
-  margin-top: -5%;
-  display: none;
+  margin-left: -50%;
 }
 
 
-@media (min-width: 700px) { 
-  .title {
-    font-size: 6rem;
+@media (max-width: 400px) { 
+  .main h1 {
+      font-size: 30px;  
   }
-  .btn{
-    width: 40%;
-    margin-top: 40px;
-    padding: 15px;
-  }
-}
-
-@media (min-width: 1200px) { 
-  .title {
-    font-size: 7rem;
-    margin-bottom: 3%;
-  }
-  .btn{
-    width: 40%;
-    margin-top: 40px;
-    padding: 15px;
+  .btnContainer{
+    display: flex;
+    flex-direction: column;
+    width: 80%;
   }
 }
 
-@media (min-width: 1600px) { 
-  .title {
-    font-size: 8rem;
-    margin-bottom: 30px;
+
+@media (max-width: 500px) { 
+  .main h1 {
+      font-size: 40px;  
   }
-  .btn{
-    width: 30%;
-    margin-top: 50px;
-    padding: 20px;
-  }
-  .displayQuete{
-    margin-top: -2%;
+  .btnContainer{
+    display: flex;
+    flex-direction: column;
+    width: 80%;
   }
 }
+  @media (max-width: 800px) { 
+  .main h1 {
+      font-size: 70px;  
+  }
+  .btnContainer{
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+  }
+
+}
+

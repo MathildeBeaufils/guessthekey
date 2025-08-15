@@ -3,6 +3,7 @@ import styles from "../styles/login.module.css";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../reducers/users';
+import SEO from '../components/SEO'
 
 
 
@@ -13,7 +14,7 @@ const Login = () => {
   if (user.token) {
     router.push('/home');
   }
-  console.log('user: ',user)
+
 
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
@@ -23,6 +24,9 @@ const Login = () => {
   const [signupUsername, setSignupUsername] = useState("");
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
+
+  const [loginError, setLoginError] = useState("");
+  const [signupError,setSignupError]=useState('')
 
   const backendUrl = "http://localhost:3000/users";
 
@@ -54,7 +58,6 @@ const Login = () => {
         return response.json();
       })
       .then((data) => {
-        console.log("Connexion réussie !", data);
         dispatch(login({ 
           token: data.data.token, 
           username: data.data.username,
@@ -71,6 +74,7 @@ const Login = () => {
       })
       .catch((error) => {
         console.error("Échec de la connexion :", error);
+        setLoginError('Email ou mot de passe invalide');
       });
   };
 
@@ -95,7 +99,12 @@ const Login = () => {
         return response.json();
       })
       .then((data) => {
-        console.log("Inscription réussie !", data);
+        console.log(data.error)
+        if (data.result === false) {
+          setSignupError(data.error);
+          return;
+        }
+        console.log("Inscription réussie !");
         dispatch(login({ 
           token: data.data.token, 
           username: data.data.username,
@@ -116,96 +125,119 @@ const Login = () => {
   };
     
     const handleInvit = (e) => {
-      router.push("/profil")
+      router.push("/userprofilepage")
     }
 
   return (
-    <div className={styles.container}>
-      <button onClick={openLoginModal} className={styles.button}>
-        SE CONNECTER
-      </button>
-      <button onClick={openSignupModal} className={styles.button}>
-        S'INSCRIRE
-      </button>
-      <button onClick={handleInvit} className={styles.button}>INVITÉ</button>
+    <>
+      <SEO title="Connection | Guess The Key" description="Connectez vous pour obtenir plus de contenue Guess The Key." />
 
-      {isLoginModalOpen && (
-        <div onClick={closeLoginModal} className={styles.modalOverlay}>
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className={styles.modalContainer}
-          >
-            <button
-              onClick={closeLoginModal}
-              className={styles.modalCloseButton}
-            >
-              &times;
-            </button>
-            <form onSubmit={handleLogin} className={styles.modalContent}>
-              <p>Email</p>
-              <input
-                type="email"
-                value={loginEmail}
-                onChange={(e) => setLoginEmail(e.target.value)}
-                required
-              />
-              <p>Mot de passe</p>
-              <input
-                type="password"
-                value={loginPassword}
-                onChange={(e) => setLoginPassword(e.target.value)}
-                required
-              />
-              <button type="submit" className={styles.modalButton}>
-                SE CONNECTER
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
 
-      {isSignupModalOpen && (
-        <div onClick={closeSignupModal} className={styles.modalOverlay}>
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className={styles.modalContainer}
-          >
-            <button
-              onClick={closeSignupModal}
-              className={styles.modalCloseButton}
+
+      <main className={styles.container}>
+
+      <h1 className={styles.title}>Guess The Key</h1>     
+
+        <button onClick={openLoginModal} className={styles.button}>
+          SE CONNECTER
+        </button>
+        <button onClick={openSignupModal} className={styles.button}>
+          S'INSCRIRE
+        </button>
+        <button onClick={handleInvit} className={styles.button}>INVITÉ</button>
+
+        {isLoginModalOpen && (
+          <div onClick={closeLoginModal} className={styles.modalOverlay}>
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className={styles.modalContainer}
             >
-              &times;
-            </button>
-            <form onSubmit={handleSignup} className={styles.modalContent}>
-              <p>Nom d'utilisateur</p>
-              <input
-                type="text"
-                value={signupUsername}
-                onChange={(e) => setSignupUsername(e.target.value)}
-                required
-              />
-              <p>Email</p>
-              <input
-                type="email"
-                value={signupEmail}
-                onChange={(e) => setSignupEmail(e.target.value)}
-                required
-              />
-              <p>Mot de passe</p>
-              <input
-                type="password"
-                value={signupPassword}
-                onChange={(e) => setSignupPassword(e.target.value)}
-                required
-              />
-              <button type="submit" className={styles.modalButton}>
-                S'INSCRIRE
+              {loginError && (
+                <div style={{ color: "red", margin: "10px", backgroundColor:'white', borderRadius:'10px', padding:'5px',display:"flex",justifyContent:"center", fontWeight:'bolder'}}>
+                  {loginError}
+                </div>
+              )}
+
+              <button
+                onClick={closeLoginModal}
+                className={styles.modalCloseButton}
+              >
+                &times;
               </button>
-            </form>
+              <form onSubmit={handleLogin} className={styles.modalContent}>
+                <p>Email</p>
+                <input
+                  type="email"
+                  value={loginEmail}
+                  onChange={(e) => setLoginEmail(e.target.value)}
+                  required
+                />
+                <p>Mot de passe</p>
+                <input
+                  type="password"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  required
+                />
+                <button type="submit" className={styles.modalButton}>
+                  SE CONNECTER
+                </button>
+              </form>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+
+        {isSignupModalOpen && (
+          <div onClick={closeSignupModal} className={styles.modalOverlay}>
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className={styles.modalContainer}
+            >
+              <button
+                onClick={closeSignupModal}
+                className={styles.modalCloseButton}
+              >
+                &times;
+              </button>
+
+              {signupError && (
+                <div style={{ color: "red", margin: "10px", backgroundColor:'white', borderRadius:'10px', padding:'5px',display:"flex",justifyContent:"center", fontWeight:'bolder'}}>
+                  {signupError}
+                </div>
+              )}
+
+              <form onSubmit={handleSignup} className={styles.modalContent}>
+                <p>Nom d'utilisateur</p>
+                <input
+                  type="text"
+                  value={signupUsername}
+                  onChange={(e) => setSignupUsername(e.target.value)}
+                  required
+                />
+                <p>Email</p>
+                <input
+                  type="email"
+                  value={signupEmail}
+                  onChange={(e) => setSignupEmail(e.target.value)}
+                  required
+                />
+                <p>Mot de passe</p>
+                <input
+                  type="password"
+                  value={signupPassword}
+                  onChange={(e) => setSignupPassword(e.target.value)}
+                  required
+                />
+                <button type="submit" className={styles.modalButton}>
+                  S'INSCRIRE
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
+      </main>    
+    </>
+
   );
 };
 

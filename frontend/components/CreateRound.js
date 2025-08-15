@@ -1,0 +1,274 @@
+import { useState, useEffect } from "react";
+import styles from "../styles/createRound.module.css";
+import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
+import SEO from '../components/SEO'
+import socket from '../socket';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faReply} from '@fortawesome/free-solid-svg-icons';
+
+const SongSearchInput = ({
+  index,
+  song,
+  onSongChange,
+  onSearch,
+  selectList,
+  onSelect,
+  selectedItem,
+}) => (
+  <div className={styles.title}>
+    <div>
+      <label>
+        Recherche un artiste ou une musique:
+        <br />
+        <input
+          type="text"
+          className={styles.inputrecherche}
+          value={song}
+          onChange={(e) => onSongChange(e.target.value)}
+          placeholder="Rechercher une chanson"
+          required
+        />
+      </label>
+      <button onClick={onSearch} className={styles.recherche}>
+        Recherche
+      </button>
+    </div>
+    <div className={styles.radioGroup}>
+      {selectList.map((item, i) => (
+        <label key={i} className={styles.radioLabel}>
+          <input
+            type="radio"
+            name={`song-${index}`}
+            checked={selectedItem && selectedItem.deezerId === item.deezerId}
+            onChange={() => onSelect(item)}
+          />
+          {item.title} - {item.artist}
+        </label>
+      ))}
+    </div>
+  </div>
+);
+
+function CreateRound() {
+  const router = useRouter();
+  const lobbyCode = router.query.lobbyCode;
+
+  // Ne rien faire tant que lobbyCode est undefined
+  if (!lobbyCode) return <div>Chargement...</div>;
+
+  const user = useSelector((state) => state.user.value);
+  const backendUrl = "http://localhost:3000";
+  const [error, setError] = useState("");
+
+  const [songs, setSongs] = useState(
+    Array(5).fill({ search: "", results: [], selected: null })
+  );
+
+  const [theme, setTheme] = useState("");
+  const [key, setKey] = useState("");
+  const [categorieList, setCategorieList] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  // (plus de rounds ici)
+
+  useEffect(() => {
+    fetch(`${backendUrl}/manches/categories`)
+      .then((response) => response.json())
+      .then((data) => {
+        setCategorieList(data.categories);
+      })
+      .catch((error) => console.error("Erreur lors du chargement des catégories :", error));
+  }, []);
+
+  const handleCategorieChange = (id) => {
+    setSelectedCategories((prev) => {
+      const newSelectedCategories = [...prev];
+      const index = newSelectedCategories.indexOf(id);
+
+      if (index > -1) {
+        newSelectedCategories.splice(index, 1);
+      } else {
+        newSelectedCategories.push(id);
+      }
+      return newSelectedCategories;
+    });
+  };
+
+  const displayCategorie = categorieList.map((data, i) => (
+    <label key={i} className={styles['category-label']}>
+      {data.nom}
+      <input
+        type="checkbox"
+        id={`cat-${i}`}
+        value={data.nom}
+        checked={selectedCategories.includes(data._id)}
+        onChange={() => handleCategorieChange(data._id)}
+      />
+    </label>
+  ));
+
+  const searchSong = (index) => {
+    const search = songs[index].search;
+    fetch(`${backendUrl}/manches/searchsong`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ search }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const list = Array.isArray(data.data) ? data.data : [];
+        setSongs((prev) =>
+          prev.map((s, i) => (i === index ? { ...s, results: list } : s))
+        );
+      })
+      .catch((error) => console.error("Erreur :", error));
+  };
+
+  const handleCreateGame = (items) => {
+    // Utilise les états locaux pour construire gameData
+    const selectedSongs = songs.map((s) => s.selected);
+    
+    const blindtestTours = selectedSongs.map((track, idx) => ({
+      type: "blindtest",
+      index: idx + 1,
+      total: 6,
+      manche: {
+        trackId: track?.trackId,
+        titre: track?.title,
+        artiste: track?.artist,
+      }
+    }));
+
+    const guessTheKeyTour = {
+      type: "guessTheKey",
+      index: 6,
+      total: 6,
+      question: `Quel est le point commun entre ces morceaux ?`,
+      key: key,
+      theme: theme
+    };
+    const gameData = {
+      theme: theme,
+      key: key,
+      tours: [...blindtestTours, guessTheKeyTour]
+    };
+    console.log("selectedSongs", selectedSongs);
+    console.log("CreateRound Gamedata:", gameData)
+    socket.emit("createGame", { lobbyCode, gameData });
+    router.push(`/lobby/${lobbyCode}`);
+  };
+
+
+  const trackValidate = () => {
+    if (!user || !user.username) {
+      console.error("User is not logged in or username is missing.");
+      alert("Veuillez vous connecter pour créer une manche.");
+      return;
+    }
+
+    const selectedSongs = songs.map((s) => s.selected);
+    if (selectedSongs.some((s) => !s)) {
+      setError("Il manque au moins une chanson pour valider la manche.");
+      return;
+    }
+    setError("");
+    const items = [
+      { username: user.username },
+      { theme: theme },
+      { key: key },
+      { categorie: selectedCategories },
+      { titre: selectedSongs},
+    ];
+    handleCreateGame(items);
+  };
+
+  const handleBack = () => {
+    router.push(`/lobby/${lobbyCode}`);
+  };
+  return (
+  <>
+      <SEO title="Creer une manche | Guess The Key" description="Creer une manche pour vos parties" />
+      <div className={styles.container}>
+        <div className={styles.back}>
+          <button className={styles.backBtn} onClick={handleBack}>
+            <FontAwesomeIcon icon={faReply} />
+          </button>
+        </div>
+        <h1 className={styles.manche}>CRÉATION DE MANCHE</h1>
+        <div className={styles.round_container}>
+  {error && <div style={{ color: 'red', marginBottom: 10 }}>{error}</div>}
+          <div className={styles.input_container}>
+            <label>
+              <p className={styles.container_p}>Nom du thème</p>
+              <input
+                type="text"
+                className={styles.input}
+                value={theme}
+                onChange={(e) => setTheme(e.target.value)}
+                required
+              />              
+            </label>
+
+            <label>
+              <p className={styles.container_p}>Key</p>
+              <input
+                type="text"
+                className={styles.input}
+                value={key}
+                onChange={(e) => setKey(e.target.value)}
+                required
+              />              
+            </label>
+
+          </div>
+
+          <div className={styles['category-container']}>
+            {displayCategorie}
+          </div>
+
+          <div className={styles.title_container}>
+            {songs.map((s, index) => (
+              <SongSearchInput
+                key={index}
+                index={index}
+                song={s.search}
+                onSongChange={(value) =>
+                  setSongs((prev) =>
+                    prev.map((song, i) =>
+                      i === index ? { ...song, search: value } : song
+                    )
+                  )
+                }
+                onSearch={() => searchSong(index)}
+                selectList={s.results}
+                onSelect={(item) =>
+                  setSongs((prev) =>
+                    prev.map((song, i) =>
+                      i === index
+                        ? { ...song, selected: item, search: `${item.title} - ${item.artist}` }
+                        : song
+                    )
+                  )
+                }
+                selectedItem={s.selected}
+              />
+            ))}
+          </div>
+
+          <div className={styles.button_validate}>
+            <button
+              onClick={trackValidate}
+              className={styles.valider}
+              disabled={songs.some((s) => !s.selected)}
+            >
+              Créer la partie
+            </button>
+          </div>
+        </div>
+        <div className={styles.button_place}></div>
+      </div>
+    </>
+  );
+}
+
+export default CreateRound;

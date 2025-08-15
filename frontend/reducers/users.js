@@ -9,7 +9,6 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
         login: (state, action) => {
-            console.log('ici', action.payload)
             state.value.token = action.payload.token;
             state.value.username = action.payload.username;
             state.value.email = action.payload.email;
@@ -25,7 +24,7 @@ export const userSlice = createSlice({
             state.value.token = null;
             state.value.username = null;
             state.value.email = null;
-            state.value.isAdmin = null;
+            state.value.isAdmin = false;
             state.value.nbVictoire = null;
             state.value.keyPoint = null;
             state.value.itemTete = null;
@@ -33,8 +32,11 @@ export const userSlice = createSlice({
             state.value.itemJambes = null;
             state.value.itemPieds = null;
         },
+        updateUsername:(state, action) => {
+            state.value.username = action.payload.username;
+        },
     },
 });
 
-export const { login, logout } = userSlice.actions;
+export const { login, logout, updateUsername } = userSlice.actions;
 export default userSlice.reducer;

@@ -1,4 +1,8 @@
-.container{
+@font-face {
+  font-family: 'Hey Comic';
+  src: url('../assets/fonts/HeyComicCustom.ttf') format('truetype');
+}
+  .container{
   background-color: #555563;
   width: 100%;
   height: 100vh;
@@ -11,28 +15,38 @@
     margin: 2%;
     color: white;
     font-size: 22px;
-    font-weight: bolder;
     display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  font-family: 'Hey Comic';
 }
 .btn{
-   width: 25%;
+  width: 25%;
   padding: 2%;
   margin: 2%;
   border-radius: 20px;
   box-shadow: 15px 15px 25px 1px rgba(0, 0, 0, 0.82);
   -webkit-box-shadow: 15px 15px 25px 1px rgba(0, 0, 0, 0.82);
   -moz-box-shadow: 15px 15px 25px 1px rgba(0, 0, 0, 0.82);
-  background-color: #FF9809;
+  background-color: #c9333d;
+  border: solid #C9333E 1px;
   color: white;
   cursor: pointer;
-  font-size: 22px;
-  font-weight: bolder;
+  font-size: 25px;
+  font-family: 'Hey Comic';
 }
+
+.btn:hover{
+  background-color: #E3505A;
+  border: solid #E3505A 1px;
+}
+
 .container h1 {
   color: white;
+  font-family: 'Hey Comic';
+    font-size: 35px;
+    margin-bottom: 80px;
 }
 .input{
     margin: 10%;
@@ -40,5 +54,27 @@
     border-radius: 5px;
     border: none;
     font-size: 22px; 
+    font-family: 'Hey Comic';
+}
+.backBtn{
+  background-color: #555563;
+  color: white;
+  position: absolute;
+  left: 30px;
+  top: 120px;
+  border: 1px #555563 solid;
+  font-size: 30px;
+  cursor: pointer;
 }
 
+@media (max-width:500px) { 
+  .title {
+    margin-top: 30px;
+    width: 80%;
+    font-size: 50px;
+    margin-bottom: 50px;
+  }
+  .btn{
+    width: 30%;
+  }
+}

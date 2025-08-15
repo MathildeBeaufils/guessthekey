@@ -1,9 +1,15 @@
+@font-face {
+  font-family: 'Hey Comic';
+  src: url('../assets/fonts/HeyComicCustom.ttf') format('truetype');
+}
 .nav{
     background-color: #E3505A;
     display: flex;
     align-items: center;
     justify-content: space-around;
-    font-size: 24px;
+     font-family: 'Hey Comic';
+    font-size: 20px;
+    letter-spacing: 2px;
     color: white;
     font-weight: bolder;
     height: 10vh;
@@ -37,6 +43,7 @@
         padding: 20px;
         font-size: 32px;
         height: 10vh;
+        z-index: 9999;
     }
     .item p {
         display: none;

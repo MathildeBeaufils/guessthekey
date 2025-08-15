@@ -81,48 +81,101 @@ router.get('/', function(req, res) {
   });
 });
 
-// Route pour ajouter une manche 
+// Route pour ajouter une manche
 router.post('/', function(req, res) {
-
-  User.findOne({ username: req.body.username}).then(user => {
-
-    Manche.findOne( {created_by: req.body.created_by, key: req.body.key}).then(manche => {
-      if(manche){
-        res.json({ result: false, message: `Il existe déjà une manche ${req.body.key} crée par ${req.body.users.username}`})
-      } else {
-        const newManche = new Manche({
-        titre1: req.body.titre1,
-        artiste1: req.body.artiste1,
-        titre2: req.body.titre2,
-        artiste2: req.body.artiste2,
-        titre3: req.body.titre3,
-        artiste3: req.body.artiste3,
-        titre4: req.body.titre4,
-        artiste4: req.body.artiste4,
-        titre5: req.body.titre5,
-        artiste5: req.body.artiste5,
-        key: req.body.key,
-        categories: req.body.categories, // Object ID requis, mettre le categories _id
-        created_at: new Date(),
-        created_by: req.body.created_by, // Object ID requis, mettre le user_id
-        });
-        newManche.save().then(data => {
-          res.json({ result: true, manche: data })
-        })
-        .catch(error => {
-          console.error('Erreur lors de la création de la manche :', error);
-        })
-      }
+  console.log("coucou la route")
+  const categorieId = [];
+  const categories = req.body.selectedItem[3].categorie;
+  for (let i = 0; i < categories.length; i++) {
+    categorieId.push(categories[i]);
+  }
+  const user = req.body.selectedItem[0].username;
+  const theme = req.body.selectedItem[1].theme;
+  const key = req.body.selectedItem[2].key;
+  const titre1=req.body.selectedItem[4].titre[0];
+  const titre2=req.body.selectedItem[4].titre[1];
+  const titre3=req.body.selectedItem[4].titre[2];
+  const titre4=req.body.selectedItem[4].titre[3];
+  const titre5=req.body.selectedItem[4].titre[4];
+  console.log(req.body.selectedItem[4].titre[0].trackId)
+  User.findOne({ username: user}).then(user => {
+    const userId = user._id;
+    const newManche = new Manche({
+    titre1: titre1.title,
+    artiste1: titre1.artist,
+    trackId1: titre1.trackId,
+    titre2: titre2.title,
+    artiste2: titre2.artist,
+    trackId2: titre2.trackId,
+    titre3: titre3.title,
+    artiste3: titre3.artist,
+    trackId3: titre3.trackId,
+    titre4: titre4.title,
+    artiste4: titre4.artist,
+    trackId4: titre4.trackId,
+    titre5: titre5.title,
+    artiste5: titre5.artist,
+    trackId5: titre5.trackId,
+    key: key,
+    theme: theme,
+    categories: categorieId, // tableau d'ID de categorie
+    created_at: new Date(),
+    created_by: userId, // Object ID requis
+    });
+    newManche.save().then(data => {
+      res.json({ result: true, manche: data })
+    })
+    .catch(error => {
+      console.error('Erreur lors de la création de la manche :', error);
     })
   })
 });
 
+// deja fait ?
+router.post('/searchsong', (req, res) => {
+  const search = req.body.search;
 
-// Route pour visualiser les manches sauvegardées par l'utilisateur
+  fetch(`https://api.deezer.com/search/track?q=${search}&limit=10`)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
+      const simplifiedData = data.data.map(track => ({
+        title: track.title,
+        artist: track.artist.name,
+        trackId: track.id
+      }));
 
-// Route pour Ajouter une manche dans le dossier de manches sauvegardées de l'utilisateur
+      res.json({ result: true, data: simplifiedData });
+    })
+    .catch(error => {
+      console.error("Error fetching artist:", error);
+      res.status(500).json({ result: false, error: "Internal server error" });
+    });
+});
 
-// Route pour supprimer une manche par un admin ou l'utilisateur qui l'a créé
+
+// route qui recupere l'URL du titre
+router.post('/musicByArtist', (req,res)=>{
+  const artiste = req.body.artiste;
+  const musique = req.body.musique;
+  console.log('artiste',artiste)
+  console.log('musique',musique)
+  fetch(`https://api.deezer.com/search/track?q=${musique}&limit=6`)
+  .then(response => response.json())
+  .then(data => {
+    const morceauCorrespondant = data.data.find(track => {
+      const titre = track.title;
+      const nomArtiste = track.artist.name;
+      return titre === musique && nomArtiste === artiste;
+    });
+    const urlMusic = morceauCorrespondant.link
+    res.json({ result: true, data:urlMusic });
+  })
+  .catch(error => {
+    console.error("Error fetching artist:", error);
+    res.status(500).json({ result: false, error: "Internal server error" });
+  });
+})
 
 
 module.exports = router;

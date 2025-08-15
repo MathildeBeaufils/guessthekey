@@ -1,0 +1,259 @@
+@font-face {
+  font-family: 'Hey Comic';
+  src: url('../assets/fonts/HeyComicCustom.ttf') format('truetype');
+}
+.main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+    min-height: 90vh;
+    background-color: #555563;
+  }
+  
+.main h1{
+  font-size: 4rem;
+}
+.title {
+  line-height: 1.15;
+  color: white;
+  cursor: default;
+  margin: 15px;
+  font-family: 'Hey Comic';
+}
+
+.sonores {
+    width: 80vw;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Hey Comic';
+}
+
+.cursor {
+    -webkit-appearance: none;
+    width: 60%;
+    height: 12px;
+    background: linear-gradient(to right, #cccccb 50%, #fff 50%);
+    border-radius: 6px;
+    outline: none;
+    touch-action: none;
+  }
+  
+  /* Curseur personnalisé pour WebKit (Chrome, Safari, iOS) */
+  .cursor::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 30px;
+    height: 30px;
+    background: #cccccb;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+  }
+  
+  /* Curseur pour Firefox */
+  .cursor::-moz-range-thumb {
+    width: 30px;
+    height: 30px;
+    background: #fff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  /* Track pour Firefox */
+  .cursor::-moz-range-track {
+    height: 12px;
+    background: #cccccb;
+    border-radius: 6px;
+  }
+  .volume {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+  }
+
+.volumeIcon {
+    font-size: 30px;
+    color: white;
+}
+
+.affichage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 10px;
+    color: #fff;
+    font-size: 20px;
+    gap: 5px;
+    font-family: 'Hey Comic';
+}
+
+.couleurs {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  font-size: 20px;
+  gap: 20px;
+}
+
+.paletteIcon {
+  font-size: 30px;
+  color: white;
+}
+.affichageIcon {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.2s ease;
+}
+
+.btnCouleurs {
+  display: flex;
+  background-color: #555563;
+  border: none;
+  cursor: pointer;
+  width: 70px;
+  height: 70px;
+  
+}
+
+.btnCouleurs:hover .affichageIcon {
+  transform: scale(1.4); 
+}
+
+  .btn{
+    background-color: #C9333E;
+    font-size: 22px;
+    font-family: 'Hey Comic';
+    color: white;
+    padding: 10px;
+    border-radius: 50px;
+    width: 60%;
+    border: solid #C9333E 1px;
+    margin-top: 30px;
+    box-shadow: 10px 10px 25px 1px rgba(0,0,0,0.82);
+    -webkit-box-shadow: 10px 10px 25px 1px rgba(0,0,0,0.82);
+    -moz-box-shadow: 10px 10px 25px 1px rgba(0,0,0,0.82);
+    cursor: pointer;
+  }
+  .btn:hover{
+    background-color: #E3505A;
+    border: solid #E3505A 1px;
+  }
+
+.btnLogout {
+  background-color: #555563;
+  border: solid 1px transparent;
+  border-radius: 50px;
+  font-size: 22px;
+  font-family: 'Hey Comic';
+  color: #fff;
+  padding: 20px;
+  margin-top: 30px;
+  display: flex;
+  gap: 20px;
+  cursor: pointer;
+}
+
+.btnLogout:hover {
+  background-color: #7b7b7e;
+  padding: 20px;
+  border: solid 1px transparent;
+  border-radius: 50px;
+}
+
+.logoutIcon {
+  font-size: 30px;
+}
+
+.profil{
+  display: flex;
+  flex-direction: column;
+  font-family: 'Hey Comic';
+  letter-spacing: 1px;
+  font-size: 20px;
+  text-align: center;
+  width: 60%;
+  color: white;
+  justify-content: center;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+.inputContaire{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.inputrecherche{
+  margin-top: 10px;
+  background-color: white;
+  padding: 8px;
+  border-radius: 20px;
+  border: white;
+  font-family: 'Hey Comic';
+}
+
+.Btnrecherche{
+  color: white;
+  margin-left: 10px;
+  background-color: #C9333E;
+  border-radius: 20px;
+  border: #C9333E;
+  padding: 8px;
+  cursor: pointer;
+  font-family: 'Hey Comic';
+  letter-spacing: 1px;
+  margin-top: 20px;
+}
+.Btnrecherche:hover{
+  background-color: #f26500;
+}
+
+@media (min-width: 700px) { 
+  .title {
+    font-size: 6rem;
+  }
+  .btn{
+    width: 40%;
+    margin-top: 40px;
+    padding: 15px;
+  }
+  .inputContaire{
+    flex-direction: row;
+  }
+
+  }  
+  @media (min-width: 1200px) { 
+    .title {
+      font-size: 7rem;
+      margin-bottom: 3%;
+    }
+    .btn{
+      width: 40%;
+      margin-top: 40px;
+      padding: 15px;
+    }
+  }
+  
+  @media (min-width: 1600px) { 
+    .title {
+      font-size: 8rem;
+      margin-bottom: 30px;
+    }
+    .btn{
+      width: 30%;
+      margin-top: 50px;
+      padding: 20px;
+    }
+  }

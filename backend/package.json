@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "nodemon ./bin/www"
+    "dev": "nodemon ./bin/www",
+    "test": "NODE_ENV=test jest"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
@@ -16,9 +17,13 @@
     "moment": "^2.30.1",
     "mongoose": "^8.17.0",
     "morgan": "~1.9.1",
+    "nanoid": "^5.1.5",
+    "socket.io": "^4.8.1",
     "uid2": "^1.0.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "jest": "^30.0.5",
+    "nodemon": "^3.1.10",
+    "supertest": "^7.1.4"
   }
 }

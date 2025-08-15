@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const parametresSchema = mongoose.Schema({
   son: String,
@@ -6,8 +6,23 @@ const parametresSchema = mongoose.Schema({
 });
 
 const inventaireSchema = mongoose.Schema({
-objetsAcquis: [{ type: mongoose.Schema.Types.ObjectId, ref: 'store' }]
-})
+  objetsAcquis: [{ type: mongoose.Schema.Types.ObjectId, ref: "store" }],
+});
+
+const missionsCampagne_SousDocumentSchema = mongoose.Schema({
+  terminee: Boolean,
+  nom: String,
+  image: String,
+  difficulte: String,
+  manches: { type: mongoose.Schema.Types.ObjectId, ref: "manches" },
+});
+
+const quetes_SousDocumentSchema = mongoose.Schema({
+  terminee: Boolean,
+  id: Number,
+  title: String,
+  description: String,
+});
 
 const userSchema = mongoose.Schema({
   username: String,
@@ -22,12 +37,13 @@ const userSchema = mongoose.Schema({
   itemTorse: String,
   itemJambes: String,
   itemPieds: String,
-  missionsCampagne: [{ type: mongoose.Schema.Types.ObjectId, ref: 'missionsCampagne' }],
+  tableauMissionsCampagne: [missionsCampagne_SousDocumentSchema],
+  tableauQuete:[quetes_SousDocumentSchema],
   parametres: parametresSchema,
   inventaire: inventaireSchema,
-  quetes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'quetes' }],
+  
 });
 
-const User = mongoose.model('users', userSchema);
+const User = mongoose.model("users", userSchema);
 
 module.exports = User;
