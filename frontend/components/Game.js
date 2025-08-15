@@ -9,14 +9,8 @@ import { useRouter } from 'next/router';
 
 function Game({lobbyCode}) {
 
-  const user = useSelector((state) => state.user.value);
+
     const router = useRouter();
-    // Verifi que seul les user authentifier puisse acceder a la page
-    useEffect(() => {
-        if (!user.token) {
-        router.push('/');
-        }
-    }, [user]);
 
   const [status, setStatus] = useState("waiting"); // waiting ou in-game ou ended
   const [round, setRound] = useState(null);
