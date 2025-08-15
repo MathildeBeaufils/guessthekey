@@ -228,7 +228,6 @@ useEffect(() => {
                 <button className={styles.btn} onClick={validerArtiste1}>Valider</button>
             </div>  
         </div>
-      
     )
 
         
