@@ -84,7 +84,6 @@ router.get('/', function(req, res) {
 // Route pour ajouter une manche
 router.post('/', function(req, res) {
   console.log("coucou la route")
-  console.log(req.body)
   const categorieId = [];
   const categories = req.body.selectedItem[3].categorie;
   for (let i = 0; i < categories.length; i++) {
@@ -188,27 +187,40 @@ router.post('/musicByArtist', (req, res) => {
 
 
 // get manche by Id
-router.post('/roundID',(req,res)=>{
+router.post('/roundID', async (req, res) => {
   const id = req.body.id;
-  Manche.findOne({_id:id})
-  .then(data=>{
-    console.log(data)
+  try {
+    const data = await Manche.findOne({ _id: id });
+    if (!data) {
+      return res.json({ result: false, message: "Pas de manches trouvées" });
+    }
+    const trackIds = [data.trackId1, data.trackId2, data.trackId3, data.trackId4, data.trackId5];
+
+    // Récupération des previews
+    const previews = await Promise.all(
+      trackIds.map(trackId =>
+        fetch(`https://api.deezer.com/track/${trackId}`)
+          .then(response => response.json())
+          .then(json => json.preview)
+      )
+    );
+
     const key = data.key;
     const theme = data.theme;
     const tracks = [
-      {artist: data.artiste1, title: data.titre1, trackID: data.trackId1},
-      {artist: data.artiste2, title: data.titre2, trackID: data.trackId2},
-      {artist: data.artiste3, title: data.titre3, trackID: data.trackId3},
-      {artist: data.artiste4, title: data.titre4, trackID: data.trackId4},
-      {artist: data.artiste5, title: data.titre5, trackID: data.trackId5},
-    ]
-    if(data){
-        res.json({result: true, key, theme, tracks})
-    } else {
-        res.json({result: false, message: "Pas de manches trouvées"})
-    }
-  })
-})
+      { artist: data.artiste1, title: data.titre1, trackID: previews[0]},
+      { artist: data.artiste2, title: data.titre2, trackID: previews[1] },
+      { artist: data.artiste3, title: data.titre3, trackID: previews[2] },
+      { artist: data.artiste4, title: data.titre4, trackID: previews[3] },
+      { artist: data.artiste5, title: data.titre5, trackID: previews[4] },
+    ];
+    res.json({ result: true, key, theme, tracks });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ result: false, message: "Erreur serveur" });
+  }
+});
+
 
 
 module.exports = router;

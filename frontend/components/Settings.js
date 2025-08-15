@@ -32,12 +32,12 @@ function Settings() {
     const handleSecurity () {}
     */
 
-  // Verifi que seul les user authentifier puisse acceder a al apage
+  // Verifi que seul les user authentifier puisse acceder a la page
   useEffect(() => {
     if (!user.token) {
       router.push('/');
     }
-  }, [user.token]);
+  }, [user]);
 
 
 

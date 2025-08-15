@@ -1,5 +1,5 @@
 import Head from "next/head";
-import Test from "../components/Test";
+import GameSolo from "../components/GameSolo";
 import { useState } from "react";
 
 
@@ -8,7 +8,7 @@ import { useState } from "react";
 function testPage() {
     return(
         <>
-            <Test />
+            <GameSolo />
         </>
     );
 }

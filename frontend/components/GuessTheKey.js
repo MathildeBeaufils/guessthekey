@@ -1,9 +1,19 @@
 import styles from '../styles/guessTheKey.module.css';
 import { useRouter } from 'next/router';
 import Menu from './Menu';
+import { useSelector } from 'react-redux';
+import { useEffect } from "react";
 
 function GuessTheKey() {
     const Router = useRouter();
+    const user = useSelector((state) => state.user.value);
+
+    // Verifi que seul les user authentifier puisse acceder a la page
+    useEffect(() => {
+        if (!user.token) {
+        router.push('/');
+        }
+    }, [user]);
 
     const handleJoin = () => {
         Router.push('/leaderboard')

@@ -5,17 +5,24 @@ import SEO from '../components/SEO'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faReply} from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector } from 'react-redux';
+import { useEffect } from "react";
 
 function Quest() {
+  const user = useSelector((state) => state.user.value);
   const router = useRouter();
-  const user = useSelector((state)=>state.user.value);
   const [showModal, setShowModal] = useState(!user?.isSignedUp);
 
   const handleBack = () => {
     router.push("/home");
   };
+
+    // Verifi que seul les user authentifier puisse acceder a la page
+    useEffect(() => {
+        if (!user.token) {
+        router.push('/');
+        }
+    }, [user]);
 
   return (
     <>

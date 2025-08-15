@@ -1,11 +1,24 @@
+import styles from '../styles/gameSolo.module.css';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addPoints } from '../reducers/missionCampagne';
+import ResultatSolo from './ResultatSolo'
+import { useRouter } from 'next/router';
+import Menu from './Menu';
 
-// tout fonctionne ici normalement
-// faire l'envoi de pts vers resultat solo ?
-function Test() {
+
+function GameSolo() {
     const dispatch = useDispatch();
+    const user = useSelector((state) => state.user.value);
+
+
+    const router = useRouter();
+    // Verifi que seul les user authentifier puisse acceder a la page
+    useEffect(() => {
+        if (!user.token) {
+        router.push('/');
+        }
+    }, [user]);
 
     const trackId = useSelector((state) => state.missionCampagne.value.trackId);
     const [keyValide, setKeyValide] = useState('');
@@ -51,6 +64,7 @@ useEffect(() => {
     console.log('Mise à jour key:', key);
     console.log('Mise à jour theme:', theme);
     console.log('Mise à jour tracks:', tracks);
+    console.log('Mise à jour tracks0:', tracks[0])
 }, [key, theme, tracks]);
 
 
@@ -172,20 +186,34 @@ useEffect(() => {
         }
     }
 
+
+    // Liste des composants 
+    function Composant1() {
     return (
-        <>
-            <p>{point}</p>         
-            <div style={{ marginTop:'50px' , marginLeft:'50px'}}>
+        <div  className={styles.inputContainer}>
+            <div>
+                {tracks[0] && (
+                <>
+                    <audio controls autoPlay >
+                        <source src={tracks[0].trackID} type="audio/mp3" />
+                        Votre navigateur ne supporte pas l'audio.
+                    </audio>
+                    <br />
+                </>
+            )}
+            </div>
+            <div >
                 <label>
                     Trouve la chanson<br />
                     <input
                     type="text"
                     value={chanson1}
                     onChange={(e) => setChanson1(e.target.value)}
+                    className={styles.input}
                     required
                     />
                 </label>
-                <button onClick={validerChanson1}>Valider</button><br />
+                <button className={styles.btn} onClick={validerChanson1}>Valider</button><br />
 
                 <label>
                     Trouve l'artiste<br />
@@ -193,119 +221,257 @@ useEffect(() => {
                     type="text"
                     value={artiste1}
                     onChange={(e) => setArtiste1(e.target.value)}
+                    className={styles.input}
                     required
                     />
                 </label>
-                <button onClick={validerArtiste1}>Valider</button>
-            </div> 
-            <div style={{ marginTop:'50px' , marginLeft:'50px'}}>
-                <label>
-                    Trouve la chanson2<br />
-                    <input
-                    type="text"
-                    value={chanson2}
-                    onChange={(e) => setChanson2(e.target.value)}
-                    required
-                    />
-                </label>
-                <button onClick={validerChanson2}>Valider</button><br />
+                <button className={styles.btn} onClick={validerArtiste1}>Valider</button>
+            </div>  
+        </div>
+    )
 
-                <label>
-                    Trouve l'artiste2<br />
-                    <input
-                    type="text"
-                    value={artiste2}
-                    onChange={(e) => setArtiste2(e.target.value)}
-                    required
-                    />
-                </label>
-                <button onClick={validerArtiste2}>Valider</button>
+        
+    }
+
+    function Composant2() {
+        return (
+            <div  className={styles.inputContainer}>
+                <div>
+                    {tracks[1] && (
+                    <>
+                        <audio controls autoPlay>
+                            <source src={tracks[1].trackID} type="audio/mp3" />
+                            Votre navigateur ne supporte pas l'audio.
+                        </audio>
+                        <br />
+                    </>
+                )}
+                </div>
+                <div>
+                    <label>
+                        Trouve la chanson<br />
+                        <input
+                        type="text"
+                        value={chanson2}
+                        onChange={(e) => setChanson2(e.target.value)}
+                        className={styles.input}
+                        required
+                        />
+                    </label>
+                    <button  className={styles.btn} onClick={validerChanson2}>Valider</button><br />
+
+                    <label>
+                        Trouve l'artiste<br />
+                        <input
+                        type="text"
+                        value={artiste2}
+                        onChange={(e) => setArtiste2(e.target.value)}
+                        className={styles.input}
+                        required
+                        />
+                    </label>
+                    <button  className={styles.btn} onClick={validerArtiste2}>Valider</button>
+                </div>  
+            </div>          
+        )
+    }
+
+function Composant3() {
+    return (
+        <div  className={styles.inputContainer}>
+            <div>
+                {tracks[2] && (
+                <>
+                    <audio controls autoPlay>
+                        <source src={tracks[2].trackID} type="audio/mp3" />
+                        Votre navigateur ne supporte pas l'audio.
+                    </audio>
+                    <br />
+                </>
+                )}
             </div>
-            <div style={{ marginTop:'50px' , marginLeft:'50px'}}>
+            <div>
                 <label>
-                    Trouve la chanson3<br />
+                    Trouve la chanson<br />
                     <input
                     type="text"
                     value={chanson3}
                     onChange={(e) => setChanson3(e.target.value)}
+                    className={styles.input}
                     required
                     />
                 </label>
-                <button onClick={validerChanson3}>Valider</button><br />
+                <button  className={styles.btn} onClick={validerChanson3}>Valider</button><br />
 
                 <label>
-                    Trouve l'artiste3<br />
+                    Trouve l'artiste<br />
                     <input
                     type="text"
                     value={artiste3}
                     onChange={(e) => setArtiste3(e.target.value)}
+                    className={styles.input}
                     required
                     />
                 </label>
-                <button onClick={validerArtiste3}>Valider</button>
+                <button  className={styles.btn} onClick={validerArtiste3}>Valider</button>                
             </div>
-            <div style={{ marginTop:'50px' , marginLeft:'50px'}}>
+        </div>        
+    )
+
+}
+
+function Composant4() {
+    return (
+        <div className={styles.inputContainer}>
+            <div>
+                {tracks[3] && (
+                <>
+                    <audio controls autoPlay>
+                        <source src={tracks[3].trackID} type="audio/mp3" />
+                        Votre navigateur ne supporte pas l'audio.
+                    </audio>
+                    <br />
+                </>
+                )}
+            </div>
+            <div>
                 <label>
-                    Trouve la chanson4<br />
+                    Trouve la chanson<br />
                     <input
                     type="text"
                     value={chanson4}
                     onChange={(e) => setChanson4(e.target.value)}
+                    className={styles.input}
                     required
                     />
                 </label>
-                <button onClick={validerChanson4}>Valider</button><br />
+                <button  className={styles.btn} onClick={validerChanson4}>Valider</button><br />
 
                 <label>
-                    Trouve l'artiste4<br />
+                    Trouve l'artiste<br />
                     <input
                     type="text"
                     value={artiste4}
                     onChange={(e) => setArtiste4(e.target.value)}
+                    className={styles.input}
                     required
                     />
                 </label>
-                <button onClick={validerArtiste4}>Valider</button>
+                <button  className={styles.btn} onClick={validerArtiste4}>Valider</button>                
             </div>
-            <div style={{ marginTop:'50px' , marginLeft:'50px'}}>
+        </div>        
+    )            
+
+}
+
+function Composant5() {
+    return (
+        <div  className={styles.inputContainer}>
+            <div>
+                {tracks[4] && (
+                <>
+                    <audio controls autoPlay>
+                        <source src={tracks[4].trackID} type="audio/mp3" />
+                        Votre navigateur ne supporte pas l'audio.
+                    </audio>
+                    <br />
+                </>
+                )}
+            </div>
+            <div>
                 <label>
-                    Trouve la chanson5<br />
+                    Trouve la chanson<br />
                     <input
                     type="text"
                     value={chanson5}
                     onChange={(e) => setChanson5(e.target.value)}
+                    className={styles.input}
                     required
                     />
                 </label>
-                <button onClick={validerChanson5}>Valider</button><br />
+                <button  className={styles.btn} onClick={validerChanson5}>Valider</button><br />
 
                 <label>
-                    Trouve l'artiste5<br />
+                    Trouve l'artiste<br />
                     <input
                     type="text"
                     value={artiste5}
                     onChange={(e) => setArtiste5(e.target.value)}
+                    className={styles.input}
                     required
                     />
                 </label>
-                <button onClick={validerArtiste5}>Valider</button>
+                <button  className={styles.btn} onClick={validerArtiste5}>Valider</button>                
             </div>
+        </div>        
+    )
+}
 
-
-            <div style={{ marginTop:'50px' , marginLeft:'50px'}}>
+function Composant6() {
+    return (
+        <div  className={styles.inputContainer}>
+            <div>
                 <label>
                     Trouve la key<br />
                     <input
                     type="text"
                     value={key}
                     onChange={(e) => setKey(e.target.value)}
+                    className={styles.input}
                     required
                     />
                 </label>
-                <button onClick={validerKey}>Valider</button><br />
+                <button  className={styles.btn} onClick={validerKey}>Valider</button><br />                
             </div>
+        </div>
+    )
+}
+
+
+function Composant7() {
+    return <ResultatSolo/> 
+}
+
+const composants = [
+    <Composant1 />,
+    <Composant2 />,
+    <Composant3 />,
+    <Composant4 />,
+    <Composant5 />,
+    <Composant6 />,
+    <Composant7 />
+];
+
+const [index, setIndex] = useState(0);
+useEffect(() => {
+    if (index < composants.length - 1) {
+        const timer = setTimeout(() => {
+            setIndex(prev => prev + 1);
+        }, 30000); // 30 secondes
+
+        return () => clearTimeout(timer);
+    }
+}, [index]);
+
+    return (
+        <>
+            <Menu />
+            <main className={styles.main}>
+
+
+            {index !== 6 && (
+                <>
+                    <p className={styles.points}>{point} Points</p>
+                    <p className={styles.mancheNb}>Manche {index + 1}/6</p>
+                    <img className={styles.vynil} src="/source.gif" />      
+                </>
+            )}
+            {composants[index]}
+
+        </main>        
         </>
+
     );
 }
 
-export default Test;
+export default GameSolo;

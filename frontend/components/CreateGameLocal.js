@@ -1,6 +1,6 @@
 import styles from "../styles/createGame.module.css";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Menu from './Menu';
 import { useSelector } from 'react-redux';
 import socket from '../socket';
@@ -13,8 +13,15 @@ function CreateGameLocal() {
   const [numberOfPlayers, setNumberOfPlayers] = useState(5);
   const [numberOfRounds, setNumberOfRounds] = useState(5);
   const username = useSelector((state) => state.user.value.username);
-  const user = useSelector((state)=>state.user.value);
-  const [showModal, setShowModal] = useState(!user?.isSignedUp);
+  const user = useSelector((state) => state.user.value);
+
+
+    // Verifi que seul les user authentifier puisse acceder a la page
+    useEffect(() => {
+        if (!user.token) {
+        router.push('/');
+        }
+    }, [user]);
 
   const handleCreate = () => {
         fetch('http://localhost:4000/lobbies/create', {
