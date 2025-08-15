@@ -68,6 +68,7 @@ function CreateRound() {
 
  
   const backendUrl = "http://localhost:3000";
+  const [error, setError] = useState("");
 
   const [songs, setSongs] = useState(
     Array(5).fill({ search: "", results: [], selected: null })
@@ -77,6 +78,7 @@ function CreateRound() {
   const [key, setKey] = useState("");
   const [categorieList, setCategorieList] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  // (plus de rounds ici)
 
   useEffect(() => {
     fetch(`${backendUrl}/manches/categories`)
@@ -131,30 +133,40 @@ function CreateRound() {
       .catch((error) => console.error("Erreur :", error));
   };
 
-  const handleCreateRound = (items) => {
-    fetch(`${backendUrl}/manches`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ selectedItem: items }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Erreur lors de la création de la manche");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Manche créée avec succès !", data);
+  const handleCreateGame = (items) => {
+    // Utilise les états locaux pour construire gameData
+    const selectedSongs = songs.map((s) => s.selected);
+    
+    const blindtestTours = selectedSongs.map((track, idx) => ({
+      type: "blindtest",
+      index: idx + 1,
+      total: 6,
+      manche: {
+        trackId: track?.trackId,
+        titre: track?.title,
+        artiste: track?.artist,
+      }
+    }));
 
-        // Manche envoyé dans le lobby
-        console.log(`LobbyCode ${lobbyCode} dans Create Round`)
-        socket.emit("createRound", { lobbyCode, roundData: data });
-        router.push(`/lobby/${lobbyCode}`);
-      })
-      .catch((error) => {
-        console.error("Échec de la création de la manche :", error);
-      });
+    const guessTheKeyTour = {
+      type: "guessTheKey",
+      index: 6,
+      total: 6,
+      question: `Quel est le point commun entre ces morceaux ?`,
+      key: key,
+      theme: theme
+    };
+    const gameData = {
+      theme: theme,
+      key: key,
+      tours: [...blindtestTours, guessTheKeyTour]
+    };
+    console.log("selectedSongs", selectedSongs);
+    console.log("CreateRound Gamedata:", gameData)
+    socket.emit("createGame", { lobbyCode, gameData });
+    router.push(`/lobby/${lobbyCode}`);
   };
+
 
   const trackValidate = () => {
     if (!user || !user.username) {
@@ -164,6 +176,11 @@ function CreateRound() {
     }
 
     const selectedSongs = songs.map((s) => s.selected);
+    if (selectedSongs.some((s) => !s)) {
+      setError("Il manque au moins une chanson pour valider la manche.");
+      return;
+    }
+    setError("");
     const items = [
       { username: user.username },
       { theme: theme },
@@ -171,14 +188,14 @@ function CreateRound() {
       { categorie: selectedCategories },
       { titre: selectedSongs},
     ];
-    handleCreateRound(items);
+    handleCreateGame(items);
   };
 
   const handleBack = () => {
     router.push(`/lobby/${lobbyCode}`);
   };
   return (
-    <>
+  <>
       <SEO title="Creer une manche | Guess The Key" description="Creer une manche pour vos parties" />
       <div className={styles.container}>
         <div className={styles.back}>
@@ -188,6 +205,7 @@ function CreateRound() {
         </div>
         <h1 className={styles.manche}>CRÉATION DE MANCHE</h1>
         <div className={styles.round_container}>
+  {error && <div style={{ color: 'red', marginBottom: 10 }}>{error}</div>}
           <div className={styles.input_container}>
             <label>
               <p className={styles.container_p}>Nom du thème</p>
@@ -236,7 +254,7 @@ function CreateRound() {
                   setSongs((prev) =>
                     prev.map((song, i) =>
                       i === index
-                        ? { ...song, selected: item, search: `${item.title} - ${item.artist}` } // <-- Correction ici
+                        ? { ...song, selected: item, search: `${item.title} - ${item.artist}` }
                         : song
                     )
                   )
@@ -247,8 +265,12 @@ function CreateRound() {
           </div>
 
           <div className={styles.button_validate}>
-            <button onClick={trackValidate} className={styles.valider}>
-              Valider
+            <button
+              onClick={trackValidate}
+              className={styles.valider}
+              disabled={songs.some((s) => !s.selected)}
+            >
+              Créer la partie
             </button>
           </div>
         </div>
