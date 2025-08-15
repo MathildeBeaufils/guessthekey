@@ -191,7 +191,17 @@ useEffect(() => {
     function Composant1() {
     return (
         <div  className={styles.inputContainer}>
-            {/* <div>{tracks[0].trackID}</div> */}
+            <div>
+                {tracks[0] && (
+                <>
+                    <audio controls autoPlay >
+                        <source src={tracks[0].trackID} type="audio/mp3" />
+                        Votre navigateur ne supporte pas l'audio.
+                    </audio>
+                    <br />
+                </>
+            )}
+            </div>
             <div >
                 <label>
                     Trouve la chanson<br />
@@ -228,8 +238,19 @@ useEffect(() => {
         return (
             <div  className={styles.inputContainer}>
                 <div>
+                    {tracks[1] && (
+                    <>
+                        <audio controls autoPlay>
+                            <source src={tracks[1].trackID} type="audio/mp3" />
+                            Votre navigateur ne supporte pas l'audio.
+                        </audio>
+                        <br />
+                    </>
+                )}
+                </div>
+                <div>
                     <label>
-                        Trouve la chanson2<br />
+                        Trouve la chanson<br />
                         <input
                         type="text"
                         value={chanson2}
@@ -241,7 +262,7 @@ useEffect(() => {
                     <button  className={styles.btn} onClick={validerChanson2}>Valider</button><br />
 
                     <label>
-                        Trouve l'artiste2<br />
+                        Trouve l'artiste<br />
                         <input
                         type="text"
                         value={artiste2}
@@ -260,8 +281,19 @@ function Composant3() {
     return (
         <div  className={styles.inputContainer}>
             <div>
+                {tracks[2] && (
+                <>
+                    <audio controls autoPlay>
+                        <source src={tracks[2].trackID} type="audio/mp3" />
+                        Votre navigateur ne supporte pas l'audio.
+                    </audio>
+                    <br />
+                </>
+                )}
+            </div>
+            <div>
                 <label>
-                    Trouve la chanson3<br />
+                    Trouve la chanson<br />
                     <input
                     type="text"
                     value={chanson3}
@@ -273,7 +305,7 @@ function Composant3() {
                 <button  className={styles.btn} onClick={validerChanson3}>Valider</button><br />
 
                 <label>
-                    Trouve l'artiste3<br />
+                    Trouve l'artiste<br />
                     <input
                     type="text"
                     value={artiste3}
@@ -293,8 +325,19 @@ function Composant4() {
     return (
         <div className={styles.inputContainer}>
             <div>
+                {tracks[3] && (
+                <>
+                    <audio controls autoPlay>
+                        <source src={tracks[3].trackID} type="audio/mp3" />
+                        Votre navigateur ne supporte pas l'audio.
+                    </audio>
+                    <br />
+                </>
+                )}
+            </div>
+            <div>
                 <label>
-                    Trouve la chanson4<br />
+                    Trouve la chanson<br />
                     <input
                     type="text"
                     value={chanson4}
@@ -306,7 +349,7 @@ function Composant4() {
                 <button  className={styles.btn} onClick={validerChanson4}>Valider</button><br />
 
                 <label>
-                    Trouve l'artiste4<br />
+                    Trouve l'artiste<br />
                     <input
                     type="text"
                     value={artiste4}
@@ -326,8 +369,19 @@ function Composant5() {
     return (
         <div  className={styles.inputContainer}>
             <div>
+                {tracks[4] && (
+                <>
+                    <audio controls autoPlay>
+                        <source src={tracks[4].trackID} type="audio/mp3" />
+                        Votre navigateur ne supporte pas l'audio.
+                    </audio>
+                    <br />
+                </>
+                )}
+            </div>
+            <div>
                 <label>
-                    Trouve la chanson5<br />
+                    Trouve la chanson<br />
                     <input
                     type="text"
                     value={chanson5}
@@ -339,7 +393,7 @@ function Composant5() {
                 <button  className={styles.btn} onClick={validerChanson5}>Valider</button><br />
 
                 <label>
-                    Trouve l'artiste5<br />
+                    Trouve l'artiste<br />
                     <input
                     type="text"
                     value={artiste5}
