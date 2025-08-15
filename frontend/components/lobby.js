@@ -108,9 +108,6 @@ const Lobby = ({lobbyCode}) => {
                                         {games.map((game, index) => (
                                             <li key={index} style={{ display: 'flex', alignItems: 'center' }}>
                                                 Thème : {game.theme}
-                                                {game.tours && (
-                                                    <span> — {game.tours.length} manche{game.tours.length > 1 ? 's' : ''}</span>
-                                                )}
                                                 <button
                                                     style={{ marginLeft: 8, color: 'red', background: 'none', border: 'none', cursor: 'pointer', fontSize: 18 }}
                                                     title="Supprimer la partie"
