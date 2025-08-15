@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import styles from "../styles/game.module.css";
@@ -133,7 +134,7 @@ function Game({lobbyCode}) {
         // Pour Guess The Key, stocker la réponse trouvée si correcte
         const myAnswer = allAnswers && allAnswers[username];
         let found = 'Réponse non trouvée';
-        // Correction : le backend envoie correctAnswer comme string OU comme {freeAnswer: ...}
+        // Correction : le backend envoie correctAnswer comme string OU comme {freeAnswer: ...}
         let expected = typeof correctAnswer === 'string' ? correctAnswer : (correctAnswer?.freeAnswer || '');
         if (myAnswer && expected && typeof myAnswer === 'string') {
           if (myAnswer.trim().toLowerCase() === expected.trim().toLowerCase()) {
@@ -516,8 +517,8 @@ function Game({lobbyCode}) {
     )}
   </div>
 )}
-        
-      </div>
-    );
+        
+      </div>
+    );
   }
   export default Game;
