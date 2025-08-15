@@ -53,7 +53,7 @@ const SongSearchInput = ({
 function CreateRound() {
   const router = useRouter();
   const lobbyCode = router.query.lobbyCode;
-
+  const user = useSelector((state) => state.user.value);
 
   // Verifi que seul les user authentifier puisse acceder a la page
   useEffect(() => {
@@ -66,7 +66,7 @@ function CreateRound() {
   // Ne rien faire tant que lobbyCode est undefined
   if (!lobbyCode) return <div>Chargement...</div>;
 
-  const user = useSelector((state) => state.user.value);
+ 
   const backendUrl = "http://localhost:3000";
 
   const [songs, setSongs] = useState(
