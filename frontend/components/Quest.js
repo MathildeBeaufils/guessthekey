@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faReply} from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 function Quest() {
   const user = useSelector((state) => state.user.value);
