@@ -3,14 +3,15 @@ import { useRouter } from "next/router";
 import Menu from "./Menu";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartPlus, faBasketShopping} from '@fortawesome/free-solid-svg-icons';
-import { useEffect } from "react";
-
-import SEO from '../components/SEO'
 import { useSelector } from 'react-redux';
+import { useState, useEffect } from "react";
+import SEO from '../components/SEO'
+
 
 function Shop() {
   const router = useRouter();
   const user = useSelector((state) => state.user.value);
+  const [showModal, setShowModal] = useState(!user?.isSignedUp);
 
     // Verifi que seul les user authentifier puisse acceder a la page
     useEffect(() => {
@@ -18,6 +19,10 @@ function Shop() {
         router.push('/');
         }
     }, [user]);
+
+    const handleBack = () => {
+    router.push("/home");
+  };
 
   return (
     <>

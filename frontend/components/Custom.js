@@ -5,12 +5,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartPlus} from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import SEO from '../components/SEO'
-import { useEffect} from "react";
+import { useState, useEffect} from "react";
 import { useSelector } from 'react-redux';
 
 function Custom() {
   const router = useRouter();
     const user = useSelector((state) => state.user.value);
+    const [showModal, setShowModal] = useState(!user?.isSignedUp);
 
     // Verifi que seul les user authentifier puisse acceder a la page
     useEffect(() => {
