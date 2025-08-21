@@ -1,4 +1,4 @@
-import styles from "../styles/Online.module.css";
+import styles from "../styles/online.module.css";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Menu from './Menu';
@@ -21,7 +21,7 @@ function Online() {
   }, [user]);
 
   useEffect(() => {
-    fetch('http://localhost:3000/lobbies')
+  fetch('http://localhost:3000/lobbies')
     .then(response => response.json())
     .then(data => {
       if(data.result === false){
