@@ -76,9 +76,11 @@ app.use('/lobbies', lobbiesRouter);
 
 // Import et appel du gameSocket avec l'instance io
 const gameSocket = require('./gamesocket');
+const port = process.env.PORT || 4000;
 gameSocket(io);
-server.listen(process.env.PORT || 4000, () => {
-  console.log('Serveur Socket.IO démarré sur https://guessthekey.vercel.app'); 
+server.listen(port || 4000, () => {
+  console.log(`Serveur Socket.IO démarré sur ${port}`); 
 });
+
 
 module.exports = app;

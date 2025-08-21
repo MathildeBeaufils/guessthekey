@@ -27,7 +27,7 @@ function PlaylistPredefini(props) {
         <div className={styles.btn} onClick={goMission}>
             {afficheTerminer}
             <Image
-                src="/cleDeSol.png" // {props.image}
+                src="/asset/pngtree-gold-treble-clef-metal-design-melody-vector-png-image_8307084-removebg-preview.png" // {props.image}
                 alt="Logo clé de sol"
                 width={10}
                 height={60}
