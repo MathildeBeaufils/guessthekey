@@ -78,7 +78,7 @@ app.use('/lobbies', lobbiesRouter);
 const gameSocket = require('./gamesocket');
 gameSocket(io);
 server.listen(4000, () => {
-  console.log('Serveur Socket.IO démarré sur http://localhost:4000'); // Express sur le port 3000, utilisé un autre
+  console.log('Serveur Socket.IO démarré sur https://guessthekey.vercel.app'); // Express sur le port 3000, utilisé un autre
 });
 
 module.exports = app;
