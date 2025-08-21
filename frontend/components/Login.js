@@ -28,7 +28,7 @@ const Login = () => {
   const [loginError, setLoginError] = useState("");
   const [signupError,setSignupError]=useState('')
 
-  const backendUrl = "http://localhost:3000/users";
+  const backendUrl = `https://guessthekey-backend.vercel.app/users`;
 
   const openLoginModal = () => setIsLoginModalOpen(true);
   const openSignupModal = () => setIsSignupModalOpen(true);
