@@ -13,10 +13,11 @@ function userProfile() {
     const [inviteUsername, setInviteUsername] = useState('');
     const user = useSelector((state)=>state.user.value);
 
+
     const handleJoin = (e) => {
         e.preventDefault();
 
-        fetch(`${process.env.Backend}/guessSignup`, {
+        fetch(`${process.env.Backend}/users/guessSignup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
