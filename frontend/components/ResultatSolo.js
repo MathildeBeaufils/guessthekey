@@ -31,7 +31,7 @@ function ResultatSolo() {
 
 
       if (!username || !missionId) return;
-      fetch(`${process.env.Backend}/missionsCampagne`, {
+      fetch(`https://guessthekey.onrender.com/missionsCampagne`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username, missionId }),

@@ -21,7 +21,7 @@ function Online() {
   }, [user]);
 
   useEffect(() => {
-  fetch(`${process.env.Backend}/lobbies`)
+  fetch(`https://guessthekey.onrender.com/lobbies`)
     .then(response => response.json())
     .then(data => {
       if(data.result === false){

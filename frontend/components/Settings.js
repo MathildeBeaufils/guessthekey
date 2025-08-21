@@ -49,7 +49,7 @@ function Settings() {
   // Delete compte
   function handleDelete() {
     const email = user.email;
-    fetch(`${process.env.Backend}/users/deleteUser/${email}`, {
+    fetch(`https://guessthekey.onrender.com/users/deleteUser/${email}`, {
       method: "DELETE",
     })
     .then(res => res.json())
@@ -67,7 +67,7 @@ function Settings() {
       newUsername : newName    
     }
 
-    fetch(`${process.env.Backend}/users/updateUsername`, {
+    fetch(`https://guessthekey.onrender.com/users/updateUsername`, {
       method: "POST",
       headers: {
           "Content-Type": "application/json",
@@ -91,7 +91,7 @@ function Settings() {
       newPassword : newPassword    
     }
 
-    fetch(`${process.env.Backend}/users/updatePassword`, {
+    fetch(`https://guessthekey.onrender.com/users/updatePassword`, {
       method: "POST",
       headers: {
           "Content-Type": "application/json",

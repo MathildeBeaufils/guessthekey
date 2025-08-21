@@ -22,7 +22,7 @@ function Home() {
   }, [user]);
 
   useEffect(() => {
-  fetch(`${process.env.Backend}/users/${user.token}`)
+  fetch(`https://guessthekey.onrender.com/users/${user.token}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.data.tableauQuete && data.data.tableauQuete.length >= 1) {

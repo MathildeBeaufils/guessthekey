@@ -17,7 +17,7 @@ function userProfile() {
     const handleJoin = (e) => {
         e.preventDefault();
 
-        fetch(`${process.env.Backend}/users/guessSignup`, {
+        fetch(`https://guessthekey.onrender.com/users/guessSignup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

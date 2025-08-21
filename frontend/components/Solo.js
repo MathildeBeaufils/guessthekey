@@ -32,7 +32,7 @@ function Solo() {
 
     useEffect(() => {
 
-        fetch(`${process.env.Backend}/missionsCampagne/${user.token}`)
+        fetch(`https://guessthekey.onrender.com/missionsCampagne/${user.token}`)
         .then((response) => response.json())
         .then((data) => {
             const arr = data.data;

@@ -25,7 +25,7 @@ function LocalJoinPage() {
 
     const handleJoin = () => {
         console.log(username)
-        fetch(`${process.env.Backend}/lobbies/join`, {
+        fetch(`https://guessthekey.onrender.com/lobbies/join`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

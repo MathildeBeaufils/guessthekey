@@ -25,7 +25,7 @@ function CreateGameMulti() {
     }, [user]);
   
   const handleCreate = () => {
-    fetch(`${process.env.Backend}/lobbies/create`, {
+    fetch(`https://guessthekey.onrender.com/lobbies/create`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
