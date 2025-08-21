@@ -76,11 +76,11 @@ app.use('/lobbies', lobbiesRouter);
 
 // Import et appel du gameSocket avec l'instance io
 const gameSocket = require('./gamesocket');
-const port = process.env.PORT || 4000;
+// const port = process.env.PORT || 4000;
 gameSocket(io);
-server.listen(port || 4000, () => {
-  console.log(`Serveur Socket.IO démarré sur ${port}`); 
-});
+// server.listen(port || 4000, () => {
+//   console.log(`Serveur Socket.IO démarré sur ${port}`); 
+// });
 
 
 module.exports = app;
