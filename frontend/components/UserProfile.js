@@ -12,12 +12,11 @@ function userProfile() {
     const dispatch = useDispatch();
     const [inviteUsername, setInviteUsername] = useState('');
     const user = useSelector((state)=>state.user.value);
-    const backendUrl = "http://localhost:3000/users";
 
     const handleJoin = (e) => {
         e.preventDefault();
 
-        fetch(`${backendUrl}/guessSignup`, {
+        fetch(`${process.env.Backend}/guessSignup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

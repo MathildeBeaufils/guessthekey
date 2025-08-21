@@ -16,7 +16,6 @@ function Settings() {
 
   const dispatch = useDispatch();
   const user = useSelector((state)=>state.user.value);
-  const backendUrl = "http://localhost:3000";
   const router = useRouter();
   const [volumeGeneral, setVolumeGeneral] = useState(50);
   const [volumeMusique, setVolumeMusique] = useState(50);
@@ -50,7 +49,7 @@ function Settings() {
   // Delete compte
   function handleDelete() {
     const email = user.email;
-    fetch(`http://localhost:3000/users/deleteUser/${email}`, {
+    fetch(`${process.env.Backend}/users/deleteUser/${email}`, {
       method: "DELETE",
     })
     .then(res => res.json())
@@ -68,7 +67,7 @@ function Settings() {
       newUsername : newName    
     }
 
-    fetch(`${backendUrl}/users/updateUsername`, {
+    fetch(`${process.env.Backend}/users/updateUsername`, {
       method: "POST",
       headers: {
           "Content-Type": "application/json",
@@ -92,7 +91,7 @@ function Settings() {
       newPassword : newPassword    
     }
 
-    fetch(`${backendUrl}/users/updatePassword`, {
+    fetch(`${process.env.Backend}/users/updatePassword`, {
       method: "POST",
       headers: {
           "Content-Type": "application/json",

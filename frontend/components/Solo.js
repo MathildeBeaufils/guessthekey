@@ -32,7 +32,7 @@ function Solo() {
 
     useEffect(() => {
 
-        fetch(`http://localhost:3000/missionsCampagne/${user.token}`)
+        fetch(`${process.env.Backend}/missionsCampagne/${user.token}`)
         .then((response) => response.json())
         .then((data) => {
             const arr = data.data;

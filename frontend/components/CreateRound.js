@@ -67,7 +67,6 @@ function CreateRound() {
   if (!lobbyCode) return <div>Chargement...</div>;
 
  
-  const backendUrl = "http://localhost:3000";
   const [error, setError] = useState("");
 
   const [songs, setSongs] = useState(
@@ -81,7 +80,7 @@ function CreateRound() {
   // (plus de rounds ici)
 
   useEffect(() => {
-    fetch(`${backendUrl}/manches/categories`)
+    fetch(`${process.env.Backend}/manches/categories`)
       .then((response) => response.json())
       .then((data) => {
         setCategorieList(data.categories);
@@ -118,7 +117,7 @@ function CreateRound() {
 
   const searchSong = (index) => {
     const search = songs[index].search;
-    fetch(`${backendUrl}/manches/searchsong`, {
+    fetch(`${process.env.Backend}/manches/searchsong`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ search }),

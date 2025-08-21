@@ -31,7 +31,7 @@ function ResultatSolo() {
 
 
       if (!username || !missionId) return;
-      fetch(`http://localhost:3000/missionsCampagne`, {
+      fetch(`${process.env.Backend}/missionsCampagne`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username, missionId }),

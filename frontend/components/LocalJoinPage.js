@@ -25,7 +25,7 @@ function LocalJoinPage() {
 
     const handleJoin = () => {
         console.log(username)
-        fetch('http://localhost:3000/lobbies/join', {
+        fetch(`${process.env.Backend}/lobbies/join`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

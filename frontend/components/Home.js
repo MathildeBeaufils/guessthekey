@@ -22,7 +22,7 @@ function Home() {
   }, [user]);
 
   useEffect(() => {
-  fetch(`http://localhost:3000/users/${user.token}`)
+  fetch(`${process.env.Backend}/users/${user.token}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.data.tableauQuete && data.data.tableauQuete.length >= 1) {

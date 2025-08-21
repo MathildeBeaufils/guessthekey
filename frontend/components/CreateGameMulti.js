@@ -25,7 +25,7 @@ function CreateGameMulti() {
     }, [user]);
   
   const handleCreate = () => {
-    fetch('http://localhost:3000/lobbies/create', {
+    fetch(`${process.env.Backend}/lobbies/create`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

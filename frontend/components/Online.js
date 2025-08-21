@@ -21,7 +21,7 @@ function Online() {
   }, [user]);
 
   useEffect(() => {
-  fetch('http://localhost:3000/lobbies')
+  fetch(`${process.env.Backend}/lobbies`)
     .then(response => response.json())
     .then(data => {
       if(data.result === false){

@@ -43,7 +43,7 @@ function GameSolo() {
 useEffect(() => {
     if (!trackId) return;
 
-    fetch(`http://localhost:3000/manches/roundID`, {
+    fetch(`${process.env.Backend}/manches/roundID`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
