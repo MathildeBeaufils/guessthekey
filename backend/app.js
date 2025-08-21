@@ -16,8 +16,12 @@ const lobbiesRouter = require('./routes/lobbies');
 
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:3001', // port utilisé pour le frontend
-    methods: ['GET', 'POST']
+origin: [
+    "https://guessthekey.vercel.app/", // Remplace par ton URL Vercel
+    "http://localhost:4000"
+  ],
+  methods: ["GET", "POST","PUT", "DELETE"],
+  credentials: true
   }
 });
 
@@ -43,7 +47,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(cors());
+
+
+app.use(cors({
+origin: [
+"https://mon-frontend.vercel.app", // Remplace par ton URL Vercel
+"http://localhost:4000"
+],
+methods: ["GET", "POST","PUT", "DELETE"],
+credentials: true
+}));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
