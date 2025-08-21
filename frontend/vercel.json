@@ -1,0 +1,12 @@
+{
+"rewrites": [
+    {
+        "source": "/api/:path*",
+        "destination": "https://guessthekey.onrender.com/api/:path"
+    },
+    {
+        "source": "/socket.io/:path",
+        "destination": "https://guessthekey.onrender.com/socket.io/:path*"
+    }
+    ]
+}

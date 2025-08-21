@@ -14,16 +14,8 @@ const { Server } = require('socket.io');
 const lobbiesRouter = require('./routes/lobbies');
 
 
-const io = new Server(server, {
-  cors: {
-origin: [
-    "https://guessthekey.vercel.app/", // Remplace par ton URL Vercel
-    "http://localhost:4000"
-  ],
-  methods: ["GET", "POST","PUT", "DELETE"],
-  credentials: true
-  }
-});
+
+
 
 app.use(express.json());
 
@@ -49,14 +41,29 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 
+const allowedOrigins = [
+"https://guessthekey.vercel.app", // ton frontend Vercel
+"http://localhost:4000" // pour dev local
+];
+
 app.use(cors({
-origin: [
-"https://mon-frontend.vercel.app", // Remplace par ton URL Vercel
-"http://localhost:4000"
-],
-methods: ["GET", "POST","PUT", "DELETE"],
+origin: function (origin, callback) {
+if (!origin || allowedOrigins.includes(origin)) {
+callback(null, true);
+} else {
+callback(new Error("Not allowed by CORS"));
+}
+},
+methods: ["GET", "POST"],
 credentials: true
 }));
+
+const io = new Server(server, {
+  cors: {
+    origin: allowedOrigins,
+    methods: ["GET", "POST"]
+  }
+});
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
