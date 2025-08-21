@@ -6,7 +6,8 @@ withCredentials: true
 });
 
 socket.on("connect", () => {
-console.log("✅ Connecté au backend via proxy Vercel");
-})
+  console.log("✅ Connecté au backend via proxy Vercel");
+  console.log("Transport utilisé :", socket.io.engine.transport.name); // --> 'websocket' ou 'polling'
+});
 
 export default socket;

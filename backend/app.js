@@ -84,4 +84,4 @@ gameSocket(io);
 // });
 
 
-module.exports = app;
+module.exports = { app, server };
