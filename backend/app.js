@@ -43,6 +43,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const allowedOrigins = [
 "https://guessthekey.vercel.app", // ton frontend Vercel
+"https://guessthekey.onrender.com",
 "http://localhost:4000" // pour dev local
 ];
 
