@@ -69,4 +69,4 @@ app.use('/lobbies', lobbiesRouter);
 
 
 
-module.exports = { app, server };
+module.exports = app;
