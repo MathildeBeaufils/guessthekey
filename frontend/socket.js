@@ -5,6 +5,8 @@ transports: ["websocket", "polling"], // compatible avec Render
 withCredentials: true
 });
 
-
+socket.on("connect", () => {
+console.log("✅ Connecté au backend via proxy Vercel");
+})
 
 export default socket;
