@@ -205,7 +205,11 @@ router.post('/roundID', async (req, res) => {
     const previews = await Promise.all(
       validTrackIds.map(async (trackId) => {
         console.log("Fetching preview for trackId:", trackId);
-        const response = await fetch(`https://api.deezer.com/track/${trackId}`);
+        const response = await fetchfetch(`https://api.deezer.com/track/${trackId}`, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (compatible; MyApp/1.0)'
+          }
+        });
         if (!response.ok) {
           console.error(`Erreur HTTP pour trackId ${trackId}:`, response.status);
           return null;
