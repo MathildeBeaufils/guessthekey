@@ -24,7 +24,6 @@ function LocalJoinPage() {
     }, [user]);
 
     const handleJoin = () => {
-        console.log(username)
         fetch(`https://guessthekey.onrender.com/lobbies/join`, {
             method: 'POST',
             headers: {

@@ -25,7 +25,6 @@ function ResultatSolo() {
     const [points, setPoints] = useState(pts);
 
     useEffect(() => {
-      console.log(points)
       if(points >= 100){
         setTitle('Victoire!')
 
@@ -37,7 +36,6 @@ function ResultatSolo() {
           body: JSON.stringify({ username, missionId }),
       })
         .then(res => res.json())
-        .then(data => console.log(data))
         .catch(err => console.error("Erreur fetch:", err));
 
       }else{

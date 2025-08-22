@@ -18,10 +18,9 @@ router.get('/:token', (req, res) => {
 });
 
 
-// update mission d'un User // fonctionne
+// update mission d'un User
 router.put('/', (req, res) => {
-    console.log('je suis la')
-    console.log(req.body)
+
     User.updateOne(
         {
             username: req.body.username,
@@ -43,8 +42,6 @@ router.put('/', (req, res) => {
 
 // creer une mission faire la view pour recuperer la manche
 router.post('/', (req, res) => {
-    console.log(req.body);
-
     const newMission = new Mission({
         nom: req.body.nom,
         image: req.body.image,

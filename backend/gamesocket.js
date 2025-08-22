@@ -49,7 +49,6 @@ module.exports = (io) => {
       lobbies.set(lobbyCode, lobby);
       io.to(lobbyCode).emit('updateGames', lobby.games);
     });
-    console.log('Utilisateur connecté:', socket.id);
 
     socket.on('joinLobby', (data) => {
       if (!data || !data.lobbyId || !data.username) {
@@ -72,7 +71,6 @@ module.exports = (io) => {
           scores: new Map(),
           roundHistory: [],
         });
-        console.log(`Nouveau lobby créé: ${lobbyId}`);
       }
 
 
@@ -87,7 +85,6 @@ module.exports = (io) => {
 
       // on utilise .keys() car on est dans une Map. Ici on récupère tous les pseudo des utilisateurs présents dans la Map
       io.to(lobbyId).emit('lobbyPlayers', [...lobby.players.keys()]);
-      console.log(`Utilisateur ${socket.id} a rejoint le lobby ${lobbyId} sous le pseudo ${username}`);
     });
 
     socket.on("createGame", ({ lobbyCode, gameData }) => {
@@ -108,7 +105,6 @@ module.exports = (io) => {
       lobby.games.push(game);
       lobbies.set(lobbyCode, lobby);
       io.to(lobbyCode).emit("gameCreated", game);
-      console.log(`Nouvelle partie créée dans lobby ${lobbyCode}`);
       io.to(lobbyCode).emit('updateGames', lobby.games);
     });
 
@@ -117,7 +113,6 @@ module.exports = (io) => {
     });
 
     socket.on('startGame', async (lobbyCode) => {
-      console.log(`Démarrage de la partie pour le lobby ${lobbyCode}`);
       const lobby = lobbies.get(lobbyCode);
       if (!lobby || lobby.status === 'in-game' || !lobby.games.length) {
         socket.emit('errorMessage', 'Partie déjà en cours, lobby invalide ou aucune partie créée');
@@ -134,7 +129,6 @@ module.exports = (io) => {
 
       io.to(lobbyCode).emit('gameStarted');
 
-      console.log("Premier tour de la partie");
       setTimeout(() => launchNextTour(lobbyCode), 500);
     });
 
@@ -237,12 +231,10 @@ module.exports = (io) => {
           io.to(lobbyId).emit('scoreUpdate', { scores: scoresObj });
         }
         if (artistOk) {
-          console.log('[SCORE] Comparaison artiste:', artistAnswer, correctArtist, '->', artistOk);
           correctAnswer.artist = roundArtist;
           pointsToAdd += 10;
           const currentScore = lobby.scores.get(socket.username) || 0;
           lobby.scores.set(socket.username, currentScore + 10);
-          console.log('[SCORE] Nouveau score pour', socket.username, ':', lobby.scores.get(socket.username));
           // Mise à jour temps réel après artiste trouvé
           const scoresObj = {};
           for (const [username, score] of lobby.scores.entries()) {
@@ -285,7 +277,6 @@ module.exports = (io) => {
             previewUrl: round.previewUrl,
             duration: lobby.roundDuration
           });
-          console.log("Emission newRound");
         }
       }
     });
@@ -293,25 +284,21 @@ module.exports = (io) => {
     socket.on('disconnect', () => {
       const username = socket.username;
       if (!username) {
-        console.log(`Déconnexion socket ${socket.id} sans username`);
         return;
       }
       
       for (const [lobbyId, lobby] of lobbies.entries()) {
         if (lobby.players.size === 0) {
           lobby.emptySince = Date.now();
-          console.log(`Lobby ${lobbyId} vide, suppression dans 5 min`);
           
           setTimeout(() => {
             const lobbyCheck = lobbies.get(lobbyId);
             if (lobbyCheck && lobbyCheck.players.size === 0) {
               lobbies.delete(lobbyId);
-              console.log(`Lobby ${lobbyId} supprimé`);
             }
           }, 5 * 60 * 1000); // 5 min de délai avant suppression réelle du lobby
         }
       }
-      console.log('Joueur déconnecté:', username, socket.id);
     });
 
   });
@@ -322,10 +309,8 @@ module.exports = (io) => {
     const game = lobby.games[lobby.currentGameIndex];
     if (!game) return;
 
-    console.log(`Lancement du tour ${lobby.currentTourIndex + 1} de la partie ${lobby.currentGameIndex + 1}`);
 
     if (lobby.currentTourIndex >= game.tours.length) {
-      console.log("Fin de la partie");
       endGame(lobbyCode);
       return;
     }
@@ -407,7 +392,6 @@ module.exports = (io) => {
     if (!game) return;
     const round = game.tours[lobby.currentTourIndex];
     if (!round) return;
-    console.log("evaluateTour");
 
     
     if (round.guessTheKey) {

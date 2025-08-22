@@ -99,12 +99,10 @@ const Login = () => {
         return response.json();
       })
       .then((data) => {
-        console.log(data.error)
         if (data.result === false) {
           setSignupError(data.error);
           return;
         }
-        console.log("Inscription réussie !");
         dispatch(login({ 
           token: data.data.token, 
           username: data.data.username,

@@ -11,7 +11,6 @@ import SEO from '../components/SEO'
 function Home() {
   const user = useSelector((state)=>state.user.value);
   const router = useRouter();
-  // Quete, a decommenté et arrangé quand se sera fait ! + decommenté dans le jsx
   const [nbQuete, setNbQuete] = useState(0);
 
     // Verifi que seul les user authentifier puisse acceder a la page

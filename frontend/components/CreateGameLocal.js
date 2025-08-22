@@ -34,7 +34,6 @@ function CreateGameLocal() {
             .then((response) => response.json())
             .then((data) => {
                 if (data.result) {
-                  console.log(username)
                   socket.emit('joinLobby', {lobbyId: data.code, username});
                   router.push(`/lobby/${data.code}`);
                 } 

@@ -83,7 +83,6 @@ router.get('/', function(req, res) {
 
 // Route pour ajouter une manche
 router.post('/', function(req, res) {
-  console.log("coucou la route")
   const categorieId = [];
   const categories = req.body.selectedItem[3].categorie;
   for (let i = 0; i < categories.length; i++) {
@@ -97,7 +96,6 @@ router.post('/', function(req, res) {
   const titre3=req.body.selectedItem[4].titre[2];
   const titre4=req.body.selectedItem[4].titre[3];
   const titre5=req.body.selectedItem[4].titre[4];
-  console.log(req.body.selectedItem[4].titre[0].trackId)
   User.findOne({ username: user}).then(user => {
     const userId = user._id;
     const newManche = new Manche({
@@ -131,14 +129,14 @@ router.post('/', function(req, res) {
   })
 });
 
-// deja fait ?
+
 router.post('/searchsong', (req, res) => {
   const search = req.body.search;
 
   fetch(`https://api.deezer.com/search/track?q=${search}&limit=6`)
     .then(response => response.json())
     .then(data => {
-      console.log(data)
+
       const simplifiedData = data.data.map(track => ({
         trackId: track.id,
         title: track.title,
@@ -188,7 +186,6 @@ router.post('/musicByArtist', (req, res) => {
 
 // get manche by Id
 router.post('/roundID', async (req, res) => {
-  console.log('reception  req.body.id', req.body.id);
   const id = req.body.id;
   try {
     const data = await Manche.findOne({ _id: id });
@@ -197,26 +194,20 @@ router.post('/roundID', async (req, res) => {
     }
 
     const trackIds = [data.trackId1, data.trackId2, data.trackId3, data.trackId4, data.trackId5];
-    console.log('trackIds', trackIds);
 
     const validTrackIds = trackIds.filter(id => id);
-    console.log('validTrackIds', validTrackIds);
 
     const previews = await Promise.all(
       validTrackIds.map(async (trackId) => {
-        console.log("Fetching preview for trackId:", trackId);
         const response = await fetch(`https://api.deezer.com/track/${trackId}`);
         if (!response.ok) {
           console.error(`Erreur HTTP pour trackId ${trackId}:`, response.status);
           return null;
         }
         const json = await response.json();
-        console.log(`Preview for ${trackId}:`, json.preview);
         return json.preview;
       })
     );
-
-    // Pour correspondre à 5 éléments même si certains previews manquent
     while (previews.length < 5) previews.push(null);
 
     const key = data.key;

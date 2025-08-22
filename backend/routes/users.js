@@ -129,7 +129,6 @@ router.post('/updateUsername', (req, res) => {
 
   User.updateOne({ username }, { username: newUsername })
     .then((result) => {
-      console.log("Résultat de updateOne :", result);
       res.json({ result: true, update: result });
     })
     .catch(error => {

@@ -77,7 +77,7 @@ function CreateRound() {
   const [key, setKey] = useState("");
   const [categorieList, setCategorieList] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
-  // (plus de rounds ici)
+
 
   useEffect(() => {
     fetch(`https://guessthekey.onrender.com/manches/categories`)
@@ -160,8 +160,6 @@ function CreateRound() {
       key: key,
       tours: [...blindtestTours, guessTheKeyTour]
     };
-    console.log("selectedSongs", selectedSongs);
-    console.log("CreateRound Gamedata:", gameData)
     socket.emit("createGame", { lobbyCode, gameData });
     router.push(`/lobby/${lobbyCode}`);
   };

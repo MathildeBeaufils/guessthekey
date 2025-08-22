@@ -52,31 +52,17 @@ useEffect(() => {
     })
     .then(response => response.json())
     .then(data => {
-        console.log(data);
         setKeyValide(data.key);
         setTheme(data.theme);
         setTracks(data.tracks);
     });
 }, [trackId]);
 
-
-useEffect(() => {
-    console.log('Mise à jour key:', key);
-    console.log('Mise à jour theme:', theme);
-    console.log('Mise à jour tracks:', tracks);
-    console.log('Mise à jour tracks0:', tracks[0])
-}, [key, theme, tracks]);
-
-
-
     // 1
     function validerChanson1() {
         if (chanson1.trim().toLowerCase() === tracks[0].title.toLowerCase()) {
         setPoint(point + 10)
         dispatch(addPoints({points:10}))
-        console.log(' Chanson1 ok');
-        } else {
-        console.log('Chanson1 pasOK');
         }
     }
 
@@ -84,9 +70,6 @@ useEffect(() => {
         if (artiste1.trim().toLowerCase() === tracks[0].artist.toLowerCase()) {
             setPoint(point + 10)
             dispatch(addPoints({points:10}))
-            console.log('Artiste1 ok');
-        } else {
-            console.log('Artiste1 pasOK');
         }
     }
 
@@ -95,9 +78,6 @@ useEffect(() => {
         if (chanson2.trim().toLowerCase() === tracks[1].title.toLowerCase()) {
             setPoint(point + 10)
             dispatch(addPoints({points:10}))
-            console.log('Chanson2 ok');
-        } else {
-            console.log('Chanson2 pasOK');
         }
     }
 
@@ -105,9 +85,6 @@ useEffect(() => {
         if (artiste2.trim().toLowerCase() === tracks[1].artist.toLowerCase()) {
             setPoint(point + 10)
             dispatch(addPoints({points:10}))
-            console.log('Artiste2 ok');
-        } else {
-            console.log('Artiste2 pasOK');
         }
     }
 
@@ -116,9 +93,6 @@ useEffect(() => {
         if (chanson3.trim().toLowerCase() === tracks[2].title.toLowerCase()) {
             setPoint(point + 10)
             dispatch(addPoints({points:10}))
-            console.log('Chanson3 ok');
-        } else {
-            console.log('Chanson3 pasOK');
         }
     }
 
@@ -126,9 +100,6 @@ useEffect(() => {
         if (artiste3.trim().toLowerCase() === tracks[2].artist.toLowerCase()) {
             setPoint(point + 10)
             dispatch(addPoints({points:10}))
-            console.log('Artiste3 ok');
-        } else {
-            console.log('Artiste3 pasOK');
         }
     }
 
@@ -137,9 +108,6 @@ useEffect(() => {
         if (chanson4.trim().toLowerCase() === tracks[3].title.toLowerCase()) {
             setPoint(point + 10)
             dispatch(addPoints({points:10}))
-            console.log('Chanson4 ok');
-        } else {
-            console.log('Chanson4 pasOK');
         }
     }
 
@@ -147,9 +115,6 @@ useEffect(() => {
         if (artiste4.trim().toLowerCase() === tracks[3].artist.toLowerCase()) {
             setPoint(point + 10)
             dispatch(addPoints({points:10}))
-            console.log('Artiste4 ok');
-        } else {
-            console.log('Artiste4 pasOK');
         }
     }
 
@@ -158,9 +123,6 @@ useEffect(() => {
         if (chanson5.trim().toLowerCase() === tracks[4].title.toLowerCase()) {
             setPoint(point + 10)
             dispatch(addPoints({points:10}))
-            console.log('Chanson5 ok');
-        } else {
-            console.log('Chanson5 pasOK');
         }
     }
 
@@ -168,9 +130,6 @@ useEffect(() => {
         if (artiste5.trim().toLowerCase() === tracks[4].artist.toLowerCase()) {
             setPoint(point + 10)
             dispatch(addPoints({points:10}))
-            console.log('Artiste5 ok');
-        } else {
-            console.log('Artiste5 pasOK');
         }
     }
     
@@ -180,10 +139,7 @@ useEffect(() => {
         if (key.trim().toLowerCase() === keyValide.toLowerCase()) {
             setPoint(point + 50)
             dispatch(addPoints({points:50}))
-            console.log('key ok');
-        } else {
-            console.log('key pasOK');
-        }
+        } 
     }
 
 

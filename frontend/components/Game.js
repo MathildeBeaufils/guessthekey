@@ -55,7 +55,6 @@ function Game({lobbyCode}) {
 
     // Connection au lobby pour récupérer les infos en instantané
     socket.emit('joinLobby', {lobbyId: lobbyCode, username });
-    console.log(` joined lobby ${lobbyCode}`);
 
     socket.emit("requestCurrentGameState", lobbyCode);
 
@@ -67,7 +66,6 @@ function Game({lobbyCode}) {
     });
 
     socket.on("gameStarted", () => {
-      console.log("La partie démarre !");
       setStatus("in-game");
       setUserRecapAnswers([
         ['Réponse non trouvée', 'Réponse non trouvée'],
@@ -109,7 +107,6 @@ function Game({lobbyCode}) {
       // Met à jour le score local si le backend l'envoie
       if (scores && scores[username] !== undefined) {
         setPoints(scores[username]);
-        console.log("roundEnded score", scores)
       }
       if (!isGuessTheKey) {
         const myAnswer = allAnswers && allAnswers[username];
@@ -133,7 +130,6 @@ function Game({lobbyCode}) {
         // Pour Guess The Key, stocker la réponse trouvée si correcte
         const myAnswer = allAnswers && allAnswers[username];
         let found = 'Réponse non trouvée';
-        // Correction : le backend envoie correctAnswer comme string OU comme {freeAnswer: ...}
         let expected = typeof correctAnswer === 'string' ? correctAnswer : (correctAnswer?.freeAnswer || '');
         if (myAnswer && expected && typeof myAnswer === 'string') {
           if (myAnswer.trim().toLowerCase() === expected.trim().toLowerCase()) {
@@ -157,7 +153,6 @@ function Game({lobbyCode}) {
 
     socket.on("gameEnded", ({ scores, history}) => {
       setFinalScores(scores);
-      console.log("gameEnded score", scores)
       setTourHistory(history);
       setStatus("ended");
       setTour(null);
@@ -375,9 +370,6 @@ function Game({lobbyCode}) {
           <p>Temps restant: {timeLeft}s</p>
 
           <div className={styles.input_container}>
-            {/* Résumé des réponses de la partie (blindtest) supprimé */}
-            
-            {/* Feedback immédiat sous chaque input pour le blindtest */}
             <input
               className={styles.input}
               placeholder="Titre"

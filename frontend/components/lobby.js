@@ -3,10 +3,9 @@ import Menu from "./Menu";
 import { useSelector } from 'react-redux';
 import { useRouter} from 'next/router';
 import styles from "../styles/lobby.module.css";
-console.log('Tentative de connexion socket...');
 import socket from '../socket';
 
-//zuuuuuuut
+
 const Lobby = ({lobbyCode}) => {
     const router = useRouter();
     const { code } = router.query;
@@ -49,7 +48,6 @@ const Lobby = ({lobbyCode}) => {
 
         // Réception de la MAJ des parties créés dans le lobby
         socket.on("updateGames", (gamesList) => {
-            console.log("Parties disponibles :", gamesList);
             setGames(gamesList);
         });
 
@@ -64,14 +62,12 @@ const Lobby = ({lobbyCode}) => {
     }, [lobbyCode, username]);
 
     const startGame = () => {
-    console.log(`Lancement de la partie pour le lobby ${lobbyCode}`)
     socket.emit('startGame', lobbyCode);
     };
 
     // }
     useEffect(() => {
         if(gameStarted){
-            console.log('Redirection vers la partie')
             router.push(`/game/${lobbyCode}`)
         } 
     }, [gameStarted, router, lobbyCode]);
