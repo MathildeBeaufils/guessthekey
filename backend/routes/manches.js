@@ -188,6 +188,7 @@ router.post('/musicByArtist', (req, res) => {
 
 // get manche by Id
 router.post('/roundID', async (req, res) => {
+  console.log('reception  req.body.id', req.body.id)
   const id = req.body.id;
   try {
     const data = await Manche.findOne({ _id: id });
@@ -195,7 +196,7 @@ router.post('/roundID', async (req, res) => {
       return res.json({ result: false, message: "Pas de manches trouvées" });
     }
     const trackIds = [data.trackId1, data.trackId2, data.trackId3, data.trackId4, data.trackId5];
-
+    console.log('trackIds', trackIds)
     // Récupération des previews
     const previews = await Promise.all(
       trackIds.map(trackId =>
