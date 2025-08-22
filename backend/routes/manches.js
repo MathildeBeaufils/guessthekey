@@ -197,26 +197,31 @@ router.post('/roundID', async (req, res) => {
     }
     const trackIds = [data.trackId1, data.trackId2, data.trackId3, data.trackId4, data.trackId5];
     console.log('trackIds', trackIds)
-        console.log('test')
+    console.log('test')
     // Récupération des previews
     const previews = await Promise.all(
-      trackIds.map(trackId =>
-        fetch(`https://api.deezer.com/track/${trackId}`)
-          .then(response => response.json())
-          .then(json => json.preview)
-      )
+      // trackIds.map(trackId =>
+      //   fetch(`https://api.deezer.com/track/${trackId}`)
+      //     .then(response => response.json())
+      //     .then(json => json.preview)
+      // )
+      
     );
+    fetch(`https://api.deezer.com/track/1881054427`)
+    .then(response => response.json())
+    .then(data => console.log(data))
 
-    const key = data.key;
-    const theme = data.theme;
-    const tracks = [
-      { artist: data.artiste1, title: data.titre1, trackID: previews[0]},
-      { artist: data.artiste2, title: data.titre2, trackID: previews[1] },
-      { artist: data.artiste3, title: data.titre3, trackID: previews[2] },
-      { artist: data.artiste4, title: data.titre4, trackID: previews[3] },
-      { artist: data.artiste5, title: data.titre5, trackID: previews[4] },
-    ];
-    res.json({ result: true, key, theme, tracks });
+    // const key = data.key;
+    // const theme = data.theme;
+    // const tracks = [
+    //   { artist: data.artiste1, title: data.titre1, trackID: previews[0]},
+    //   { artist: data.artiste2, title: data.titre2, trackID: previews[1] },
+    //   { artist: data.artiste3, title: data.titre3, trackID: previews[2] },
+    //   { artist: data.artiste4, title: data.titre4, trackID: previews[3] },
+    //   { artist: data.artiste5, title: data.titre5, trackID: previews[4] },
+    // ];
+    // res.json({ result: true, key, theme, tracks });
+    res.json({ result: true, data })
   } catch (error) {
     console.error(error);
     res.status(500).json({ result: false, message: error });
