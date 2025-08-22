@@ -210,6 +210,7 @@ router.post('/roundID', async (req, res) => {
     fetch(`https://api.deezer.com/track/1881054427`)
     .then(response => response.json())
     .then(data => console.log(data))
+    console.log(typeof fetch);
 
     // const key = data.key;
     // const theme = data.theme;
