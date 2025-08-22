@@ -197,6 +197,7 @@ router.post('/roundID', async (req, res) => {
     }
     const trackIds = [data.trackId1, data.trackId2, data.trackId3, data.trackId4, data.trackId5];
     console.log('trackIds', trackIds)
+        console.log('test')
     // Récupération des previews
     const previews = await Promise.all(
       trackIds.map(trackId =>
@@ -218,7 +219,7 @@ router.post('/roundID', async (req, res) => {
     res.json({ result: true, key, theme, tracks });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ result: false, message: "Erreur serveur" });
+    res.status(500).json({ result: false, message: error });
   }
 });
 
