@@ -3,7 +3,7 @@ var router = express.Router();
 const Categorie = require('../models/categories');
 const Manche = require('../models/manches');
 const User = require('../models/users');
-import fetch from 'node-fetch';
+
 
 // --------------------- CATEGORIES ------------------------------ 
 
