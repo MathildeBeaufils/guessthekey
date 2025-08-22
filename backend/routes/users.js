@@ -114,7 +114,7 @@ router.delete('/deleteUser/:email', (req, res) => {
   });
 });
 
-// Route GET pour récupérer un utilisateur à partir de son username
+// Route GET pour récupérer un utilisateur à partir de son token
 router.get('/:token', (req, res) => {
   User.findOne({token: req.params.token}).then(data => {
     if(data){
